@@ -1,0 +1,16 @@
+<p>todo works!</p>
+
+<div>
+    Task name: <input type="text" #taskName> <br>
+    Description: <input type="text" #taskDesc> <br>
+    Priority (change this to a dropdown menu)<input type="text" #taskPriority> <br>
+    <button (click)="createTask(taskName.value, taskDesc.value, taskPriority.value);
+        taskName.value = ''; taskDesc.value = ''; taskPriority.value = ''">Create Task</button>
+</div>
+
+<div *ngFor="let task of tasks">
+    
+    <br>
+    <b>Task:</b> {{task.name}} <br>
+    <b>Description:</b> {{task.description}} <br>
+</div>
