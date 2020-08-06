@@ -7,7 +7,7 @@ import { catchError, tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class TasksService {
-  url = 'api/tasks'
+  url = 'http://localhost:4000' // the port the mongo database is listening on
   constructor(private http: HttpClient) { }
 
   getTasks(): Promise<Object[]>{
@@ -29,7 +29,7 @@ export class TasksService {
     this.http.get(this.url).toPromise().then((res:any) => console.log("get: " + res));
     return this.http.get(this.url).toPromise().then((res:any) => {
       if(res.length == 0){
-        return this.http.post<any>(this.url, 
+        return this.http.post<any>(this.url,
           {
             name: task.name,
             date: task.date,
@@ -41,7 +41,7 @@ export class TasksService {
       }
       else{
         console.log("users is NOT null");
-        return this.http.post<any>(this.url, 
+        return this.http.post<any>(this.url,
           { // this line used to JSON.stringify the post object, just keep in mind you don't really need to do that anymore!
             name: task.name,
             date: task.date,
