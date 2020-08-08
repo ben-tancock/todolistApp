@@ -18,17 +18,11 @@ export class TasksService {
       .then((res:any) => res).catch(this.handleError)*/
   }
 
-  deleteTask(id: number): Promise<any>{
+  deleteTask(id: number){
     var delUrl = this.url + "/" + id;
-    return this.http.delete(delUrl).toPromise().then(() => null).catch(this.handleError);
+    //return this.http.delete(delUrl).toPromise().then(() => null).catch(this.handleError);
+    return this.http.delete(delUrl);
 
-  }
-
-  testPost(){
-    return this.http.post(this.url,
-      {
-        msg: "hello"
-      });
   }
 
   /*
@@ -42,57 +36,17 @@ export class TasksService {
   createTask(task){
     // might need a null case for this (see previous project)
     console.log("test create task (service)");
-    //this.http.post<any>(this.url, {msg: "hi"}).toPromise().then((res:any) => console.log("response recieved: " + res));
-
-    // This does nothing, you NEED to make it .toPromise for the server to recieve it... why?
-    // I think it's because you need to subscribe to it? It's an observable. I think.
     return this.http.post(this.url + '/create',
     {
       name: task.name,
       date: task.date,
-      descripion: task.description,
+      description: task.description,
       priority: task.priority,
       id: task.id
     });
-
-
-
-    /*return this.http.post<any>(this.url + '/create',
-      {
-        name: task.name,
-        date: task.date,
-        descripion: task.description,
-        priority: task.priority,
-        id: task.id
-      })
-    .toPromise().then((res:any) => console.log(res));*/
-
-    /*this.http.get(this.url).toPromise().then((res:any) => console.log("get: " + res));
-    return this.http.get(this.url).toPromise().then((res:any) => {
-      if(res.length == 0){
-        return this.http.post<any>(this.url,
-          {
-            name: task.name,
-            date: task.date,
-            description: task.description,
-            priority: task.priority,
-            id: task.id
-          }).toPromise()
-            .then((res:any) => res.data).catch(this.handleError);
-      }
-      else{
-        console.log("users is NOT null");
-        return this.http.post<any>(this.url,
-          { // this line used to JSON.stringify the post object, just keep in mind you don't really need to do that anymore!
-            name: task.name,
-            date: task.date,
-            description: task.description,
-            priority: task.priority,
-            id: task.id
-          }).toPromise().then((res:any) => res.data).catch(this.handleError);
-      }
-    });*/
   }
+
+
 
   handleError(){
 

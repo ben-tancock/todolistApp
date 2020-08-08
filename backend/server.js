@@ -84,29 +84,48 @@ router.route('/create').post(function(req, res, next){
 });
 
 app.get('/tasks', function(req, res){
-  console.log("request for tasks recieved");
-  //var response = Task.find(); // attempting to json-stringify this blows it up
-  /*response.exec(function(err, docs){
-    console.log("the docs: " + docs);
-  });*/
-  var response = null;
+  console.log("request for tasks recieved\n");
   Task.find().exec(function(err, docs){
-    for(var i in docs){
+    /*for(var i in docs){
       console.log(docs[i].name);
-    }
-    console.log(JSON.stringify(docs));
+    }*/
+    //console.log(JSON.stringify(docs));
     res.send(docs);
-  })
-  /*console.log("sending response: ");
-  console.log(response);
-  res.send(response);*/
+  });
 });
 
 app.post('/create', function(req, res){
-  console.log("recieved create request: push the object to the tasks array");
+  console.log("recieved create request: push the object to the tasks array\n");
   console.log(req.body);
-  var response = {msg: "hello from the serverino ;^)"};
-  res.send(response);
+  // to do: update the database of tasks with the task that was created by the user
+  tasksCollection.insertOne(req.body, function(err, result){
+    if(!err){
+      console.log("\nsuccessfully inserted " + result.name);
+      res.send({data: result, status: 'success'});
+    }
+    else{
+      console.log("\nerror inserting object: " + req.body);
+      res.send({data: result, status: 'failed'});
+    }
+  });
+});
+
+app.delete('/*', function(req, res){
+  var delId = Number(req.url.split('/')[1]);
+  console.log("\nrecieved delete request for task " + delId);
+
+  // we need to cast delId to a Number. (update: works!)
+  tasksCollection.deleteOne({id: delId}, function(err, result){
+    if(!err){
+      console.log("successfully deleted task: " + result);
+      res.send({data: result, status: 'success'});
+    }
+    else{
+      console.log("could not delete task: " + result);
+      res.send({data: result, status: 'failed'});
+    }
+  });
+
 });
 
 

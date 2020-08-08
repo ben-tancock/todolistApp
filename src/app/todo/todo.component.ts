@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class TodoComponent implements OnInit {
   tasks: any = [];
+  theDate;
 
   selectedTask;
 
@@ -27,22 +28,38 @@ export class TodoComponent implements OnInit {
   }
 
   createTask(taskName, taskDesc, taskPriority){
+    this.theDate = new Date();
     let newTask = {
       name: taskName,
-      date: "sample",
+      date: this.theDate,
       description: taskDesc,
       priority: taskPriority,
-      id: 1
+      id: this.tasks.length
     }
 
     this.TaskService.createTask(newTask).subscribe((res:any) => {
-      console.log(res.msg); // prints the msg property of the server response!
+      console.log(JSON.stringify(res)); // prints the msg property of the server response!
+      // once we get a message back indicating a success, we have to update the client-side task list by calling getTasks again
+      if(res.status == "success"){
+        console.log("creation successful");
+        this.getTasks();
+      }
+      else{
+        console.log("creation failed!");
+      }
+    });
+  }
+
+  // finds the task with the matching id, sends msg to server
+  deleteTask(id){
+    console.log("delete task " + id);
+    this.TaskService.deleteTask(id).subscribe((res:any) => {
+      console.log("task deletion complete - server response: " + JSON.stringify(res));
+      this.getTasks();
+      console.log("tasks remaining: " + this.tasks); // tasks aren't being removed, despite server success
+
+      // the server might be saying it's successful, but it's probably successfully deleting 0 tasks... is our filter wrong?
     });
 
   }
-
-
-
-
-
 }
