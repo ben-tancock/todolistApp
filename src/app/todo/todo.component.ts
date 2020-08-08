@@ -9,26 +9,21 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./todo.component.css']
 })
 export class TodoComponent implements OnInit {
-  tasks: any = [
-    {
-      name: "sample task",
-      date: "today",
-      description: "lorem ipsum",
-      priority: "testing priority",
-      id: 0
-    }
-  ];
+  tasks: any = [];
 
   selectedTask;
 
   constructor(private TaskService: TasksService) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.getTasks();
   }
 
   getTasks(){
-    this.TaskService.getTasks().then(tasks => this.tasks = tasks);
+    this.TaskService.getTasks().subscribe((res:any) => {
+      console.log("the response: " + JSON.stringify(res));
+      this.tasks = res;
+    });
   }
 
   createTask(taskName, taskDesc, taskPriority){
@@ -39,13 +34,15 @@ export class TodoComponent implements OnInit {
       priority: taskPriority,
       id: 1
     }
-    this.TaskService.createTask(newTask).then((res:any) => {
-      console.log("task creation testing...");
+
+    this.TaskService.createTask(newTask).subscribe((res:any) => {
+      console.log(res.msg); // prints the msg property of the server response!
     });
+
   }
 
-  
 
-  
+
+
 
 }

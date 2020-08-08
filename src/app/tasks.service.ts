@@ -10,11 +10,12 @@ export class TasksService {
   url = 'http://localhost:4000' // the port the mongo database is listening on
   constructor(private http: HttpClient) { }
 
-  getTasks(): Promise<Object[]>{
+  getTasks(){
     console.log("get tasks...");
-    this.http.get(this.url).toPromise().then(res => console.log("testing get: " + res));
+    return this.http.get(this.url + '/tasks');
+    /*this.http.get(this.url).toPromise().then(res => console.log("testing get: " + res));
     return this.http.get(this.url).toPromise()
-      .then((res:any) => res).catch(this.handleError)
+      .then((res:any) => res).catch(this.handleError)*/
   }
 
   deleteTask(id: number): Promise<any>{
@@ -23,10 +24,50 @@ export class TasksService {
 
   }
 
-  createTask(task): Promise<any>{
+  testPost(){
+    return this.http.post(this.url,
+      {
+        msg: "hello"
+      });
+  }
+
+  /*
+  a task object has a:
+  - name
+  - date
+  - description
+  - priority
+  - id
+  */
+  createTask(task){
     // might need a null case for this (see previous project)
     console.log("test create task (service)");
-    this.http.get(this.url).toPromise().then((res:any) => console.log("get: " + res));
+    //this.http.post<any>(this.url, {msg: "hi"}).toPromise().then((res:any) => console.log("response recieved: " + res));
+
+    // This does nothing, you NEED to make it .toPromise for the server to recieve it... why?
+    // I think it's because you need to subscribe to it? It's an observable. I think.
+    return this.http.post(this.url + '/create',
+    {
+      name: task.name,
+      date: task.date,
+      descripion: task.description,
+      priority: task.priority,
+      id: task.id
+    });
+
+
+
+    /*return this.http.post<any>(this.url + '/create',
+      {
+        name: task.name,
+        date: task.date,
+        descripion: task.description,
+        priority: task.priority,
+        id: task.id
+      })
+    .toPromise().then((res:any) => console.log(res));*/
+
+    /*this.http.get(this.url).toPromise().then((res:any) => console.log("get: " + res));
     return this.http.get(this.url).toPromise().then((res:any) => {
       if(res.length == 0){
         return this.http.post<any>(this.url,
@@ -50,7 +91,7 @@ export class TasksService {
             id: task.id
           }).toPromise().then((res:any) => res.data).catch(this.handleError);
       }
-    });
+    });*/
   }
 
   handleError(){
