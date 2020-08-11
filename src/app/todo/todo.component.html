@@ -1,28 +1,50 @@
 
-<div>
-    Task name: <input type="text" #taskName> <br>
-    Description: <input type="text" #taskDesc> <br>
-    Priority (change this to a dropdown menu)
-    <select name="" id="" #taskPriority>
-      <option value="low">low</option>
-      <option value="medium">medium</option>
-      <option value="high">high</option>
-    </select> <br>
-    <button (click)="createTask(taskName.value, taskDesc.value, taskPriority.value);
-        taskName.value = ''; taskDesc.value = ''; taskPriority.value = ''">Create Task</button>
-</div>
+<table>
+  <tr>
+    <th>
+      <div *ngFor="let task of tasks" taskDirective class="tasks" style="border: red solid 5px;">
+        <app-task class="taskObject" style="margin-right: 800px;"
+        [taskName] = task.name
+        [taskPriority] = task.priority
+        [taskDescription] = task.description
+        [taskDate] = task.date>
+        </app-task>
+        <button (click)="deleteTask(task.id)">X</button>
+      </div>
+
+    </th>
+
+    <th>
+
+      <div style="text-align: left;">
+        <div class="create">
+          Task name: <input type="text" #taskName> <br>
+            <p style="vertical-align: middle;">
+              <label for="taskDesc" >Description: <textarea id="taskDesc" #taskDesc cols="30" rows="5"></textarea></label>
+
+            </p>
+            <br>
 
 
-<div *ngFor="let task of tasks" taskDirective>
-  <br>
-  <app-task
-  [taskName] = task.name
-  [taskPriority] = task.priority
-  [taskDescription] = task.description
-  [taskDate] = task.date>
-  </app-task>
-  <button (click)="deleteTask(task.id)">X</button>
-  <br> <br> <br>
-</div>
+          Priority:
+          <select name="" id="" #taskPriority>
+            <option value="low">low</option>
+            <option value="medium">medium</option>
+            <option value="high">high</option>
+          </select> <br>
+          <button  (click)="createTask(taskName.value, taskDesc.value, taskPriority.value);
+              taskName.value = ''; taskDesc.value = ''; taskPriority.value = ''">Create Task</button>
+        </div>
+      </div>
+
+    </th>
+  </tr>
+</table>
+
+
+
+
+
+
 
 

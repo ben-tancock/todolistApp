@@ -1,0 +1,34 @@
+.create{
+  text-align: center;
+  border-radius: 10px;
+ /* margin-bottom: 50px;
+  margin: 200px;
+  margin-top: 0px;
+  padding: 20px;*/
+  border: solid black 10px;
+}
+
+.tasks {
+  margin-right: 300px;
+}
+
+div.create > input, select, span, textarea{
+  margin-bottom: 20px;
+  overflow: scroll;
+  vertical-align: top;
+
+}
+
+.tasks > button{
+  position: relative;
+  float: right;
+}
+
+table {
+  border: solid lightblue 10px;
+  width: 100%;
+}
+
+th {
+  border: solid green 10px;
+}
