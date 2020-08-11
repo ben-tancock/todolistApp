@@ -6,12 +6,16 @@ import { AppComponent } from './app.component';
 import { TitleComponent } from './title/title.component';
 import { TodoComponent } from './todo/todo.component';
 import { HttpClientModule } from '@angular/common/http';
+import { TaskDirective } from './task.directive';
+import { TaskComponent } from './task/task.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TitleComponent,
-    TodoComponent
+    TodoComponent,
+    TaskDirective,
+    TaskComponent
   ],
   imports: [
     BrowserModule,

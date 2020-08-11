@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { TasksService } from '../tasks.service';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+
+//import { Task } from '../task';
 
 @Component({
   selector: 'app-todo',
@@ -9,8 +11,11 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./todo.component.css']
 })
 export class TodoComponent implements OnInit {
+  // this only works for one description, the description doesn't change for each click
+ // @ViewChild("taskDescription", {read: ElementRef}) taskDescription: ElementRef;
   tasks: any = [];
   theDate;
+  isClicked = false;
 
   selectedTask;
 
@@ -26,6 +31,13 @@ export class TodoComponent implements OnInit {
       this.tasks = res;
     });
   }
+
+  // this works, don't need directives for mouse clicking
+  // but, it's also for the entire list object, we need task components I think
+ /* @HostListener('click') onMouseClick(){
+    //console.log("this is the task description: " + this.taskDescription.nativeElement.innerText);
+    //this.isClicked = !this.isClicked;
+  }*/
 
   createTask(taskName, taskDesc, taskPriority){
     this.theDate = new Date();

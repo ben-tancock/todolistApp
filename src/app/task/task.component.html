@@ -1,0 +1,8 @@
+
+<div>
+  <span> <b>Task:</b>{{taskName}}  <br></span>
+  <span><b>Priority:</b>{{taskPriority}}  <br></span>
+  <span *ngIf="this.isClicked"> <b>Description: </b> {{taskDescription}} <br></span>
+  <span *ngIf="this.isClicked"> <b>Date: </b> {{taskDate}} <br></span>
+  <br><br>
+</div>

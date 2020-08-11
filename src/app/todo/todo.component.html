@@ -1,17 +1,28 @@
-<p>todo works!</p>
 
 <div>
     Task name: <input type="text" #taskName> <br>
     Description: <input type="text" #taskDesc> <br>
-    Priority (change this to a dropdown menu)<input type="text" #taskPriority> <br>
+    Priority (change this to a dropdown menu)
+    <select name="" id="" #taskPriority>
+      <option value="low">low</option>
+      <option value="medium">medium</option>
+      <option value="high">high</option>
+    </select> <br>
     <button (click)="createTask(taskName.value, taskDesc.value, taskPriority.value);
         taskName.value = ''; taskDesc.value = ''; taskPriority.value = ''">Create Task</button>
 </div>
 
-<div *ngFor="let task of tasks">
 
-    <br>
-    <b>Task:</b> {{task.name}} <br>
-    <b>Description:</b> {{task.description}} <br>
-    <button (click)="deleteTask(task.id)">X</button>
+<div *ngFor="let task of tasks" taskDirective>
+  <br>
+  <app-task
+  [taskName] = task.name
+  [taskPriority] = task.priority
+  [taskDescription] = task.description
+  [taskDate] = task.date>
+  </app-task>
+  <button (click)="deleteTask(task.id)">X</button>
+  <br> <br> <br>
 </div>
+
+
