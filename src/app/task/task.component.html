@@ -1,8 +1,23 @@
 
-<div>
+<!--<div>
   <span> Task:{{taskName}}  <br></span>
   <span><b>Priority:</b>{{taskPriority}}  <br></span>
   <span *ngIf="this.isClicked"> <b>Description: </b> {{taskDescription}} <br></span>
   <span *ngIf="this.isClicked"> <b>Date: </b> {{taskDate}} <br></span>
   <br><br>
-</div>
+</div> -->
+
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      <button id="completeBtn" (click)="completeClick(true)" >&#10003;</button>
+      <p style="overflow: hidden; max-width: 200px; max-height: 20px; position: absolute; left: 10%;">{{taskName}}</p>
+    </mat-panel-title>
+    <mat-panel-description>
+      <p style="position: absolute; left: 33%;">Priority: {{taskPriority}}</p>
+      <button id="deleteBtn" (click)="deleteClick(true)" style="position: absolute; left: 86%;">X</button></mat-panel-description>
+  </mat-expansion-panel-header>
+  <p style="max-width: 30%;">{{taskDescription}}</p>
+  <p>Date created: {{taskDate}}</p>
+
+</mat-expansion-panel>

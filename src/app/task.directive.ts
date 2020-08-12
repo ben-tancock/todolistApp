@@ -17,22 +17,12 @@ export class TaskDirective {
   }
 
   @HostListener('mouseleave') onMouseLeave() {
-    /*if(!this.isClicked){
-      this.background('white');
-    }*/
-    this.background('white');
+    this.background('transparent');
 
   }
 
   @HostListener('click') onMouseClick(){
-    //this.isClicked = !this.isClicked;
-    //this.border('blue', 'solid', '2px');
     this.background('lightgrey');
-  }
-
-  ngAfterViewInit() {
-    // still wouldn't work!! wtf!!!
-   // console.log("this is the task description: " + this.taskDescription.nativeElement);
   }
 
 

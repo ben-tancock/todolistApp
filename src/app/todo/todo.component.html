@@ -12,14 +12,16 @@
 
     <th>
       <div *ngFor="let task of tasks" taskDirective class="tasks">
-        <button id="completeBtn" (click)="completeTask()">&#10003;</button>
+        <!--<button id="completeBtn" (click)="completeTask()">&#10003;</button> -->
         <app-task class="taskObject"
         [taskName] = task.name
         [taskPriority] = task.priority
         [taskDescription] = task.description
-        [taskDate] = task.date>
+        [taskDate] = task.date
+        (completed)="completeTask()"
+        (deleted)="deleteTask(task.id)">
         </app-task>
-        <button id="deleteBtn" (click)="deleteTask(task.id)">X</button>
+        <!--<button id="deleteBtn" (click)="deleteTask(task.id)">X</button>-->
       </div>
     </th>
 
@@ -32,8 +34,6 @@
 
             </p>
             <br>
-
-
           Priority:
           <select name="" id="" #taskPriority>
             <option value="low">low</option>

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, HostListener, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-task',
@@ -11,6 +11,19 @@ export class TaskComponent implements OnInit {
   @Input('taskPriority') taskPriority: string;
   @Input('taskDescription') taskDescription: string;
   @Input('taskDate') taskDate: string;
+  @Output() deleted = new EventEmitter<boolean>();
+  @Output() completed = new EventEmitter<boolean>();
+
+  didDelete = false;
+  didComplete = false;
+
+  deleteClick(deleteBool: boolean){
+    this.deleted.emit(deleteBool);
+  }
+
+  completeClick(completeBool: boolean){
+    this.completed.emit(completeBool);
+  }
 
   //name;
   date;
@@ -27,7 +40,6 @@ export class TaskComponent implements OnInit {
 
 
   @HostListener('click') onMouseClick(){
-    console.log("testing visibility change");
     console.log(this.taskName);
     this.isClicked = !this.isClicked;
 
