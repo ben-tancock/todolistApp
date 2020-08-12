@@ -2,6 +2,13 @@ import { Component, OnInit, HostListener, ViewChild, ElementRef, Renderer2 } fro
 import { TasksService } from '../tasks.service';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition
+} from '@angular/animations';
 
 
 //import { Task } from '../task';
@@ -9,7 +16,8 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-todo',
   templateUrl: './todo.component.html',
-  styleUrls: ['./todo.component.css']
+  styleUrls: ['./todo.component.css'],
+
 })
 export class TodoComponent implements OnInit {
   // this only works for one description, the description doesn't change for each click
@@ -17,7 +25,8 @@ export class TodoComponent implements OnInit {
   tasks: any = [];
   theDate;
   isClicked = false;
-
+  isDeleted = false;
+  formatted;
   selectedTask;
 
   constructor(private TaskService: TasksService) { }
@@ -26,12 +35,25 @@ export class TodoComponent implements OnInit {
     this.getTasks();
   }
 
+  deleteAnimation(){
+    this.isDeleted = !this.isDeleted;
+  }
+
+  @HostListener('click') onMouseClick(){
+    this.deleteAnimation();
+    //console.log('testing sidebar');
+  }
+
   getTasks(){
     this.TaskService.getTasks().subscribe((res:any) => {
       console.log("the response: " + JSON.stringify(res));
       this.tasks = res;
     });
   }
+
+  // get the value of text area
+  // replace /\n/g with '<br>'
+  // send to tag
 
   completeTask(){
     console.log("test complete task");

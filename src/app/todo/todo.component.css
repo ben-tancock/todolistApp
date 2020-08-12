@@ -1,6 +1,8 @@
 .create{
   text-align: center;
   padding: 20px;
+  margin-left: 100px;
+  margin-right: 8%;
  /* border-radius: 10px;
   margin-bottom: 50px;
   margin: 200px;
@@ -12,7 +14,6 @@
 
 .sidebar{
   width: 100px;
-  border: solid, red, 30px;
   float: top;
   top: 100px;
 }
@@ -26,23 +27,37 @@
  /* border: grey, solid, 10px; ---- doesn't work btw */
   box-sizing: border-box;
   text-align: left;
+
 }
 
 .tasks {
-  width: 100%;
+  width: 60%;
+  margin-left: 20%;
   /*border-bottom: grey solid 2px;*/
   box-sizing: border-box;
-  padding-bottom: 5px;
-  padding-top: 5px;
+  padding-bottom: 10px;
+  padding-top: 10px;
 }
+
+.createSection{
+  margin-left: 90%;
+}
+
+.fixedBtn{
+  position: fixed;
+  margin-bottom: 6%;
+  bottom: 0px
+}
+
 
 
 div.create > input, select, span, textarea{
   margin-bottom: 20px;
   overflow: scroll;
-  vertical-align: top;
+  /*vertical-align: top;*/
 
 }
+
 
 #completeBtn{
   position: relative;
@@ -64,7 +79,6 @@ div.create > input, select, span, textarea{
 }*/
 
 table {
-  /*border: solid lightblue 10px;*/
   width: 100%;
 }
 

@@ -1,53 +1,49 @@
-
-
 <table>
   <tr>
-    <!--Eventually some settings will be put in this column-->
-    <!--<th class="sidebar">
-      <app-sidebar></app-sidebar>
-    </th>-->
-    <!--<th>
-      <app-new-nav></app-new-nav>
-    </th>-->
-
     <th>
       <div *ngFor="let task of tasks" taskDirective class="tasks">
-        <!--<button id="completeBtn" (click)="completeTask()">&#10003;</button> -->
         <app-task class="taskObject"
         [taskName] = task.name
         [taskPriority] = task.priority
         [taskDescription] = task.description
         [taskDate] = task.date
         (completed)="completeTask()"
-        (deleted)="deleteTask(task.id)">
+        (deleted)="deleteTask(task.id)"
+        >
         </app-task>
-        <!--<button id="deleteBtn" (click)="deleteTask(task.id)">X</button>-->
       </div>
-    </th>
-
-    <th>
-      <div>
-        <div class="create">
-          Task name: <input type="text" #taskName> <br>
-            <p style="vertical-align: middle;">
-              <label for="taskDesc" >Description: <textarea id="taskDesc" #taskDesc cols="30" rows="5"></textarea></label>
-
-            </p>
-            <br>
-          Priority:
-          <select name="" id="" #taskPriority>
-            <option value="low">low</option>
-            <option value="medium">medium</option>
-            <option value="high">high</option>
-          </select> <br>
-          <button  (click)="createTask(taskName.value, taskDesc.value, taskPriority.value);
-              taskName.value = ''; taskDesc.value = ''; taskPriority.value = ''">Create Task</button>
-        </div>
-      </div>
-
     </th>
   </tr>
 </table>
+
+<div class="createSection">
+  <div class="fixedBtn">
+    <button mat-fab [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu" style="background-color: blue;">
+      <mat-icon>add_icon</mat-icon>
+    </button>
+  </div>
+
+  <mat-menu #menu="matMenu">
+    <div class="create" (click) = "$event.stopPropagation()" >
+      Task name: <input type="text" #taskName> <br>
+
+      <p style="vertical-align: middle;">
+        <label for="taskDesc">Description: <textarea id="taskDesc" #taskDesc cols="30" rows="5"></textarea></label>
+      </p>
+      <p>{{formatted}}</p>
+      <br>
+
+      Priority:
+      <select name="" id="" #taskPriority>
+        <option selected="selected" value="low">low</option>
+        <option value="medium">medium</option>
+        <option value="high">high</option>
+      </select> <br>
+      <button  (click)="createTask(taskName.value, taskDesc.value, taskPriority.value);
+          taskName.value = ''; taskDesc.value = ''; taskPriority.value = 'low'">Create Task</button>
+    </div>
+  </mat-menu>
+</div>
 
 
 
