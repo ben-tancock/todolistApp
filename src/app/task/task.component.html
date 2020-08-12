@@ -1,11 +1,5 @@
 
-<!--<div>
-  <span> Task:{{taskName}}  <br></span>
-  <span><b>Priority:</b>{{taskPriority}}  <br></span>
-  <span *ngIf="this.isClicked"> <b>Description: </b> {{taskDescription}} <br></span>
-  <span *ngIf="this.isClicked"> <b>Date: </b> {{taskDate}} <br></span>
-  <br><br>
-</div> -->
+
 
 <mat-expansion-panel>
   <mat-expansion-panel-header>
@@ -17,7 +11,7 @@
       <p style="position: absolute; left: 33%;">Priority: {{taskPriority}}</p>
       <button id="deleteBtn" (click)="deleteClick(true)" style="position: absolute; left: 86%;">X</button></mat-panel-description>
   </mat-expansion-panel-header>
-  <p style="max-width: 30%;">{{taskDescription}}</p>
+  <div style="white-space: pre-wrap;">{{taskDescription}}</div> <br>
   <p>Date created: {{taskDate}}</p>
 
 </mat-expansion-panel>
