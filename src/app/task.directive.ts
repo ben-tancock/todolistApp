@@ -8,25 +8,26 @@ import { Directive, ElementRef, HostListener, Input, Renderer2, ViewChild } from
 export class TaskDirective {
   @ViewChild('taskDescription') taskDescription: ElementRef;
 
+  //isClicked = false;
+
   constructor(private _elRef: ElementRef, private _renderer: Renderer2) { }
 
   @HostListener('mouseenter') onMouseEnter() {
-    //console.log("test mouse enter");
-    this.border('lime', 'solid', '10px');
+    this.background('lightgrey');
   }
 
   @HostListener('mouseleave') onMouseLeave() {
-    this.border(); // set border to nothing when mouse leaves
+    /*if(!this.isClicked){
+      this.background('white');
+    }*/
+    this.background('white');
+
   }
 
   @HostListener('click') onMouseClick(){
-    this.border('blue', 'solid', '10px');
-    //this._renderer.setStyle(this._elRef.nativeElement, 'visibility', 'hidden'); // this sets the whole thing to hidden
-    //this.taskDescription.nativeElement.value = "test!";
-    //console.log("testing visibility change");
-    // we want to display the rest of the task elements when clicked
-    // how do we get the objects attributes?
-
+    //this.isClicked = !this.isClicked;
+    //this.border('blue', 'solid', '2px');
+    this.background('lightgrey');
   }
 
   ngAfterViewInit() {
@@ -36,7 +37,7 @@ export class TaskDirective {
 
 
 
-  // what the hell does everything below even do?
+  //this is a function, it used to change the border as the mouse entered / left the element (mouse behaviour was due to functions above)
   private border(
     color: string = null,
     type: string = null,
@@ -52,4 +53,14 @@ export class TaskDirective {
       this._elRef.nativeElement, 'border-width', width
     );
   }
+
+  private background(
+    color: string = null
+  ){
+    this._renderer.setStyle(
+      this._elRef.nativeElement, 'background-color', color
+    );
+
+  }
+
 }

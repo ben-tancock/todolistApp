@@ -32,12 +32,12 @@ export class TodoComponent implements OnInit {
     });
   }
 
-  // this works, don't need directives for mouse clicking
-  // but, it's also for the entire list object, we need task components I think
- /* @HostListener('click') onMouseClick(){
-    //console.log("this is the task description: " + this.taskDescription.nativeElement.innerText);
-    //this.isClicked = !this.isClicked;
-  }*/
+  completeTask(){
+    console.log("test complete task");
+    // <action that sends task to a completed tasks array>
+    //this.deleteTask()
+  }
+
 
   createTask(taskName, taskDesc, taskPriority){
     this.theDate = new Date();

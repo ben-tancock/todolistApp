@@ -1,22 +1,30 @@
 
+
 <table>
   <tr>
+    <!--Eventually some settings will be put in this column-->
+    <!--<th class="sidebar">
+      <app-sidebar></app-sidebar>
+    </th>-->
+    <!--<th>
+      <app-new-nav></app-new-nav>
+    </th>-->
+
     <th>
-      <div *ngFor="let task of tasks" taskDirective class="tasks" style="border: red solid 5px;">
-        <app-task class="taskObject" style="margin-right: 800px;"
+      <div *ngFor="let task of tasks" taskDirective class="tasks">
+        <button id="completeBtn" (click)="completeTask()">&#10003;</button>
+        <app-task class="taskObject"
         [taskName] = task.name
         [taskPriority] = task.priority
         [taskDescription] = task.description
         [taskDate] = task.date>
         </app-task>
-        <button (click)="deleteTask(task.id)">X</button>
+        <button id="deleteBtn" (click)="deleteTask(task.id)">X</button>
       </div>
-
     </th>
 
     <th>
-
-      <div style="text-align: left;">
+      <div>
         <div class="create">
           Task name: <input type="text" #taskName> <br>
             <p style="vertical-align: middle;">
