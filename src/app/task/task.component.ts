@@ -11,17 +11,46 @@ import {
   templateUrl: './task.component.html',
   styleUrls: ['./task.component.css'],
   animations: [
-    trigger('deleteAnimation', [
+    /*trigger('flyInOut', [
+      state('in', style({ transform: 'translateX(0)' })),
+      transition('void => *', [
+        style({ transform: 'translateX(-100%)', backgroundColor:'yellow' }),
+        animate(500)
+      ]),
+      transition('* => void', [
+        animate(500, style({ transform: 'translateX(100%)', backgroundColor:'yellow' }))
+      ])
+    ])*/
+
+
+    trigger('taskAnimation', [
+
       state('deleted', style({
-        height: '48px',
-        transform: "translateX(-200%)"
+        transform: "translateX(-100%)"
       })),
+
+      //state('in', style({transform: 'translateX(100%)'})),
 
       transition('* => deleted', [
         animate('300ms')
       ]),
 
+     /* transition('* => in', [
+        animate('300ms')
+      ]),
+
+      transition('* => in', [
+        animate(500, style({ transform: 'translateX(100%)' }))
+      ])*/
+
     ]),
+
+    trigger('createAnimation', [
+      transition('* => created', [
+        style({ transform: 'translateX(-100%)' }),
+        animate('350ms')
+      ]),
+    ])
 
   ]
 })
@@ -36,26 +65,25 @@ export class TaskComponent implements OnInit {
   isOpen = false;
   didDelete = false;
   didComplete = false;
-  //name;
   date;
-  //description;
-  //priority;
   id;
   isClicked = false;
 
-  deleteClick(deleteBool: boolean){
+  deleteClick(){
     console.log("test task delete");
     this.toggle();
     setTimeout(function(){
-      this.deleted.emit(deleteBool);
+      this.deleted.emit();
     }.bind(this), 500);
 
   }
 
 
 
-  completeClick(completeBool: boolean){
-    this.completed.emit(completeBool);
+  completeClick(){
+    // we gotta change the icon on the task mat-icon tag somehow
+    this.didComplete = !this.didComplete;
+    this.completed.emit(this.didComplete);
   }
 
   toggle(){
@@ -68,6 +96,9 @@ export class TaskComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    // try calling creation animation here?
+    console.log("initializiing task");
+    //this.didDelete = false;
   }
 
 

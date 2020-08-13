@@ -18,10 +18,29 @@ import {
   templateUrl: './todo.component.html',
   styleUrls: ['./todo.component.css'],
 
+  /* why not make an 'out' and 'in' state, instead of two different create and delete animations, in different components and everything?
+   we've also proven we don't need the deletion animation to be in the task component, since we sort of have a creation one working. I think.
+  If we can somehow target individual tasks in todo component. */
+  animations: [
+    trigger('flyInOut', [
+      state('in', style({ /*transform: 'translateX(0)'*/
+        border: 'solid 5px yellow' })),
+
+      state('out', style({
+        border: 'solid 5px green'})),
+
+      transition('void => out', [
+        style({ transform: 'translateX(-100%)' }),
+        animate(350)
+      ]),
+      /*transition('* => void', [
+        animate(500, style({ transform: 'translateX(100%)' }))
+      ])*/
+    ])
+  ]
 })
 export class TodoComponent implements OnInit {
-  // this only works for one description, the description doesn't change for each click
- // @ViewChild("taskDescription", {read: ElementRef}) taskDescription: ElementRef;
+
   tasks: any = [];
   theDate;
   isClicked = false;
@@ -35,14 +54,6 @@ export class TodoComponent implements OnInit {
     this.getTasks();
   }
 
-  deleteAnimation(){
-    this.isDeleted = !this.isDeleted;
-  }
-
-  @HostListener('click') onMouseClick(){
-    this.deleteAnimation();
-    //console.log('testing sidebar');
-  }
 
   getTasks(){
     this.TaskService.getTasks().subscribe((res:any) => {
@@ -50,10 +61,6 @@ export class TodoComponent implements OnInit {
       this.tasks = res;
     });
   }
-
-  // get the value of text area
-  // replace /\n/g with '<br>'
-  // send to tag
 
   completeTask(){
     console.log("test complete task");
@@ -71,6 +78,7 @@ export class TodoComponent implements OnInit {
       priority: taskPriority,
       id: this.tasks.length
     }
+    this.selectedTask = newTask;
 
     this.TaskService.createTask(newTask).subscribe((res:any) => {
       console.log(JSON.stringify(res)); // prints the msg property of the server response!
@@ -91,7 +99,7 @@ export class TodoComponent implements OnInit {
     this.TaskService.deleteTask(id).subscribe((res:any) => {
       console.log("task deletion complete - server response: " + JSON.stringify(res));
       this.getTasks();
-      console.log("tasks remaining: " + this.tasks); // tasks aren't being removed, despite server success
+      console.log("tasks remaining: " + this.tasks.length); // tasks aren't being removed, despite server success
 
       // the server might be saying it's successful, but it's probably successfully deleting 0 tasks... is our filter wrong?
     });

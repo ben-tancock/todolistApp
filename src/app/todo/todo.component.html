@@ -1,8 +1,15 @@
+<!--<ul  taskDirective class="tasks">
+  <li *ngFor="let task of tasks"
+  [@flyInOut]="'in'"> <app-task></app-task> </li>
+</ul> -->
+
 <table>
   <tr>
     <th>
-      <div *ngFor="let task of tasks" taskDirective class="tasks">
-        <app-task class="taskObject"
+      <!--[@flyInOut]="didDelete?  'deleted' : 'in'" >
+      " (task.id == this.tasks.length) ? '' : ''"-->
+      <div *ngFor="let task of tasks" taskDirective class="tasks"> <!--[@flyInOut]="(task.id == 'low') ? 'in' : 'out' "> -->
+        <app-task  class="taskObject"
         [taskName] = task.name
         [taskPriority] = task.priority
         [taskDescription] = task.description
@@ -23,11 +30,11 @@
     </button>
   </div>
 
-  <mat-menu #menu="matMenu">
+  <mat-menu #menu="matMenu" >
     <div class="create" (click) = "$event.stopPropagation()" >
       Task name: <input type="text" #taskName> <br>
 
-      <p style="vertical-align: middle;">
+      <p style="vertical-align: middle;" >
         <label for="taskDesc">Description: <textarea id="taskDesc" #taskDesc cols="30" rows="5"></textarea></label>
       </p>
       <p>{{formatted}}</p>
