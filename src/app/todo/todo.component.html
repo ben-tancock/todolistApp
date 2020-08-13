@@ -1,19 +1,17 @@
-<!--<ul  taskDirective class="tasks">
-  <li *ngFor="let task of tasks"
-  [@flyInOut]="'in'"> <app-task></app-task> </li>
-</ul> -->
 
 <table>
   <tr>
     <th>
       <!--[@flyInOut]="didDelete?  'deleted' : 'in'" >
       " (task.id == this.tasks.length) ? '' : ''"-->
-      <div *ngFor="let task of tasks" taskDirective class="tasks"> <!--[@flyInOut]="(task.id == 'low') ? 'in' : 'out' "> -->
+      <!-- Since all created tasks are added to the bottom, the creation animation is only applied to the bottom task -->
+      <div *ngFor="let task of tasks" taskDirective class="tasks" [@flyInOut]="((task.id == this.tasks.length - 1) ? 'out' : '' )">
         <app-task  class="taskObject"
         [taskName] = task.name
         [taskPriority] = task.priority
         [taskDescription] = task.description
         [taskDate] = task.date
+        [taskId] = task.id
         (completed)="completeTask()"
         (deleted)="deleteTask(task.id)"
         >
@@ -32,20 +30,20 @@
 
   <mat-menu #menu="matMenu" >
     <div class="create" (click) = "$event.stopPropagation()" >
-      Task name: <input type="text" #taskName> <br>
+      <p style="vertical-align: middle;"> Task name: <br> <input type="text" #taskName> <br> </p>
+
 
       <p style="vertical-align: middle;" >
-        <label for="taskDesc">Description: <textarea id="taskDesc" #taskDesc cols="30" rows="5"></textarea></label>
+        <label for="taskDesc">Description: <br> <textarea id="taskDesc" #taskDesc cols="30" rows="5"></textarea></label>
       </p>
-      <p>{{formatted}}</p>
       <br>
 
-      Priority:
+      <label for="" style="vertical-align: middle;">Priority:</label> <br>
       <select name="" id="" #taskPriority>
         <option selected="selected" value="low">low</option>
         <option value="medium">medium</option>
         <option value="high">high</option>
-      </select> <br>
+      </select> <br><br>
       <button  (click)="createTask(taskName.value, taskDesc.value, taskPriority.value);
           taskName.value = ''; taskDesc.value = ''; taskPriority.value = 'low'">Create Task</button>
     </div>

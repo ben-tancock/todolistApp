@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, ViewChild, ElementRef, Renderer2 } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild, ElementRef, Renderer2, Output, EventEmitter } from '@angular/core';
 import { TasksService } from '../tasks.service';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -40,6 +40,7 @@ import {
   ]
 })
 export class TodoComponent implements OnInit {
+  @Output() created = new EventEmitter<boolean>();
 
   tasks: any = [];
   theDate;
@@ -62,11 +63,7 @@ export class TodoComponent implements OnInit {
     });
   }
 
-  completeTask(){
-    console.log("test complete task");
-    // <action that sends task to a completed tasks array>
-    //this.deleteTask()
-  }
+
 
 
   createTask(taskName, taskDesc, taskPriority){
@@ -78,6 +75,7 @@ export class TodoComponent implements OnInit {
       priority: taskPriority,
       id: this.tasks.length
     }
+    console.log("tasks length: " + this.tasks.length);
     this.selectedTask = newTask;
 
     this.TaskService.createTask(newTask).subscribe((res:any) => {
@@ -104,5 +102,11 @@ export class TodoComponent implements OnInit {
       // the server might be saying it's successful, but it's probably successfully deleting 0 tasks... is our filter wrong?
     });
 
+  }
+
+  completeTask(){
+    console.log("test complete task");
+    // <action that sends task to a completed tasks array>
+    //this.deleteTask()
   }
 }

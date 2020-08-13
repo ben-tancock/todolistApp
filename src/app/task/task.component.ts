@@ -60,18 +60,20 @@ export class TaskComponent implements OnInit {
   @Input('taskPriority') taskPriority: string;
   @Input('taskDescription') taskDescription: string;
   @Input('taskDate') taskDate: string;
+  @Input('taskId') taskId: Number;
   @Output() deleted = new EventEmitter<boolean>();
   @Output() completed = new EventEmitter<boolean>();
   isOpen = false;
   didDelete = false;
   didComplete = false;
+  isCreated = false;
   date;
   id;
   isClicked = false;
 
   deleteClick(){
     console.log("test task delete");
-    this.toggle();
+    this.deleteToggle();
     setTimeout(function(){
       this.deleted.emit();
     }.bind(this), 500);
@@ -86,8 +88,12 @@ export class TaskComponent implements OnInit {
     this.completed.emit(this.didComplete);
   }
 
-  toggle(){
+  deleteToggle(){
     this.didDelete = !this.didDelete;
+  }
+
+  createToggle(){
+    this.isCreated = !this.isCreated;
   }
 
 
@@ -103,7 +109,10 @@ export class TaskComponent implements OnInit {
 
 
   @HostListener('click') onMouseClick(){
-    console.log(this.taskName);
+    /*console.log("task ID (task-side): " + this.taskId);
+    console.log("task name (task-side): " + this.taskName);
+    console.log("task priority (task-side): " + this.taskPriority);
+    console.log("task date (task-side): " + this.taskDate);*/
 
     this.isClicked = !this.isClicked;
 
