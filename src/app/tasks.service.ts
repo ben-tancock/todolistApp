@@ -42,7 +42,8 @@ export class TasksService {
       date: task.date,
       description: task.description,
       priority: task.priority,
-      id: task.id
+      id: task.id,
+      tState: task.tState
     });
   }
 

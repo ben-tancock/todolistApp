@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, HostListener, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import {
   trigger,
   state,
@@ -11,47 +11,28 @@ import {
   templateUrl: './task.component.html',
   styleUrls: ['./task.component.css'],
   animations: [
-    /*trigger('flyInOut', [
-      state('in', style({ transform: 'translateX(0)' })),
-      transition('void => *', [
-        style({ transform: 'translateX(-100%)', backgroundColor:'yellow' }),
-        animate(500)
-      ]),
-      transition('* => void', [
-        animate(500, style({ transform: 'translateX(100%)', backgroundColor:'yellow' }))
-      ])
-    ])*/
-
-
     trigger('taskAnimation', [
 
       state('deleted', style({
         transform: "translateX(-100%)"
       })),
 
-      //state('in', style({transform: 'translateX(100%)'})),
+      state('created', style({ transform: 'translateX(0%)'
+      })),
 
+      state('void', style({
+        left: '-100%'
+      })),
+
+      // changing the * to void makes the animation crap: why?
       transition('* => deleted', [
-        animate('300ms')
+        animate('200ms')
       ]),
 
-     /* transition('* => in', [
-        animate('300ms')
-      ]),
-
-      transition('* => in', [
-        animate(500, style({ transform: 'translateX(100%)' }))
-      ])*/
-
-    ]),
-
-    trigger('createAnimation', [
       transition('* => created', [
-        style({ transform: 'translateX(-100%)' }),
         animate('350ms')
       ]),
-    ])
-
+    ]),
   ]
 })
 export class TaskComponent implements OnInit {
@@ -60,8 +41,9 @@ export class TaskComponent implements OnInit {
   @Input('taskPriority') taskPriority: string;
   @Input('taskDescription') taskDescription: string;
   @Input('taskDate') taskDate: string;
-  @Input('taskId') taskId: Number;
-  @Output() deleted = new EventEmitter<boolean>();
+  @Input('taskId') taskId: number;
+  @Input('taskState') taskState: string;
+  @Output() animated = new EventEmitter<any>();
   @Output() completed = new EventEmitter<boolean>();
   isOpen = false;
   didDelete = false;
@@ -71,30 +53,47 @@ export class TaskComponent implements OnInit {
   id;
   isClicked = false;
 
-  deleteClick(){
-    console.log("test task delete");
-    this.deleteToggle();
-    setTimeout(function(){
-      this.deleted.emit();
-    }.bind(this), 500);
 
+  deleteClick(){
+    console.log("TASK: test task delete");
+    this.taskState = 'deleted';
+    console.log("task state: " + this.taskState)
   }
 
+  createClick(){
+    //console.log("TASK: test create click");
+    //this.taskState = '';
+  }
 
+  setState(newState){
+    console.log("STATE CHANGE");
+    this.taskState = newState;
+  }
 
+  animStart(){
+    //console.log("animation started");
+  }
+
+  animEnd(){
+   // console.log("animation ended: " + this.taskState);
+    //this.taskState = '';
+    if(this.taskState == 'deleted'){
+      // it gets task date...
+      //
+      this.animated.emit({status: this.taskState, id: this.taskId}); // any animation could be called here, have to let todo know which one
+
+    }
+    this.taskState = '';
+  }
   completeClick(){
     // we gotta change the icon on the task mat-icon tag somehow
-    this.didComplete = !this.didComplete;
-    this.completed.emit(this.didComplete);
+    //this.didComplete = !this.didComplete;
+    //this.completed.emit(this.didComplete);
+    this.setState('created');
+
   }
 
-  deleteToggle(){
-    this.didDelete = !this.didDelete;
-  }
 
-  createToggle(){
-    this.isCreated = !this.isCreated;
-  }
 
 
 
@@ -104,6 +103,7 @@ export class TaskComponent implements OnInit {
   ngOnInit(): void {
     // try calling creation animation here?
     console.log("initializiing task");
+    //this.taskState = this.taskState;
     //this.didDelete = false;
   }
 

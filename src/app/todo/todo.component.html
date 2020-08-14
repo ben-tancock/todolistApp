@@ -1,19 +1,26 @@
 
-<table>
-  <tr>
-    <th>
+<table #table >
+  <tr #tr>
+    <th #th>
       <!--[@flyInOut]="didDelete?  'deleted' : 'in'" >
       " (task.id == this.tasks.length) ? '' : ''"-->
       <!-- Since all created tasks are added to the bottom, the creation animation is only applied to the bottom task -->
-      <div *ngFor="let task of tasks" taskDirective class="tasks" [@flyInOut]="((task.id == this.tasks.length - 1) ? 'out' : '' )">
-        <app-task  class="taskObject"
+      <!-- yeah this doesn't really work, since you can any task, not just the bottom, and the id's aren't reorganized -->
+      <!-- Oh! oh! even if we introduce drag-and-drop, the created task will always have the highest id number, since we fixed the duplicates thing now!!
+        ARRRGHHH but it does it on deletion too!!! why???
+
+      you know, while this doesn't work for the creation notification, when we delete a task, I would like all the tasks below it to animate smoother, could be useful...-->
+
+      <div #div  *ngFor="let task of tasks" taskDirective class="tasks"> <!-- [@flyInOut]='state'> -->
+        <app-task #appTask class="taskObject"
         [taskName] = task.name
         [taskPriority] = task.priority
         [taskDescription] = task.description
         [taskDate] = task.date
         [taskId] = task.id
+        [taskState] = task.tState
         (completed)="completeTask()"
-        (deleted)="deleteTask(task.id)"
+        (animated)="taskAnimated($event)"
         >
         </app-task>
       </div>

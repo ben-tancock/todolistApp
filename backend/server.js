@@ -6,6 +6,7 @@ var url = require('url');
 const cors = require('cors');
 var bodyParser = require('body-parser');
 
+var idCount = 0;
 /*
   a task object has a:
   - name
@@ -26,12 +27,14 @@ var taskSchema = new Schema({
 }, {collection: 'tasksCollection'}
 );*/
 
+
 const schema = new mongoose.Schema({
   name: {type: String, required: true},
   date: {type: String, required: true},
   description: {type: String},
   priority: {type: String},
-  id: {type: Number, required:true}
+  id: {type: Number, required:true},
+  tState: {type: String, required: true}
 }, {collection: 'tasksCollection'});
 
 /*
@@ -58,6 +61,7 @@ const tasksCollection = mongoose.connection.collection('tasksCollection');
 const app = express();
 const router = express.Router();
 
+var idCount = 0;
 
 // ENABLING CORS STUFF ---------------------------------------------
 app.use(cors());
@@ -70,27 +74,11 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 app.use('/', express.query());
-app.get('/', function(req, res){
-  console.log("recieved get request: " + req);
-  //res.send("hello world");
-});
-
-router.post('/', function(req, res, next){
-  console.log("got test post");
-});
-
-router.route('/create').post(function(req, res, next){
-  console.log("got post");
-});
 
 app.get('/tasks', function(req, res){
   console.log("request for tasks recieved\n");
   Task.find().exec(function(err, docs){
-    /*for(var i in docs){
-      console.log(docs[i].name);
-    }*/
-    //console.log(JSON.stringify(docs));
-    res.send(docs);
+    res.send({docs:docs, idCount: idCount});
   });
 });
 
@@ -101,6 +89,8 @@ app.post('/create', function(req, res){
   tasksCollection.insertOne(req.body, function(err, result){
     if(!err){
       console.log("\nsuccessfully inserted " + result.name);
+      idCount++;
+      console.log("increasing id count: " + idCount);
       res.send({data: result, status: 'success'});
     }
     else{
@@ -139,9 +129,11 @@ connection.once('open', function(){
     console.log("there are " + docs + " docs in the collection\n");
 
     // if there aren't any docs in the collection, add one for testing purposes
+    // we don't need to do this anymore
     if(docs == 0){
-      var addThis = new Task({
-        name: "sample task",
+      idCount = 0;
+      /*var addThis = new Task({
+        name: "sample task (created whenever the server is connected and detects 0 docs)",
         date: "today",
         description: "lorem ipsum",
         priority: "testing priority",
@@ -155,7 +147,7 @@ connection.once('open', function(){
         else{
           console.log("object succsessfully saved \n");
         }
-      });
+      });*/
     }
   });
 
