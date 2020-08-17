@@ -1,7 +1,7 @@
 
 
-
-<mat-expansion-panel [@taskAnimation]='taskState' (@taskAnimation.start) = animStart() (@taskAnimation.done) = animEnd()>
+<!--[@taskAnimation]='taskState' (@taskAnimation.start) = animStart() (@taskAnimation.done) = animEnd()-->
+<mat-expansion-panel>
   <mat-expansion-panel-header>
     <mat-panel-title>
       <mat-icon taskDirective id="completeBtn" class="noSelect" *ngIf="!didComplete" (click)="completeClick()" (click) = "$event.stopPropagation()">check_box_outline_blank</mat-icon>

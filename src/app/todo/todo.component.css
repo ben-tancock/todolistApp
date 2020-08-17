@@ -26,6 +26,7 @@
 
 .taskObject {
  /* border: grey, solid, 10px; ---- doesn't work btw */
+  width: 5%;
   box-sizing: border-box;
   text-align: left;
 

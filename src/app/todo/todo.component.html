@@ -11,14 +11,15 @@
 
       you know, while this doesn't work for the creation notification, when we delete a task, I would like all the tasks below it to animate smoother, could be useful...-->
 
-      <div #div  *ngFor="let task of tasks" taskDirective class="tasks"> <!-- [@flyInOut]='state'> -->
-        <app-task #appTask class="taskObject"
+      <div #div  *ngFor="let task of tasks" taskDirective class="tasks" [@enterLeave] > <!-- [@flyInOut]='state'> -->
+        <app-task
+        #appTask class="taskObject"
         [taskName] = task.name
         [taskPriority] = task.priority
-        [taskDescription] = task.description
+        [taskDescription] = "task.description"
         [taskDate] = task.date
         [taskId] = task.id
-        [taskState] = task.tState
+        [taskState] = task.state
         (completed)="completeTask()"
         (animated)="taskAnimated($event)"
         >

@@ -43,7 +43,7 @@ export class TasksService {
       description: task.description,
       priority: task.priority,
       id: task.id,
-      tState: task.tState
+      state: task.state
     });
   }
 

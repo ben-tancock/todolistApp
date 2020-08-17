@@ -34,7 +34,7 @@ const schema = new mongoose.Schema({
   description: {type: String},
   priority: {type: String},
   id: {type: Number, required:true},
-  tState: {type: String, required: true}
+  state: {type: String}
 }, {collection: 'tasksCollection'});
 
 /*
@@ -88,7 +88,8 @@ app.post('/create', function(req, res){
   // to do: update the database of tasks with the task that was created by the user
   tasksCollection.insertOne(req.body, function(err, result){
     if(!err){
-      console.log("\nsuccessfully inserted " + result.name);
+      console.log("\n the result object: " + JSON.stringify(result.ops));
+      console.log("\nsuccessfully inserted: " + JSON.stringify(result.ops[0].name));
       idCount++;
       console.log("increasing id count: " + idCount);
       res.send({data: result, status: 'success'});

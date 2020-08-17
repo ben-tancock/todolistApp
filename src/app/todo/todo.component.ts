@@ -22,24 +22,33 @@ import { delay } from 'rxjs/operators';
   /* why not make an 'out' and 'in' state, instead of two different create and delete animations, in different components and everything?
    we've also proven we don't need the deletion animation to be in the task component, since we sort of have a creation one working. I think.
   If we can somehow target individual tasks in todo component. */
-  /*animations: [
-    trigger('flyInOut', [
-      state('in', style({ transform: 'translateX(0)' })),
-      transition('* => in', [
-        style({ transform: 'translateX(-100%)' }),
-        animate('350ms')
+  animations: [
+    trigger('enterLeave', [
+
+      /*state('deleted', style({
+        transform: "translateX(-100%)"
+      })),*/
+
+      state('void', style({
+        transform: "translateX(-100%)", border: 'solid 5px green'
+      })),
+
+
+      transition(':enter', [
+        animate('300ms', style({  border:'solid 5px yellow', transform: "translateX(0%)"}))
       ]),
-      transition('in => *', [
-        animate('350ms', style({ transform: 'translateX(100%)' }))
-      ])
-    ])
-  ]*/
+
+      transition(':leave', [
+        animate('300ms', style({  border:' solid 5px blue', transform: "translateX(-100%)"}))
+      ]),
+    ]),
+  ]
 })
 export class TodoComponent implements OnInit {
   @Output() created = new EventEmitter<boolean>();
   @ViewChildren("appTask") taskElements: QueryList<any>;
 
-  tasks: any = [];
+  tasks: Array<any> = [];
   theDate;
   isClicked = false;
   isDeleted = false;
@@ -55,50 +64,44 @@ export class TodoComponent implements OnInit {
   ngOnInit() {
     // server needs to keep track of id's, they're reset to 0 whenever client-side is initialized
     this.getTasks();
-
-    // this doesn't work because the element is undefined
-    //this.createAnimation(139);
   }
 
   ngAfterViewInit(){
-    //this.taskElements.changes.subscribe(() => this.printElements());
 
-    // this produces the error, can't modify in / after ngAfterViewInit()
-    //this.createAnimation(139);
   }
 
   @HostListener('click') onMouseClick(){
     console.log('clicked!');
-
-    // this is never called because we are waiting for the querylist to change, which it won't, because it's full
-    //this.createAnimation(139);
-    //this.printElements();
   }
 
 
-  // once the task has completed an animation, it will send parent some data
-  // after the animation has completed.
-  // based on what the animation was, decide what to do next
+  // we need the task component to tell us when certain parts of it have been clicked, hence why the create button is almost entirely done in todo
   taskAnimated(emit){
     console.log("test task animated emit: " + JSON.stringify(emit));
     if(emit.status == 'deleted'){
       console.log("emit deleted on task: " + emit.id);
       this.deleteTask(emit.id);
     }
-    else if(emit.status == 'created'){ // when the create button is clicked... the element does not exist, we have no reference to call the animation on
-      // maybe we should have tasks take an animation state as an input? so we can give the new ones the create animation?
-      //this.createTask(emit.id);
-    }
+
   }
 
-  getTask(){
-    this.tasks.push(
-      {name: "test name",
-      date: this.theDate,
-      description: "test desc",
-      priority: "high",
-      id: 999,
-      tState: 'created'})
+  addTask(task){
+    // all undefined!!
+    let printing = JSON.parse(task);
+    console.log("TASK OBJECT: " + printing.name);
+    console.log("task print out: " + '\n' + printing.name + '\n' + printing.description)
+    console.log("\n CREATING task: " + printing);
+
+    // why does this create a new element on the web page?
+    this.tasks.push(JSON.parse(task));
+  }
+
+  // needs to remove by id
+  removeTask(id){
+    // This only pops off the end. We can fix this by using an ArrayList
+    // nvm javascript doesn't have arraylist lol
+    let index = this.tasks.findIndex(task => (task.id == id));
+    this.tasks.splice(index, 1);
   }
 
   getTasks(){
@@ -137,7 +140,7 @@ export class TodoComponent implements OnInit {
       description: taskDesc,
       priority: taskPriority,
       id: (this.idCount++),
-      tState: ''
+      state: ''
     }
 
     this.idCount = this.idCount++;
@@ -154,8 +157,8 @@ export class TodoComponent implements OnInit {
       // once we get a message back indicating a success, we have to update the client-side task list by calling getTasks again
       if(res.status == "success"){
         console.log("creation successful");
-        console.log("created tasks name: " + JSON.stringify(res.data.ops));
-        this.getTask();
+        console.log( "created task: " + JSON.stringify(res.data.ops[0].name));
+        this.addTask(JSON.stringify(res.data.ops[0]));
         //this.createAnimation(newTask.id);
 
       }
@@ -171,7 +174,8 @@ export class TodoComponent implements OnInit {
     console.log("delete task " + id);
     this.TaskService.deleteTask(id).subscribe((res:any) => {
       console.log("task deletion complete - server response: " + JSON.stringify(res));
-      this.getTasks(); // make a remove task instead
+      //this.getTasks(); // make a remove task instead
+      this.removeTask(id);
     });
 
   }
