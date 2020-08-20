@@ -30,16 +30,16 @@ import { delay } from 'rxjs/operators';
       })),*/
 
       state('void', style({
-        transform: "translateX(-100%)", border: 'solid 5px green'
+        transform: "translateX(-100%)", height: "50px"
       })),
 
 
       transition(':enter', [
-        animate('300ms', style({  border:'solid 5px yellow', transform: "translateX(0%)"}))
+        animate('300ms', style({ transform: "translateX(0%)"}))
       ]),
 
       transition(':leave', [
-        animate('300ms', style({  border:' solid 5px blue', transform: "translateX(-100%)"}))
+        animate('300ms', style({ transform: "translateX(-100%)"}))
       ]),
     ]),
   ]

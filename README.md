@@ -1,3 +1,12 @@
+# TO RUN THIS APP IF YOU DOWNLOADED THE CODE:
+in the terminal (in the folder where you downloaded the project), type:
+  npm install npm -g
+and when that finishes, type...
+  npm i
+it might take a few minutes. NOTE: you must have node installed on your computer for this to work
+
+
+
 # Todolist
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.9.

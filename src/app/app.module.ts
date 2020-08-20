@@ -19,7 +19,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { MatMenuModule } from '@angular/material/menu';
-
+import { LoginComponent } from './login/login.component';
+import {MatInputModule} from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { MatMenuModule } from '@angular/material/menu';
     TaskDirective,
     TaskComponent,
     SidebarComponent,
-    NewNavComponent
+    NewNavComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -43,7 +45,9 @@ import { MatMenuModule } from '@angular/material/menu';
     MatIconModule,
     MatListModule,
     MatExpansionModule,
-    MatMenuModule
+    MatMenuModule,
+    MatInputModule
+
   ],
   providers: [],
   bootstrap: [AppComponent]
