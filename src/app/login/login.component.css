@@ -4,10 +4,11 @@
 }
 
 .headerBtns{
-  text-align: right;
-  width: 60%;
-  /*border: solid 2px black;*/
+  text-align: center;
+  width: 30%;
   display: table;
+  margin-left: 20%;
+
 }
 
 span{
@@ -18,11 +19,14 @@ span{
   justify-self: left;
 }
 
+.barspace{
+  width: 100%;
+}
+
 .icons {
   display: table-cell;
   vertical-align: middle;
   height: 120px;
-  border: solid 2px black;
 }
 
 
@@ -31,6 +35,10 @@ span{
   height: 20px;
   vertical-align: middle;
 
+}
+
+.iconLabel{
+  font-size: 12px;
 }
 
 

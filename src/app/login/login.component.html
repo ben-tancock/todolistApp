@@ -1,30 +1,28 @@
 
 
 <mat-toolbar color="primary" class="header">
-
   <div class="headerTitle"> My To-do List App</div>
+  <div class="barspace">
+    <div class="headerBtns">
+      <div style="display: table-row;">
+        <div class="icons">
+          <br>
+          <a href="https://github.com/ben-tancock">
+            <img class="iconImgs" src="../../assets/images/giticon.png" alt="">
+          </a>
+          <p class="iconLabel">Github</p>
+        </div>
 
-  <div class="headerBtns">
-
-    <div style="display: table-row;">
-
-      <div class="icons">
-        <a href="https://github.com/ben-tancock">
-          <img class="iconImgs" src="../../assets/images/giticon.png" alt="">
-        </a>
+        <div  class="icons">
+          <br>
+          <a href="https://www.linkedin.com/in/ben-tancock/">
+            <img class="iconImgs" src="../../assets/images/linkedin_icon.png" alt="">
+          </a>
+          <p class="iconLabel">LinkedIn</p>
+        </div>
       </div>
-
-      <div  class="icons">
-        <a href="https://www.linkedin.com/in/ben-tancock/">
-          <img class="iconImgs" src="../../assets/images/linkedin_icon.png" alt="">
-        </a>
-      </div>
-
     </div>
-
-</div>
-
-
+  </div>
 </mat-toolbar>
 
 
@@ -39,13 +37,13 @@
     <div class="inputs">
       <mat-form-field>
         <mat-label>Username</mat-label>
-        <input matInput type="text" class="username">
+        <input matInput type="text" class="username" #Username>
         <mat-icon matSuffix>person</mat-icon>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Password</mat-label>
-        <input matInput type="text" class="password">
+        <input matInput type="text" class="password" #Password>
         <mat-icon matSuffix>lock</mat-icon>
       </mat-form-field>
 
@@ -54,9 +52,12 @@
 
     <!-- Style this button so it doesn't look like ass -->
     <div class="btnContainer">
-      <button mat-flat-button color="primary">
-        Login
-      </button>
+      <form action="/user">
+        <button (click)="btnClick(Username.value, Password.value)" mat-flat-button color="primary">
+          Login
+        </button>
+      </form>
+
     </div>
   </div>
 </div>
