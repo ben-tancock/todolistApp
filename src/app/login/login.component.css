@@ -1,13 +1,13 @@
 .header{
   width: 100% !important;
   height: 13%;
-
-
 }
 
 .headerBtns{
   text-align: right;
-  width: 100%;
+  width: 60%;
+  /*border: solid 2px black;*/
+  display: table;
 }
 
 span{
@@ -17,6 +17,23 @@ span{
 .headerTitle{
   justify-self: left;
 }
+
+.icons {
+  display: table-cell;
+  vertical-align: middle;
+  height: 120px;
+  border: solid 2px black;
+}
+
+
+.iconImgs{
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+
+}
+
+
 
 .loginBox {
   border: solid 2px gray;
