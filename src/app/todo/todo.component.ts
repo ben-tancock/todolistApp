@@ -24,20 +24,12 @@ import { delay } from 'rxjs/operators';
   If we can somehow target individual tasks in todo component. */
   animations: [
     trigger('enterLeave', [
-
-      /*state('deleted', style({
-        transform: "translateX(-100%)"
-      })),*/
-
       state('void', style({
         transform: "translateX(-100%)", height: "50px"
       })),
-
-
       transition(':enter', [
         animate('300ms', style({ transform: "translateX(0%)"}))
       ]),
-
       transition(':leave', [
         animate('300ms', style({ transform: "translateX(-100%)"}))
       ]),
@@ -55,6 +47,8 @@ export class TodoComponent implements OnInit {
   formatted;
   selectedTask;
   idCount: number = 0;
+
+  userName;
   //state: string = '';
 
 
@@ -105,7 +99,7 @@ export class TodoComponent implements OnInit {
   }
 
   getTasks(){
-    this.TaskService.getTasks().subscribe((res:any) => {
+    this.TaskService.getTasks(this.userName).subscribe((res:any) => {
       this.tasks = res.docs;
       this.idCount = res.idCount;
     });

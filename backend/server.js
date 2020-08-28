@@ -5,6 +5,13 @@ var mongoose = require('mongoose');
 var url = require('url');
 const cors = require('cors');
 var bodyParser = require('body-parser');
+var ejs = require('ejs');
+const bcrypt = require('bcrypt')
+const passport = require('passport')
+const flash = require('express-flash')
+const session = require('express-session')
+
+//const methodOverride = require('method-override')
 
 var idCount = 0;
 /*
@@ -17,18 +24,7 @@ var idCount = 0;
   */
 
 // we should maybe look into making a seperate file for the schema stuff, but we'll have it here for now
-/*var Schema = mongoose.Schema;
-var taskSchema = new Schema({
-  name: {type: String, required: true},
-  date: {type: String, required: true},
-  description: {type: String},
-  priority: {type: String},
-  id: {type: Number, required:true}
-}, {collection: 'tasksCollection'}
-);*/
-
-
-const schema = new mongoose.Schema({
+const taskSchema = new mongoose.Schema({
   name: {type: String, required: true},
   date: {type: String, required: true},
   description: {type: String},
@@ -36,6 +32,15 @@ const schema = new mongoose.Schema({
   id: {type: Number, required:true},
   state: {type: String}
 }, {collection: 'tasksCollection'});
+
+const userSchema = new mongoose.Schema({
+  username: {type: String, required: true},
+  password: {type: String, required: true},
+  idCount: {type: Number, required: false},
+
+  // Array of tasks
+  tasks: [taskSchema]
+}, {collection: 'usersCollection'});
 
 /*
 schema.pre('save', function(next) {
@@ -55,8 +60,13 @@ schema.post('save', function(doc){
 
 // this is compiling the model for the task object
 // the model object acts as a representation of all documents in the collection
-const Task = mongoose.model('Tasks', schema);
+const Task = mongoose.model('Tasks', taskSchema);
 const tasksCollection = mongoose.connection.collection('tasksCollection');
+
+
+
+const Users = mongoose.model('Users', userSchema);
+const usersCollection = mongoose.connection.collection('usersCollection');
 
 const app = express();
 const router = express.Router();
@@ -76,7 +86,26 @@ app.use(bodyParser.json());
 app.use('/', express.query());
 
 app.get('/tasks', function(req, res){
-  console.log("request for tasks recieved\n");
+  console.log("this is /tasks\n");
+  Task.find().exec(function(err, docs){
+    res.send({docs:docs, idCount: idCount});
+  });
+});
+
+
+// triggers when after user types in username and pw and clicks 'login' button
+app.post('/tasks', function(req, res){
+  console.log("this is /tasks\n");
+  Task.find().exec(function(err, docs){
+    res.send({docs:docs, idCount: idCount});
+  });
+});
+
+
+app.get('/tasks/*', function(req, res){
+  console.log("this is the url: " + req.url);
+  var user = String(req.url.split('/')[1]);
+  console.log("request for user" + user  + "tasks recieved\n");
   Task.find().exec(function(err, docs){
     res.send({docs:docs, idCount: idCount});
   });
@@ -86,6 +115,9 @@ app.post('/create', function(req, res){
   console.log("recieved create request: push the object to the tasks array\n");
   console.log(req.body);
   // to do: update the database of tasks with the task that was created by the user
+  // insert into correct user
+  // user will be given in url?
+  // oh we've done this before in delete, when we parsed the number out of the url, we can parse the user out as well!
   tasksCollection.insertOne(req.body, function(err, result){
     if(!err){
       console.log("\n the result object: " + JSON.stringify(result.ops));
