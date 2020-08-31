@@ -64,11 +64,6 @@ const Task = mongoose.model('Tasks', taskSchema);
 const tasksCollection = mongoose.connection.collection('tasksCollection');
 
 
-<<<<<<< HEAD
-
-=======
-// what is the difference between Users and usersCollection again?
->>>>>>> more login stuff!
 const Users = mongoose.model('Users', userSchema);
 const usersCollection = mongoose.connection.collection('usersCollection');
 
@@ -98,13 +93,11 @@ app.get('/tasks', function(req, res){
 
 
 // triggers when after user types in username and pw and clicks 'login' button
-<<<<<<< HEAD
 app.post('/tasks', function(req, res){
   console.log("this is /tasks\n");
   Task.find().exec(function(err, docs){
     res.send({docs:docs, idCount: idCount});
   });
-=======
 // req is the user data you need to find the user with the data, and retrieve the users tasks, and then send the tasks to the todo component,
 // and then render the todo component html
 // some other authentication stuff needs to be done too
@@ -127,7 +120,6 @@ app.post('/tasks', function(req, res){
     }
 
   })
->>>>>>> more login stuff!
 });
 
 
