@@ -163,6 +163,7 @@ app.post('/create', function(req, res){
   });
 
   doc.tasks = doc.tasks.push(req.body);
+  
   /*
 >>>>>>> more login stuff!
   tasksCollection.insertOne(req.body, function(err, result){
