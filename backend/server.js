@@ -98,6 +98,7 @@ app.post('/tasks', function(req, res){
   Task.find().exec(function(err, docs){
     res.send({docs:docs, idCount: idCount});
   });
+});
 // req is the user data you need to find the user with the data, and retrieve the users tasks, and then send the tasks to the todo component,
 // and then render the todo component html
 // some other authentication stuff needs to be done too
@@ -139,8 +140,6 @@ app.post('/create', function(req, res){
   // insert into correct user
   // user will be given in url?
   // oh we've done this before in delete, when we parsed the number out of the url, we can parse the user out as well!
-<<<<<<< HEAD
-=======
 
   // we will need to find the user object to insert into first
   doc = Users.find({username: {$eq: req.body.username}, password: { $eq: req.body.password}}, function(err, result){
@@ -155,9 +154,8 @@ app.post('/create', function(req, res){
   });
 
   doc.tasks = doc.tasks.push(req.body);
-  
+
   /*
->>>>>>> more login stuff!
   tasksCollection.insertOne(req.body, function(err, result){
     if(!err){
       console.log("\n the result object: " + JSON.stringify(result.ops));
@@ -170,8 +168,6 @@ app.post('/create', function(req, res){
       console.log("\nerror inserting object: " + req.body);
       res.send({data: result, status: 'failed'});
     }
-<<<<<<< HEAD
-=======
   });*/
 });
 
@@ -192,7 +188,6 @@ app.post('/register', function(req, res){
       console.log("\nerror inserting object: " + req.body);
       res.send({data: result, status: 'failed'});
     }
->>>>>>> more login stuff!
   });
 });
 
@@ -221,11 +216,7 @@ const connection = mongoose.connection;
 
 connection.once('open', function(){
 
-<<<<<<< HEAD
-  mongoose.connection.db.collection('tasksCollection').countDocuments(function(err, docs){
-=======
   mongoose.connection.db.collection('usersCollection').countDocuments(function(err, docs){
->>>>>>> more login stuff!
     console.log("there are " + docs + " docs in the collection\n");
 
     // if there aren't any docs in the collection, add one for testing purposes
