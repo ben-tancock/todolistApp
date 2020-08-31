@@ -12,8 +12,15 @@ export class TasksService {
 
   getTasks(userName){
     console.log("get tasks...");
+<<<<<<< HEAD
     // this.url needs to be in the format: '/tasks/<user name>/'
     // might need to call toString on userName?
+=======
+    
+
+    // user data, such as username and pw, should probably not be in the url, and sent over as a data object instead?
+    // we don't have encryption and bcrypt and session token stuff working yet, so for now url might be the simplest way, just to ensure this stuff works
+>>>>>>> more login stuff!
     return this.http.get(this.url + '/tasks/' + userName);
 
   }

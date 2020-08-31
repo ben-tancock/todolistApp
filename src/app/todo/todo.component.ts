@@ -2,6 +2,10 @@ import { Component, OnInit, HostListener, ViewChild, ElementRef, Renderer2, Outp
 import { TasksService } from '../tasks.service';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+<<<<<<< HEAD
+=======
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+>>>>>>> more login stuff!
 import {
   trigger,
   state,
@@ -48,15 +52,30 @@ export class TodoComponent implements OnInit {
   selectedTask;
   idCount: number = 0;
 
+<<<<<<< HEAD
   userName;
+=======
+  userName = '';
+>>>>>>> more login stuff!
   //state: string = '';
 
 
 
+<<<<<<< HEAD
   constructor(private TaskService: TasksService) { }
 
   ngOnInit() {
     // server needs to keep track of id's, they're reset to 0 whenever client-side is initialized
+=======
+  constructor(private TaskService: TasksService, private route: ActivatedRoute) { }
+
+  ngOnInit() {
+    // server needs to keep track of id's, they're reset to 0 whenever client-side is initialized
+    // we also need to assign this.username to the username the this.router.navigate function sends to it
+    this.userName = this.route.snapshot.params.username;
+    console.log("router params: " + this.userName);
+   // this.userName = this.userName.username;
+>>>>>>> more login stuff!
     this.getTasks();
   }
 

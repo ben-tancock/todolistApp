@@ -50,11 +50,26 @@
       <br>
     </div>
 
+<<<<<<< HEAD
     <!-- Style this button so it doesn't look like ass -->
     <div class="btnContainer">
       <button (click)="btnClick(Username.value, Password.value)" mat-flat-button color="primary">
         Login
       </button>
+=======
+    <!-- Use Angular routing to send to tasks page with user data to display, if successful -->
+    <!-- routing: [routerLink] = "['/url', data stuff]"  => [routerLink]="['/tasks']" -->
+    <!-- Might need to do routing in component?-->
+    <div class="btnContainer">
+      <button (click)="loginClick(Username.value, Password.value)"  mat-flat-button color="primary">
+        Login
+      </button>
+
+      <!-- To do: send to register component, let user know register successful / unsuccessful, send back to login-->
+      <button (click)="btnRegister(Username.value, Password.value)" mat-flat-button color="primary">
+        Register
+      </button>
+>>>>>>> more login stuff!
     </div>
   </div>
 </div>
