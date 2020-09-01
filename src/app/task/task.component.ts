@@ -31,9 +31,7 @@ export class TaskComponent implements OnInit {
 
 
   deleteClick(){
-    console.log("TASK: test task delete");
     this.taskState = 'deleted';
-    console.log("task state: " + this.taskState)
     this.animated.emit({status: this.taskState, id: this.taskId}); // any animation could be called here, have to let todo know which one
   }
 
@@ -50,7 +48,7 @@ export class TaskComponent implements OnInit {
 
 
   @HostListener('click') onMouseClick(){
-    console.log("the state: " + this.taskState);
+    //console.log("the state: " + this.taskState);
     this.isClicked = !this.isClicked;
   }
 

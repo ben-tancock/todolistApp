@@ -2,10 +2,7 @@ import { Component, OnInit, HostListener, ViewChild, ElementRef, Renderer2, Outp
 import { TasksService } from '../tasks.service';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-<<<<<<< HEAD
-=======
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
->>>>>>> more login stuff!
 import {
   trigger,
   state,
@@ -15,8 +12,6 @@ import {
 } from '@angular/animations';
 import { delay } from 'rxjs/operators';
 
-
-//import { Task } from '../task';
 
 @Component({
   selector: 'app-todo',
@@ -29,7 +24,7 @@ import { delay } from 'rxjs/operators';
   animations: [
     trigger('enterLeave', [
       state('void', style({
-        transform: "translateX(-100%)", height: "50px"
+        transform: "translateX(-100%)", height: "100%"
       })),
       transition(':enter', [
         animate('300ms', style({ transform: "translateX(0%)"}))
@@ -50,32 +45,27 @@ export class TodoComponent implements OnInit {
   isDeleted = false;
   formatted;
   selectedTask;
+
+  // representation of data stored in user object in server, todo is never responsible for changing
+  // when a task is created, todo just lets task service know the new tasks idCount is idCount + 1, which is then relayed to the server
+  // but it's always set to 0 here...
   idCount: number = 0;
 
-<<<<<<< HEAD
-  userName;
-=======
   userName = '';
->>>>>>> more login stuff!
-  //state: string = '';
+  password = '';
 
 
 
-<<<<<<< HEAD
-  constructor(private TaskService: TasksService) { }
-
-  ngOnInit() {
-    // server needs to keep track of id's, they're reset to 0 whenever client-side is initialized
-=======
   constructor(private TaskService: TasksService, private route: ActivatedRoute) { }
 
   ngOnInit() {
     // server needs to keep track of id's, they're reset to 0 whenever client-side is initialized
     // we also need to assign this.username to the username the this.router.navigate function sends to it
+    // we need to figure out how to get user data out of the url, but this works for now
     this.userName = this.route.snapshot.params.username;
-    console.log("router params: " + this.userName);
+    this.password = this.route.snapshot.params.password;
+    //console.log("router params: " + this.userName);
    // this.userName = this.userName.username;
->>>>>>> more login stuff!
     this.getTasks();
   }
 
@@ -90,9 +80,9 @@ export class TodoComponent implements OnInit {
 
   // we need the task component to tell us when certain parts of it have been clicked, hence why the create button is almost entirely done in todo
   taskAnimated(emit){
-    console.log("test task animated emit: " + JSON.stringify(emit));
+    //console.log("test task animated emit: " + JSON.stringify(emit));
     if(emit.status == 'deleted'){
-      console.log("emit deleted on task: " + emit.id);
+      //console.log("emit deleted on task: " + emit.id);
       this.deleteTask(emit.id);
     }
 
@@ -101,11 +91,9 @@ export class TodoComponent implements OnInit {
   addTask(task){
     // all undefined!!
     let printing = JSON.parse(task);
-    console.log("TASK OBJECT: " + printing.name);
+    //console.log("TASK OBJECT: " + printing.name);
     console.log("task print out: " + '\n' + printing.name + '\n' + printing.description)
-    console.log("\n CREATING task: " + printing);
 
-    // why does this create a new element on the web page?
     this.tasks.push(JSON.parse(task));
   }
 
@@ -118,8 +106,9 @@ export class TodoComponent implements OnInit {
   }
 
   getTasks(){
-    this.TaskService.getTasks(this.userName).subscribe((res:any) => {
-      this.tasks = res.docs;
+    this.TaskService.getTasks(this.userName, this.password).subscribe((res:any) => {
+      //console.log("server response for getTasks: " + JSON.stringify(res));
+      this.tasks = res.tasks;
       this.idCount = res.idCount;
     });
   }
@@ -134,33 +123,33 @@ export class TodoComponent implements OnInit {
   createAnimation(id){
      // the task we want doesn't exist at this point
     this.taskElements.changes.subscribe(() => {
-      console.log("creating animation for: " + this.taskElements.find(task => task.taskId == id));
+      //console.log("creating animation for: " + this.taskElements.find(task => task.taskId == id));
       this.taskElements.find(task => task.taskId == id).setState('created');
-      console.log("created");
+      //console.log("created");
     });
-    console.log("end of method");
+    //console.log("end of method");
 
   }
 
   createTask(taskName, taskDesc, taskPriority){
-    //this.getTask();
-
-
     this.theDate = new Date();
+    let newId = this.idCount + 1;
+
+    // this is printing really weird shit...
+    console.log("creating task, this is the task id: " + newId);
     let newTask = {
       name: taskName,
       date: this.theDate,
       description: taskDesc,
       priority: taskPriority,
-      id: (this.idCount++),
+      id: this.idCount + 1,
       state: ''
     }
 
-    this.idCount = this.idCount++;
-    console.log("tasks length: " + this.tasks.length);
+    //console.log("tasks length: " + this.tasks.length);
     this.selectedTask = newTask;
 
-    this.TaskService.createTask(newTask).subscribe((res:any) => {
+    this.TaskService.createTask(this.userName, this.password, newTask).subscribe((res:any) => {
 
       // once the data has been inserted, does that mean that the task component itself exists?
       // I'm guessing no...
@@ -170,8 +159,10 @@ export class TodoComponent implements OnInit {
       // once we get a message back indicating a success, we have to update the client-side task list by calling getTasks again
       if(res.status == "success"){
         console.log("creation successful");
-        console.log( "created task: " + JSON.stringify(res.data.ops[0].name));
-        this.addTask(JSON.stringify(res.data.ops[0]));
+        console.log( "created task: " + JSON.stringify(res.task));
+        this.addTask(JSON.stringify(res.task));
+        console.log("id count: " + JSON.stringify(res));
+        this.idCount = res.idCount;
         //this.createAnimation(newTask.id);
 
       }
@@ -185,7 +176,7 @@ export class TodoComponent implements OnInit {
   deleteTask(id){
     console.log("delete task being called...");
     console.log("delete task " + id);
-    this.TaskService.deleteTask(id).subscribe((res:any) => {
+    this.TaskService.deleteTask(this.userName, this.password, id).subscribe((res:any) => {
       console.log("task deletion complete - server response: " + JSON.stringify(res));
       //this.getTasks(); // make a remove task instead
       this.removeTask(id);
