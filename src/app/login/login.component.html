@@ -54,12 +54,12 @@
     <!-- routing: [routerLink] = "['/url', data stuff]"  => [routerLink]="['/tasks']" -->
     <!-- Might need to do routing in component?-->
     <div class="btnContainer">
-      <button (click)="loginClick(Username.value, Password.value)"  mat-flat-button color="primary">
+      <button (click)="loginClick(Username.value, Password.value)"  mat-flat-button color="primary" style="margin: 10px">
         Login
       </button>
 
       <!-- To do: send to register component, let user know register successful / unsuccessful, send back to login-->
-      <button (click)="btnRegister(Username.value, Password.value)" mat-flat-button color="primary">
+      <button (click)="btnRegister(Username.value, Password.value)" mat-flat-button color="primary" style="margin: 10px">
         Register
       </button>
     </div>

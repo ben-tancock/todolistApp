@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
     this.password = pw;
     console.log("username and password set: \n" + this.username + "\n" + this.password);
     this.authService.loginUser(uname, pw).subscribe((res:any) => {
-      console.log("server response: " + res);
+      console.log("server response: " + JSON.stringify(res));
     });
 
     this.goToTasks();

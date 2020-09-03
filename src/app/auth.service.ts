@@ -36,6 +36,7 @@ export class AuthService {
       username: uname,
       password: pw,
       idCount: 0,
+      id: Date.now().toString(),
       tasks: []
     });
   }
