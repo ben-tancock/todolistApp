@@ -20,9 +20,10 @@ export class LoginComponent implements OnInit {
     this.username = uname;
     this.password = pw;
     console.log("username and password set: \n" + this.username + "\n" + this.password);
-    this.authService.loginUser(uname, pw).subscribe((res:any) => {
+    /*this.authService.loginUser(uname, pw).subscribe((res:any) => {
       console.log("server response: " + JSON.stringify(res));
-    });
+    });*/
+    this.authService.loginUser(uname, pw);
 
     this.goToTasks();
   }
@@ -43,5 +44,6 @@ export class LoginComponent implements OnInit {
     // to-do: verify that user login is actually successful
 
   }
+
 
 }

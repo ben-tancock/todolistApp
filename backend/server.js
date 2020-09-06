@@ -5,17 +5,62 @@ if (process.env.NODE_ENV !== 'production') {
 
 
 var express = require('express');
-var mongoose = require('mongoose');
+var app = express();
+
 var url = require('url');
-const cors = require('cors');
+var cors = require('cors');
+var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session'); // should give us persistent sessions...
+var passport = require('passport');
 var ejs = require('ejs');
-const bcrypt = require('bcrypt')
-const passport = require('passport')
-const flash = require('express-flash')
-const session = require('express-session')
+var bcrypt = require('bcrypt');
+var flash = require('express-flash');
+var mongoose = require('mongoose');
+
 //const methodOverride = require('method-override')
-const initializePassport = require('./passport-config')
+var initializePassport = require('./passport-config');
+// this completes passport authentication strategy
+// passes passport, a function for finding a user by their username,
+// and a function for finding a user by id to the initialize() function inside passport-config
+// the authenticateUser function then uses these methods to get what it needs
+initializePassport(
+  passport,
+  // both of these things are functions, passed into passport config
+  // I think I pass mongoose middleware stuff here to return the right things
+  username => Users.find({username: { $eq: username }}),
+  id => Users.find({id: { $eq: id }})
+)
+
+var MongoStore = require('connect-mongo')(session);
+var router = express.Router();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(cookieParser("process.env.SESSION_SECRET"));
+
+
+app.use(session({
+  // this is in your .env file in backend
+  // you'll want to generate it as a random string of characters so that it's more secure
+  // the longer it is, the more secure it will be
+  secret: "process.env.SESSION_SECRET",
+  resave: false, // should we reset our session variables if nothing has changed?
+  // NOTE: this MUST be set to true otherwise the user authentication / session data won't be saved between middleware methods
+  // e.g. if you log in (via /tasks post method), it will print the session data at the end, but if you then do '/create' method right after the req object will be null (because it wasn't saved)
+  saveUninitialized: false, // do you want to save an empty value in the session if there is no value?
+  cookie: {
+    // might want to look into changing this in the future, as cookie stores user stuff
+    // for now I have it off until I'm certain I've got all this passport js, cookie and session stuff down pat
+    secure: false
+  },
+  store: new MongoStore({
+    url: 'mongodb://localhost/todoDB',
+    collection: 'sessions'
+  })
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // we should maybe look into making a seperate file for the schema stuff, but we'll have it here for now
 const taskSchema = new mongoose.Schema({
@@ -40,69 +85,9 @@ const userSchema = new mongoose.Schema({
 const Users = mongoose.model('Users', userSchema);
 const usersCollection = mongoose.connection.collection('usersCollection');
 
-const app = express();
-const router = express.Router();
 
-// this completes passport authentication strategy
-// passes passport, a function for finding a user by their username,
-// and a function for finding a user by id to the initialize() function inside passport-config
-// the authenticateUser function then uses these methods to get what it needs
-initializePassport(
-  passport,
-  // both of these things are functions, passed into passport config
-  // I think I pass mongoose middleware stuff here to return the right things
-  //Users.find({username: { $eq: req.body.username}, password: { $eq: req.body.password}})
-
-  //email => users.find(user => user.email === email),
-  username => Users.find({username: { $eq: username}}),
-
-  // why are we using id? what should we use instead? what is id for in the context of passport?
-  // in the function it's used for serialization?
-  //id => users.find(user => user.id === id)
-  id => Users.find()
-)
-
-/*
-schema.pre('save', function(next) {
-  console.log("%s is about to be saved", this.name);
-  next();
-});
-
-schema.post('save', function(doc){
-  console.log("%s has been saved", doc.name);
-  next();
-});
-*/
-
-// I'm not entirely sure what exporting does in this context...
-// you'd only really do this if we put schemas in another file, which we haven't yet...
-//exports.taskSchema = taskSchema;
-
-// this is compiling the model for the task object
-// the model object acts as a representation of all documents in the collection
-
-// session takes a couple of variables, one of these is a secret, a key that is going to encrypt all of our info for us. we will get this from our environment variables
-// create a .env file
-
-
-
-app.use(session({
-  // this is in your .env file in backend
-  // you'll want to generate it as a random string of characters so that it's more secure
-  // the longer it is, the more secure it will be
-  secret: "process.env.SESSION_SECRET",
-  resave: false, // should we reset our session variables if nothing has changed?
-  saveUninitialized: false // do you want to save an empty value in the session if there is no value?
-}));
-
-app.use(passport.initialize());
-app.use(passport.session());
-
-
-
-//
 // ENABLING CORS STUFF ---------------------------------------------
-app.use(cors());
+app.use(cors({credentials: true, origin: 'http://localhost:4200'}));
 app.get('/with-cors', cors(), (req, res, next) => {
   console.log("testing cors:");
 });
@@ -111,22 +96,14 @@ app.get('/with-cors', cors(), (req, res, next) => {
 // we need this because mongoose functions are asynchronous
 function getByUsername(uname){
   return Users.find({username: {$eq: uname}}).exec();
-  /*Users.find({username: {$eq: uname}}, function(err, result){
-    if(err){
-      console.log("error finding user by username");
-    }
-    else{
-      callback(result);
-      //callback(result);
-    }
-  });*/
 }
 
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
+
+
 app.use(flash());
 
 app.use('/', express.query());
+
 
 app.get('/tasks', function(req, res){
   console.log("this is /tasks\n");
@@ -137,6 +114,7 @@ app.get('/tasks', function(req, res){
   });
 });
 
+// this method is done when the user clicks the 'login' button
 // the data passed to authenticate is based on the POST request
 // the tasks.service is sending: {username: userName, password: pw}
 app.post('/tasks', passport.authenticate('local',
@@ -148,93 +126,107 @@ app.post('/tasks', passport.authenticate('local',
     failureFlash: 'testing flash'
   }), function(req, res){
     // if this function gets called, authentication was successful.
-    // req.user contains the authenticated user
-    // never executes...?
-    // it's probably failing because I never do any passport stuff for register?
-    console.log("\nrequest: " + req);
+    console.log("\n Successful authentication, request: " + JSON.stringify(req.body));
+    //console.log("user before login: " + req.user);
+
+    // if a user is logged in, passport js will create a user object in req for every request in express.js
+    // if a user is logged in, req.user exists
+    // passport.authenticate is supposed to invoke req.login automatically
+    // why is everything below this being called twice?
+    req.logIn(req.user, function(err){
+      if(err){
+        console.log("ERROR logging in user \n");
+        res.send();
+      }
+      else{
+        console.log("\n User LOGGED IN");
+        let sendTasks = req.user[0].tasks;
+        res.send({tasks: sendTasks, idCount: req.user.idCount});
+        //req.user.save();
+      }
+    });
+    /*console.log("\n here's the user: " + req.user);
+    console.log("\n HERE IS THE ENTIRE SESSION: " + JSON.stringify(req.session));
+    console.log("\n here's the sesssion id: " + JSON.stringify(req.session.id));
+    console.log("\n here's the sesssion cookie: " + JSON.stringify(req.session.cookie)); // returns empty */
+    // what is the client expecting?
+    //console.log("\nsending this back: " + req.user.tasks);
+    //res.send({tasks: req.user.tasks, idCount: req.user.idCount});
   }
 );
 
-app.post('/register', checkNotAuthenticated, async (req, res) => {
-  try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10)
-    req.body.password = hashedPassword;
-    console.log("\nnew req pw: " + req.body.password);
-    usersCollection.insertOne(req.body, function(err, result){
-      if(!err){
-        console.log("\n the result object: " + JSON.stringify(result.ops));
-        console.log("\nsuccessfully inserted: " + JSON.stringify(result.ops[0].username));
-        res.send({data: result, status: 'success'});
-      }
-      else{
-        console.log("\nerror inserting object: " + req.body);
-        res.send({data: result, status: 'failed'});
-      }
-    });
-    //res.redirect('/login')
-  } catch {
-    //res.redirect('/register')
-    console.log("catch!\n")
+// this method is done when the user clicks the 'register' button
+app.post('/register', async (req, res) => {
+  // TO DO: if a find() req for a user with the req username has a length > 1, send an error message
+  let usernameQuery = await Users.find({username: { $eq: req.body.username}});
+  console.log(usernameQuery);
+  if (usernameQuery.length >= 1){
+    console.log("ERROR: there already another user with that username");
+
+    // TO DO: implement client-side response to failed stuff (error messages, proper redirects,  etc.)
+    res.send({data: null, status: 'failed'});
   }
-})
-
-
-/*app.post('/register', function(req, res){
-  console.log("server registering user: " + JSON.stringify(req.body));
-  // push user into server-side user object array, send response back
-
-  var hashedPassword = bcrypt.hashSync(req.body.password, 10);
-  //console.log("this is the hashed password: " + hashedPassword + "\n");
-
-  req.body.password = hashedPassword;
-  //console.log("results after hashing: " + JSON.stringify(req.body) + "\n");
-
-  // I'm not exactly sure why usersCollection works for insertion, and Users works for find() operations... questions for later!
-  usersCollection.insertOne(req.body, function(err, result){
-    if(!err){
-      console.log("\n the result object: " + JSON.stringify(result.ops));
-      console.log("\nsuccessfully inserted: " + JSON.stringify(result.ops[0].username));
-      res.send({data: result, status: 'success'});
+  else{
+    try {
+      const hashedPassword = await bcrypt.hash(req.body.password, 10)
+      req.body.password = hashedPassword;
+      console.log("\nnew req pw: " + req.body.password);
+      usersCollection.insertOne(req.body, function(err, result){
+        if(!err){
+          //console.log("\n the result object: " + JSON.stringify(result.ops));
+          console.log("\nsuccessfully inserted and registered: " + JSON.stringify(result.ops[0].username));
+          res.send({data: result, status: 'success'});
+        }
+        else{
+          console.log("\nerror inserting object: " + req.body);
+          res.send({data: result, status: 'failed'});
+        }
+      });
+      //res.redirect('/login')
+    } catch {
+      //res.redirect('/register')
+      console.log("catch!\n")
     }
-    else{
-      console.log("\nerror inserting object: " + req.body);
-      res.send({data: result, status: 'failed'});
-    }
-  });
-});*/
-
-/*
-app.post('/tasks', function(req, res){
-  console.log("this is /tasks, here is the req:" + JSON.stringify(req.body) +  "\n");
-  Users.find({username: { $eq: req.body.username}, password: { $eq: req.body.password}}).exec(function(err, docs){
-    if(err){
-      console.log("error finding user! \n");
-    }
-    else{
-      // send back the docs (the docs is 1 entire user object, with the tasks)
-      // the user also includes the id count now, no need to send separate id count object
-      console.log("the docs: " + docs);
-      res.send({tasks: docs[0].tasks, idCount: docs[0].idCount});
-    }
-
-  });
-});*/
+  }
+});
 
 
+//I can't use passport.authenticate for /create of a task because it requires a username and password, only given for logging in
+// the todo component has this info... but is it safe to send over?
+// shouldn't I be getting this stuff from a cookie? can I send over / recieve a cookie?
 
 // for task creation, user creation is in /register
-app.post('/create', function(req, res){
+app.post('/create', checkAuthenticated, function(req, res){
+  // these console logs make it clear that, when I try and create a task, the server isn't giving the the cookie I want.
+  // I want the cookie with the user data. I can't retrieve the shit I want quickly or easily without it
+  // Like I could go through the mongodb with the find function right? but what's the point of authentication then?
+  // IS that what I'm supposed to do?
+  //console.log("\n HERE IS THE ENTIRE CREATE SESSION: " + JSON.stringify(req.session));
+  //console.log("\n here's the sesssion id for create: " + req.session.id); // this works!
+  //console.log("\n here's the create session cookie: " + JSON.stringify(req.session.cookie)) // the session has a cookie, not the request, also this contains user stuff!
 
-  // eventually we're going to have to check if more than one user matches for username and pw (for logging in tho, probs not here)
+
   // alongisde pushing the task to the user subarray of tasks, we also need to increment their idCount variable
-  Users.findOneAndUpdate({username: { $eq: req.body.user.username}, password: { $eq: req.body.user.password}}, {$push: {tasks: req.body.task}, $inc: {idCount: 1}}, function(err, result){
+  // do we need to find the user anymore? are they stored in the session???
+  //console.log("\ncreate task req body: " + JSON.stringify(req.body));
+  //console.log("\nreq.user.username: " + req.user.username); // undefined
+  //console.log("\nreq.user.id: " + req.user.id); // also undefined!
+  //console.log("\nreq.user: " + JSON.parse(req.user)); // is an object, returns error when using json.stringify
+  //console.log(JSON.stringify(req.session)); // has passport user id thing
+
+  // thanks to passport js, we have the user object, no need to find?
+  // but it's in a cookie, we need the object in the server!
+  // we have the user id, use that to find: don't need pw because we're already authenticated!
+  console.log("req.session.passport: " + JSON.stringify(req.session.passport));
+  Users.findOneAndUpdate({id: { $eq: req.session.passport.user}}, {$push: {tasks: req.body.task}, $inc: {idCount: 1}}, function(err, result){
     if(err){
       console.log("error finding and updating! \n");
       res.send("error finding and updating");
     }
     else{
       // since we're only creating one task, we only need to send one task back
-      console.log("find and update successful!");
+      // result is null...
+      console.log("find and update successful! " + result);
       console.log("this is the users id count: " + result.idCount + "\n");
 
       // we COULD send the whole user object back, but we don't have to, so we probably shouldn't
@@ -307,14 +299,16 @@ connection.once('open', function(){
 
 function checkAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
+    console.log("user is authenticated!")
     return next()
   }
-
+  console.log("WARNING: USER NOT AUTHENTICATED");
   res.redirect('/login')
 }
 
 function checkNotAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
+    // Send a message back to the client telling it to redirect instead
     return res.redirect('/')
   }
   next()

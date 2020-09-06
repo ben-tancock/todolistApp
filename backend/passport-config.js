@@ -1,7 +1,6 @@
 const LocalStrategy = require('passport-local').Strategy
 const bcrypt = require('bcrypt');
 const { ConnectionBase } = require('mongoose');
-//const { Local } = require('protractor/built/driverProviders');
 
 // this function will be called inside server.js
 // all of our passport configuration will be done here
@@ -13,30 +12,25 @@ function initialize(passport, getUserByUsername){
   const authenticateUser = async (username, password, done) => {
     //console.log("this is the username: " + username);
 
-    // this is an asynchronous function that isn't being returned yet
+    // this was asynchronous function that isn't being returned yet
+    // await fixed it though
     const user = await getUserByUsername(username)
-    console.log("this is the user id: " + user.id); // undefined
 
-
-    if(user == null){
+    // we're going to need to somehow prevent people from creating a user with the same username and password
+    if(!user.length || user == null){
+      console.log("PASSPORT: user not found, no user with that email \n");
       return done(null, false, {message: "no user with that email"})
     }
 
     try{
-      // check to make sure passwords are the same
-      // password = pw sent in login form
-      // if bcrypt returns true, we have an authenticated user
-      /*let testHash = bcrypt.hash("testdata", 10);
-      console.log("testhash: " + testHash);
-      let testPassword = "testpw";*/
-      //console.log("\nthis is passport password: " + password)
-      //console.log("\nthis is passport user.password: " + user) // undefined because user object is undefined
-      console.log(password + " being compared with " + user[0].password);
-      if(bcrypt.compare(password, JSON.stringify(user[0].password))){
+
+      if(await bcrypt.compare(password, user[0].password)){
         // null = no error (on server end)
         // user = user you want to authenticate with
+        console.log("PASSPORT: bcrypt is successful \n");
         return done(null, user)
       } else {
+        console.log("PASSPORT: bcrypt returns false on comparison! \n");
         return done(null, false, {message: "password incorrect"})
       }
     } catch (e){
@@ -55,12 +49,16 @@ function initialize(passport, getUserByUsername){
 
   // serialize user as single id
   // called when the user logs in, decides what is stored in the cookie
-  passport.serializeUser((user, done) => done(null, user[0].id))
+  passport.serializeUser((user, done) => {
+    console.log("\nSerializing User");
+    done(null, user[0].id);
+  })
 
   // this is supposed to retrieve the whole user object, somehow?
   // called on each request, loads user data based on cookies contents
   passport.deserializeUser((id, done) => {
-    return done(null, getUserById(id))
+    console.log("\nDESERIALIZING USER");
+    return done(null, getUserByUsername(id))
   })
 }
 

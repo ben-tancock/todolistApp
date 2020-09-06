@@ -1,6 +1,9 @@
 import { Component, OnInit, HostListener, ViewChild, ElementRef, Renderer2, Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
 import { TasksService } from '../tasks.service';
-import { Observable } from 'rxjs';
+import { AuthService } from '../auth.service';
+
+import { Observable,  } from 'rxjs';
+import { catchError, tap, share, map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import {
@@ -49,21 +52,23 @@ export class TodoComponent implements OnInit {
   // representation of data stored in user object in server, todo is never responsible for changing
   // when a task is created, todo just lets task service know the new tasks idCount is idCount + 1, which is then relayed to the server
   // but it's always set to 0 here...
-  idCount: number = 0;
+  idCount = 0;
 
   userName = '';
   password = '';
 
 
 
-  constructor(private TaskService: TasksService, private route: ActivatedRoute) { }
+  constructor(private TaskService: TasksService, private authService: AuthService, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    // server needs to keep track of id's, they're reset to 0 whenever client-side is initialized
-    // we also need to assign this.username to the username the this.router.navigate function sends to it
-    // we need to figure out how to get user data out of the url, but this works for now
-    this.userName = this.route.snapshot.params.username;
-    this.password = this.route.snapshot.params.password;
+    console.log("initializing todo");
+    // I'm unsure if this is secure / good programming practice, but it beats passing
+    // user info in through the url. Something to look into later.
+    // Personally I don't see a huge problem with it?
+    this.userName = this.authService.username;
+    this.password = this.authService.password;
+
     //console.log("router params: " + this.userName);
    // this.userName = this.userName.username;
     this.getTasks();
@@ -92,9 +97,10 @@ export class TodoComponent implements OnInit {
     // all undefined!!
     let printing = JSON.parse(task);
     //console.log("TASK OBJECT: " + printing.name);
-    console.log("task print out: " + '\n' + printing.name + '\n' + printing.description)
+    console.log("task print out: " + '\n' + printing.name + '\n' + printing.description) // undefined
 
     this.tasks.push(JSON.parse(task));
+    console.log("\ntasks: " + this.tasks);
   }
 
   // needs to remove by id
@@ -107,7 +113,10 @@ export class TodoComponent implements OnInit {
 
   getTasks(){
     this.TaskService.getTasks(this.userName, this.password).subscribe((res:any) => {
-      //console.log("server response for getTasks: " + JSON.stringify(res));
+      console.log("tasks response from server: " + JSON.stringify(res)); // is blank...
+      if(!res.length){
+        console.log("\nERROR GETTING TASKS FROM SERVER");
+      }
       this.tasks = res.tasks;
       this.idCount = res.idCount;
     });

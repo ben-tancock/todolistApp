@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, share, map } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ export class TasksService {
 
 
   getTasks(userName, pw){
+    console.log("tasks service: get tasks \n");
     // user data, such as username and pw, should probably not be in the url, and sent over as a data object instead?
     // we don't have encryption and bcrypt and session token stuff working yet, so for now url might be the simplest way, just to ensure this stuff works
 
@@ -20,8 +22,13 @@ export class TasksService {
     // https://stackoverflow.com/questions/46585/when-do-you-use-post-and-when-do-you-use-get
     //return this.http.get(this.url + '/tasks/' + userName);
     // also, if we're getting a users stuff, we need to send a username AND a pw
-    return this.http.post(this.url + '/tasks', {username: userName, password: pw});
-
+    return this.http.post(this.url + '/tasks', {username: userName, password: pw},
+    {
+      headers: new HttpHeaders({
+        'Access-Control-Allow-Credentials' : 'true'
+      }),
+      withCredentials: true
+    });
   }
 
   deleteTask(uname, pw, id: number ){
@@ -30,7 +37,7 @@ export class TasksService {
     //return this.http.delete(delUrl);
 
     // probably should just make it POST for securities sake, also make url specify task deletion as opposed to user deletion
-    return this.http.post(delUrl, {username: uname, password: pw});
+    return this.http.post(delUrl, {username: uname, password: pw}, {withCredentials: true});
 
   }
 
@@ -62,7 +69,12 @@ export class TasksService {
         username: uname,
         password: pw
       }
-    });
+    },
+    {
+      headers: new HttpHeaders({'Access-Control-Allow-Credentials' : 'true'}),
+      withCredentials: true
+    }
+  );
   }
 
 
