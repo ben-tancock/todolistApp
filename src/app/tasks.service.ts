@@ -14,6 +14,7 @@ export class TasksService {
 
   getTasks(userName, pw){
     console.log("tasks service: get tasks \n");
+    console.log("username and pw to post: " + userName + " " + pw);
     // user data, such as username and pw, should probably not be in the url, and sent over as a data object instead?
     // we don't have encryption and bcrypt and session token stuff working yet, so for now url might be the simplest way, just to ensure this stuff works
 

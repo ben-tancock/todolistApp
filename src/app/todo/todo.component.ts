@@ -69,16 +69,20 @@ export class TodoComponent implements OnInit {
     // Personally I don't see a huge problem with it?
     let uname = window.sessionStorage.getItem('userName');
     let pw = window.sessionStorage.getItem('password');
+    console.log("type of uname var: " + typeof(uname))
 
-    if(uname == 'undefined' || pw == 'undefined'){
+    if(uname == 'undefined' ||  pw == 'undefined' || uname == null || pw == null){
       console.log("logging user in (session storage undefined)..." + this.authService.username + " " + this.authService.password);
       this.login(this.authService.username,  this.authService.password);
     }
     else{
-      this.userName = window.sessionStorage.getItem('userName');
-      this.password = window.sessionStorage.getItem('password');
       console.log("session storage not undefined! " + window.sessionStorage.getItem('userName') + " " + window.sessionStorage.getItem('password'));
     }
+
+    this.userName = window.sessionStorage.getItem('userName');
+    this.password = window.sessionStorage.getItem('password');
+
+
 
 
     this.getTasks();
@@ -96,8 +100,6 @@ export class TodoComponent implements OnInit {
     console.log("\nlogging user in funct:" + uname + " " + pw);
     window.sessionStorage.setItem('userName', uname);
     window.sessionStorage.setItem('password', pw);
-
-
   }
 
 

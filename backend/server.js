@@ -117,7 +117,7 @@ app.get('/tasks', function(req, res){
 // this method is done when the user clicks the 'login' button
 // the data passed to authenticate is based on the POST request
 // the tasks.service is sending: {username: userName, password: pw}
-app.post('/tasks', checkAuthenticated, passport.authenticate('local',
+app.post('/tasks', passport.authenticate('local',
   {
     successMessage: 'success',
     failureMessage: 'fail',
