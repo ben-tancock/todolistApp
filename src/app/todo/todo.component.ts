@@ -14,6 +14,7 @@ import {
   transition
 } from '@angular/animations';
 import { delay } from 'rxjs/operators';
+import { typeofExpr } from '@angular/compiler/src/output/output_ast';
 
 
 @Component({
@@ -54,8 +55,8 @@ export class TodoComponent implements OnInit {
   // but it's always set to 0 here...
   idCount = 0;
 
-  userName = '';
-  password = '';
+  userName;
+  password;
 
 
 
@@ -66,11 +67,20 @@ export class TodoComponent implements OnInit {
     // I'm unsure if this is secure / good programming practice, but it beats passing
     // user info in through the url. Something to look into later.
     // Personally I don't see a huge problem with it?
-    this.userName = this.authService.username;
-    this.password = this.authService.password;
+    let uname = window.sessionStorage.getItem('userName');
+    let pw = window.sessionStorage.getItem('password');
 
-    //console.log("router params: " + this.userName);
-   // this.userName = this.userName.username;
+    if(uname == 'undefined' || pw == 'undefined'){
+      console.log("logging user in (session storage undefined)..." + this.authService.username + " " + this.authService.password);
+      this.login(this.authService.username,  this.authService.password);
+    }
+    else{
+      this.userName = window.sessionStorage.getItem('userName');
+      this.password = window.sessionStorage.getItem('password');
+      console.log("session storage not undefined! " + window.sessionStorage.getItem('userName') + " " + window.sessionStorage.getItem('password'));
+    }
+
+
     this.getTasks();
   }
 
@@ -80,6 +90,14 @@ export class TodoComponent implements OnInit {
 
   @HostListener('click') onMouseClick(){
     console.log('clicked!');
+  }
+
+  login(uname, pw){
+    console.log("\nlogging user in funct:" + uname + " " + pw);
+    window.sessionStorage.setItem('userName', uname);
+    window.sessionStorage.setItem('password', pw);
+
+
   }
 
 
@@ -114,9 +132,6 @@ export class TodoComponent implements OnInit {
   getTasks(){
     this.TaskService.getTasks(this.userName, this.password).subscribe((res:any) => {
       console.log("tasks response from server: " + JSON.stringify(res)); // is blank...
-      if(!res.length){
-        console.log("\nERROR GETTING TASKS FROM SERVER");
-      }
       this.tasks = res.tasks;
       this.idCount = res.idCount;
     });

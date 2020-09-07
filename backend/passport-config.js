@@ -18,8 +18,8 @@ function initialize(passport, getUserByUsername){
 
     // we're going to need to somehow prevent people from creating a user with the same username and password
     if(!user.length || user == null){
-      console.log("PASSPORT: user not found, no user with that email \n");
-      return done(null, false, {message: "no user with that email"})
+      console.log("PASSPORT: user not found, no user with that username \n");
+      return done(null, false, {message: "no user with that username"})
     }
 
     try{

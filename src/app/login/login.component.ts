@@ -11,6 +11,7 @@ export class LoginComponent implements OnInit {
   password;
 
 
+
   constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
@@ -33,11 +34,9 @@ export class LoginComponent implements OnInit {
     this.authService.registerUser(uname, pw).subscribe((res:any) => {
       console.log("recieved registration response from the server");
     });
-
-    // after user is registered, go to tasks
-    // have to do this after user is logged in too, should probably make a function for it
-
   }
+
+
 
   goToTasks(){
     this.authService.renderTasks(this.username, this.password);

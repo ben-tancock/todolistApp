@@ -45,7 +45,7 @@ app.use(session({
   // you'll want to generate it as a random string of characters so that it's more secure
   // the longer it is, the more secure it will be
   secret: "process.env.SESSION_SECRET",
-  resave: false, // should we reset our session variables if nothing has changed?
+  resave: true, // should we reset our session variables if nothing has changed?
   // NOTE: this MUST be set to true otherwise the user authentication / session data won't be saved between middleware methods
   // e.g. if you log in (via /tasks post method), it will print the session data at the end, but if you then do '/create' method right after the req object will be null (because it wasn't saved)
   saveUninitialized: false, // do you want to save an empty value in the session if there is no value?
@@ -117,7 +117,7 @@ app.get('/tasks', function(req, res){
 // this method is done when the user clicks the 'login' button
 // the data passed to authenticate is based on the POST request
 // the tasks.service is sending: {username: userName, password: pw}
-app.post('/tasks', passport.authenticate('local',
+app.post('/tasks', checkAuthenticated, passport.authenticate('local',
   {
     successMessage: 'success',
     failureMessage: 'fail',
@@ -145,9 +145,10 @@ app.post('/tasks', passport.authenticate('local',
         //req.user.save();
       }
     });
+    console.log("\n here's the sesssion id: " + JSON.stringify(req.session.id));
     /*console.log("\n here's the user: " + req.user);
     console.log("\n HERE IS THE ENTIRE SESSION: " + JSON.stringify(req.session));
-    console.log("\n here's the sesssion id: " + JSON.stringify(req.session.id));
+
     console.log("\n here's the sesssion cookie: " + JSON.stringify(req.session.cookie)); // returns empty */
     // what is the client expecting?
     //console.log("\nsending this back: " + req.user.tasks);
@@ -224,12 +225,6 @@ app.post('/create', checkAuthenticated, function(req, res){
       res.send("error finding and updating");
     }
     else{
-      // since we're only creating one task, we only need to send one task back
-      // result is null...
-      console.log("find and update successful! " + result);
-      console.log("this is the users id count: " + result.idCount + "\n");
-
-      // we COULD send the whole user object back, but we don't have to, so we probably shouldn't
       res.send({status: "success", task: req.body.task, idCount: result.idCount});
     }
   });
@@ -238,7 +233,7 @@ app.post('/create', checkAuthenticated, function(req, res){
 
 
 // deleting a task (using task ID, given in URL) from a users tasks subarray
-app.post('/deleteTask/*', function(req, res){
+app.post('/deleteTask/*', checkAuthenticated, function(req, res){
   // the first thing we need to do is find the user
   // is the client sending the user data over?
   // should now be sending over username and password in a JSON object
@@ -255,7 +250,7 @@ app.post('/deleteTask/*', function(req, res){
     else{
       // since we're only creating one task, we only need to send one task back
       console.log("find and delete task successful! \n");
-      console.log("result of deletion: " + result);
+      console.log("result of deletion: " + result); // is this supposed to be null?
       res.send({status: "success", task: req.body.task});
     }
   });
@@ -308,9 +303,12 @@ function checkAuthenticated(req, res, next) {
 
 function checkNotAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
+    console.log("\nuser IS authenticated, stopping this request...");
     // Send a message back to the client telling it to redirect instead
-    return res.redirect('/')
+    return;
+    //return res.redirect('/')
   }
+  console.log("user is NOT authenticated");
   next()
 }
 

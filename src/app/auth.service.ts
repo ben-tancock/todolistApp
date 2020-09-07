@@ -14,6 +14,8 @@ export class AuthService {
   username;
   password;
 
+  //localStorage.setItem("token", this.username);
+
 
   constructor(private http: HttpClient, private router: Router) { }
 
