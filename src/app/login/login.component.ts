@@ -10,23 +10,30 @@ export class LoginComponent implements OnInit {
   username;
   password;
 
-
-
   constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
+    this.authService.loginCheck().subscribe((res:any) => {
+      console.log("heres the authentication response: " + JSON.stringify(res.authenticated));
+      if(res.authenticated == true){
+        // btw .renderTasks actually doesn't use any of the params we give rn because we use cookies to retrieve user info
+        this.authService.setLogin(true);
+        this.authService.renderTasks();
+      }
+    });
   }
 
   loginClick(uname, pw){
     this.username = uname;
     this.password = pw;
     console.log("username and password set: \n" + this.username + "\n" + this.password);
-    /*this.authService.loginUser(uname, pw).subscribe((res:any) => {
-      console.log("server response: " + JSON.stringify(res));
-    });*/
-    this.authService.loginUser(uname, pw);
 
-    this.goToTasks();
+    this.authService.login(uname, pw).subscribe((res:any) => {
+      if(res.status == 'success'){
+        this.authService.setLogin(true);
+        this.goToTasks();
+      }
+    });
   }
 
   btnRegister(uname, pw){
@@ -36,13 +43,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-
-
   goToTasks(){
-    this.authService.renderTasks(this.username, this.password);
-    // to-do: verify that user login is actually successful
-
+    this.authService.renderTasks();
   }
-
-
 }

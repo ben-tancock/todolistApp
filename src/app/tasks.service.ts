@@ -23,7 +23,7 @@ export class TasksService {
     // https://stackoverflow.com/questions/46585/when-do-you-use-post-and-when-do-you-use-get
     //return this.http.get(this.url + '/tasks/' + userName);
     // also, if we're getting a users stuff, we need to send a username AND a pw
-    return this.http.post(this.url + '/tasks', {username: userName, password: pw},
+    return this.http.post(this.url + '/getTasks', {username: userName, password: pw},
     {
       headers: new HttpHeaders({
         'Access-Control-Allow-Credentials' : 'true'
@@ -38,7 +38,14 @@ export class TasksService {
     //return this.http.delete(delUrl);
 
     // probably should just make it POST for securities sake, also make url specify task deletion as opposed to user deletion
-    return this.http.post(delUrl, {username: uname, password: pw}, {withCredentials: true});
+    return this.http.post(delUrl, {username: uname, password: pw},
+      {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Credentials' : 'true'
+        }),
+        withCredentials: true
+      }
+    );
 
   }
 
@@ -62,7 +69,7 @@ export class TasksService {
         date: task.date,
         description: task.description,
         priority: task.priority,
-        id: task.id + 1,
+        id: task.id,
         state: task.state
       },
       user:

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Subject } from 'rxjs';
 
@@ -13,6 +13,7 @@ export class AuthService {
 
   username;
   password;
+  loggedIn = false;
 
   //localStorage.setItem("token", this.username);
 
@@ -21,16 +22,39 @@ export class AuthService {
 
 
 
-  loginUser(uname, pw){
+  login(uname, pw){
     console.log("logging in user: " + uname + " " + pw + '\n');
     this.username = uname;
     this.password = pw;
-    /*return this.http.post( this.url + '/tasks',
-    {
-      username: uname,
-      password: pw
-    });*/
-    //return this.http.get('/tasks');
+    return this.http.post(this.url + '/login', {username: uname, password: pw}, {
+      headers: new HttpHeaders({
+        'Access-Control-Allow-Credentials' : 'true'
+      }),
+      withCredentials: true
+    });
+  }
+
+  setLogin(bool){
+    this.loggedIn = bool;
+  }
+
+  logout(){
+    console.log("test auth logout");
+    return this.http.get(this.url + '/logout',  {
+      headers: new HttpHeaders({
+        'Access-Control-Allow-Credentials' : 'true'
+      }),
+      withCredentials: true
+    });
+  }
+
+  loginCheck(){
+    return this.http.get(this.url + '/loginCheck', {
+      headers: new HttpHeaders({
+        'Access-Control-Allow-Credentials' : 'true'
+      }),
+      withCredentials: true
+    } );
   }
 
 
@@ -53,9 +77,8 @@ export class AuthService {
 
 
   // takes user tasks data as input, passes it to tasks component
-  renderTasks(uname, pw){
+  renderTasks(){
     console.log("render tasks \n");
-    // return this.http.get(this.url + '/tasks');
     this.router.navigate(['/tasks']);
   }
 

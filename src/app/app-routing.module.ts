@@ -3,11 +3,10 @@ import { Routes, RouterModule } from '@angular/router';
 import { TodoComponent } from './todo/todo.component';
 import { NewNavComponent } from './new-nav/new-nav.component';
 import { LoginComponent } from './login/login.component';
+import { TaskGuardGuard } from './task-guard.guard';
 
 
 const routes: Routes = [
-
-
   {
     path: 'login',
     component: LoginComponent
@@ -21,7 +20,8 @@ const routes: Routes = [
 
   {
     path: 'tasks',
-    component: NewNavComponent
+    component: NewNavComponent,
+    canActivate: [TaskGuardGuard]
   },
 ];
 
