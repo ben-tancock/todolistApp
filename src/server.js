@@ -1,7 +1,7 @@
 // this is going to load in all of our environment variables and set them inside process.env
-if (process.env.NODE_ENV !== 'production') {
+/*if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
-}
+}*/
 
 
 var express = require('express');
@@ -19,6 +19,7 @@ var flash = require('express-flash');
 var mongoose = require('mongoose');
 
 //const methodOverride = require('method-override')
+//var initializePassport = require('passport-config');
 var initializePassport = require('./passport-config');
 // this completes passport authentication strategy
 // passes passport, a function for finding a user by their username,
