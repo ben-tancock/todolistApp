@@ -53,7 +53,8 @@ app.use(session({
   cookie: {
     // might want to look into changing this in the future, as cookie stores user stuff
     // for now I have it off until I'm certain I've got all this passport js, cookie and session stuff down pat
-    secure: false
+    secure: false,
+    maxAge: 60000
   },
   store: new MongoStore({
     url: 'mongodb://localhost/todoDB',
@@ -93,12 +94,6 @@ app.get('/with-cors', cors(), (req, res, next) => {
   console.log("testing cors:");
 });
 // -----------------------------------------------------------------
-
-// we need this because mongoose functions are asynchronous
-function getByUsername(uname){
-  return Users.find({username: {$eq: uname}}).exec();
-}
-
 
 
 app.use(flash());
@@ -254,8 +249,10 @@ app.post('/deleteTask/*', checkAuthenticated, function(req, res){
 });
 
 
-
-mongoose.connect('mongodb://localhost/todoDB');
+// mongodb+srv://todoApp:<password>@cluster0.huawl.mongodb.net/<dbname>?retryWrites=true&w=majority
+const uri = "mongodb+srv://todoApp:7211@cluster0.huawl.mongodb.net/toDoDB?retryWrites=true&w=majority";
+//mongoose.set('usenewUrlParser', true);
+mongoose.connect(uri);
 const connection = mongoose.connection;
 
 connection.once('open', function(){
