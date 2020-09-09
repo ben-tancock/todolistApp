@@ -292,6 +292,7 @@ function checkNotAuthenticated(req, res, next) {
 });*/
 
 app.listen(process.env.PORT || 8080, function(req, res){
+  console.log("the port: ${process.env.PORT}")
   console.log("express server listening on port 8080");
 })
 
