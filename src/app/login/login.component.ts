@@ -13,9 +13,6 @@ export class LoginComponent implements OnInit {
   constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.authService.testGet().subscribe((res:any) => {
-      console.log("test get");
-    });
     this.authService.loginCheck().subscribe((res:any) => {
       console.log("heres the authentication response: " + JSON.stringify(res.authenticated));
       if(res.authenticated == true){
