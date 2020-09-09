@@ -11,7 +11,6 @@ export class LoginComponent implements OnInit {
   password;
 
   constructor(private authService: AuthService) { }
-  // test branch change
 
   ngOnInit(): void {
     this.authService.loginCheck().subscribe((res:any) => {
