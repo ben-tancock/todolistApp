@@ -301,7 +301,7 @@ const app = express();
 app.use(express.static(__dirname + '/dist/todolist'));
 app.get('/*', function(req,res) {
   console.log("server get request");
-  res.sendFile('index.html');});
+  res.sendFile(__dirname + 'index.html');});
 app.listen(process.env.PORT || 8080, () => {
   console.log("express server listening on some port");
 });
