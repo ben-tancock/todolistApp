@@ -4,7 +4,7 @@
 }*/
 
 
-var express = require('express');
+/*var express = require('express');
 var app = express();
 
 var url = require('url');
@@ -287,12 +287,19 @@ function checkNotAuthenticated(req, res, next) {
 }
 
 
-/*app.listen(4000, function(req, res){
-  console.log("express server listening on port 4000\n");
-});*/
+
 const PORT = process.env.PORT;
 app.listen(process.env.PORT || 8080, function(req, res){
   console.log("the port: " + PORT);
   console.log("express server listening on port 8080");
-})
+});*/
 
+
+const express = require('express');
+const path = require('path');
+const app = express();
+app.use(express.static(__dirname + '/dist/todolist'));
+app.get('/*', function(req,res) {
+  res.sendFile(path.join(__dirname+
+    '/dist/angular-on-heroku/login.html'));});
+app.listen(process.env.PORT || 8080);
