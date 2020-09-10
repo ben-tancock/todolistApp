@@ -43,7 +43,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser("process.env.SESSION_SECRET"));
 
 
-app.use(session({
+/*app.use(session({
   // this is in your .env file in backend
   // you'll want to generate it as a random string of characters so that it's more secure
   // the longer it is, the more secure it will be
@@ -62,7 +62,8 @@ app.use(session({
     url: '"mongodb+srv://todoApp:7211@cluster0.huawl.mongodb.net/toDoDB?retryWrites=true&w=majority"',
     collection: 'sessions'
   })
-}));
+}));*/
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -74,7 +75,7 @@ const taskSchema = new mongoose.Schema({
   priority: {type: String},
   id: {type: Number, required:true},
   state: {type: String}
-}, {collection: 'tasksCollection'});
+})//, {collection: 'tasksCollection'});
 
 const userSchema = new mongoose.Schema({
   username: {type: String, required: true},
@@ -86,15 +87,15 @@ const userSchema = new mongoose.Schema({
   tasks: [taskSchema]
 }, {collection: 'usersCollection'});
 
-const Users = mongoose.model('Users', userSchema);
-const usersCollection = mongoose.connection.collection('usersCollection');
+//const Users = mongoose.model('Users', userSchema);
+//const usersCollection = mongoose.connection.collection('usersCollection');
 
 
 // ENABLING CORS STUFF ---------------------------------------------
-app.use(cors({credentials: true, origin: 'https://to-do-bentancock.herokuapp.com/'}));
+/*app.use(cors({credentials: true, origin: 'https://to-do-bentancock.herokuapp.com/'}));
 app.get('/with-cors', cors(), (req, res, next) => {
   console.log("testing cors:");
-});
+});*/
 // -----------------------------------------------------------------
 
 app.use(flash());
