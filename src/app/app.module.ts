@@ -44,7 +44,6 @@ import { TitleComponent } from './title/title.component';
     MatMenuModule,
     MatSidenavModule,
     MatListModule,
-    MatNavList
   ],
   providers: [],
   bootstrap: [AppComponent]
