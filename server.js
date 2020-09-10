@@ -142,6 +142,13 @@ app.get('/loginCheck', function(req, res){
   }
 });
 
+// because of the app.use(express.static...) line, a user trying to navigate using /login will execute this (I think)
+app.get('/login', function(req, res){
+  console.log("test GET login");
+  res.send("GET login response");
+
+})
+
 app.post('/login', passport.authenticate('local',
   {
     successMessage: 'success',
