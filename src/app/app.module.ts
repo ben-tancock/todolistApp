@@ -13,6 +13,8 @@ import { MatListModule } from '@angular/material/list';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { MatMenuModule } from '@angular/material/menu';
 import {MatInputModule} from '@angular/material/input';
+import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http';
+
 
 @NgModule({
   declarations: [
@@ -20,6 +22,7 @@ import {MatInputModule} from '@angular/material/input';
     LoginComponent,
   ],
   imports: [
+    HttpClientModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
