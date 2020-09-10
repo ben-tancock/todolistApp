@@ -12,6 +12,7 @@ export class TaskGuardGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
       if(!this.authService.loggedIn){
+        console.log("testing guard");
         this.router.navigate(['/login']);
       }
       return this.authService.loggedIn;
