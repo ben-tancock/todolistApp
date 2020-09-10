@@ -298,7 +298,16 @@ app.listen(process.env.PORT || 8080, function(req, res){
 const express = require('express');
 const path = require('path');
 const app = express();
+var cors = require('cors');
 app.use(express.static(__dirname + '/dist/todolist'));
+app.use('/', express.query());
+
+// ENABLING CORS STUFF ---------------------------------------------
+app.use(cors({credentials: true, origin: 'https://to-do-bentancock.herokuapp.com/'}));
+app.get('/with-cors', cors(), (req, res, next) => {
+  console.log("testing cors:");
+});
+// -----------------------------------------------------------------
 
 
 app.get('/*', function(req,res) {
@@ -306,7 +315,14 @@ app.get('/*', function(req,res) {
   res.sendFile(__dirname + '/index.html');
   //res.sendFile(path.join(__dirname, 'src', 'index.html'));
 });
+
+
 app.listen(process.env.PORT || 8080, () => {
   console.log("this is dirname: " + __dirname);
   console.log("express server listening on some port");
 });
+
+/*app.listen(4000, () => {
+  //console.log("this is dirname: " + __dirname);
+  console.log("express server listening on some port");
+});*/

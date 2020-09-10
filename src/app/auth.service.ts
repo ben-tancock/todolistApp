@@ -22,6 +22,10 @@ export class AuthService {
 
 
 
+  /*testRoute(){
+    console.log("auth doing test route");
+    return this.http.get(this.url + '/');
+  }*/
 
   login(uname, pw){
     console.log("logging in user: " + uname + " " + pw + '\n');
