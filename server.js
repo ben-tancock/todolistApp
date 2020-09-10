@@ -59,8 +59,6 @@ app.use(session({
     maxAge: 60000
   },
   store: new MongoStore({
-    //url: '"mongodb+srv://todoApp:7211@cluster0.huawl.mongodb.net/toDoDB?retryWrites=true&w=majority"',
-    //collection: 'sessions'
     mongooseConnection: mongoose.connection,
     collection: 'sessions'
   })
@@ -110,7 +108,7 @@ app.get('/*', function(req,res) {
 });
 
 
-/*
+
 app.get('/tasks', function(req, res){
   console.log("this is /tasks\n");
   // need client to send user data,
@@ -244,9 +242,8 @@ app.post('/deleteTask/*', checkAuthenticated, function(req, res){
     }
   });
 });
-*/
 
-// mongodb+srv://todoApp:<password>@cluster0.huawl.mongodb.net/<dbname>?retryWrites=true&w=majority
+
 const uri = "mongodb+srv://todoApp:7211@cluster0.huawl.mongodb.net/toDoDB?retryWrites=true&w=majority";
 //mongoose.set('usenewUrlParser', true);
 mongoose.connect(uri);
@@ -261,7 +258,7 @@ connection.once('open', function(){
   console.log("MongoDB database connection established successfully\n");
 });
 
-/*
+
 function checkAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     console.log("user is authenticated!")
@@ -283,7 +280,7 @@ function checkNotAuthenticated(req, res, next) {
   console.log("user is NOT authenticated");
   next();
 }
-*/
+
 
 
 const PORT = process.env.PORT;
