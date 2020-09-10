@@ -8,7 +8,8 @@ import { Subject } from 'rxjs';
 })
 export class AuthService {
 
-  url = 'http://localhost:4000';
+  //url = 'http://localhost:4000';
+  url = 'https://to-do-bentancock.herokuapp.com'
 
 
   username;
@@ -54,7 +55,12 @@ export class AuthService {
   }
 
   loginCheck(){
-    return this.http.get(this.url + '/loginCheck');
+    return this.http.get(this.url + '/loginCheck', {
+      headers: new HttpHeaders({
+        'Access-Control-Allow-Credentials' : 'true'
+      }),
+      withCredentials: true
+    } );
   }
 
 
