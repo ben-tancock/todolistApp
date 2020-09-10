@@ -20,6 +20,7 @@ import {MatInputModule} from '@angular/material/input';
     LoginComponent,
   ],
   imports: [
+    AppComponent,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
