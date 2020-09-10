@@ -54,12 +54,7 @@ export class AuthService {
   }
 
   loginCheck(){
-    return this.http.get(this.url + '/loginCheck', {
-      headers: new HttpHeaders({
-        'Access-Control-Allow-Credentials' : 'true'
-      }),
-      withCredentials: true
-    } );
+    return this.http.get(this.url + '/loginCheck');
   }
 
 

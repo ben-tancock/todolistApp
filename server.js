@@ -92,10 +92,10 @@ const userSchema = new mongoose.Schema({
 
 
 // ENABLING CORS STUFF ---------------------------------------------
-/*app.use(cors({credentials: true, origin: 'https://to-do-bentancock.herokuapp.com/'}));
+app.use(cors({credentials: true, origin:'https://to-do-bentancock.herokuapp.com/'}));
 app.get('/with-cors', cors(), (req, res, next) => {
   console.log("testing cors:");
-});*/
+});
 // -----------------------------------------------------------------
 
 app.use(flash());
@@ -103,7 +103,10 @@ app.use('/', express.query());
 
 
 app.use(express.static(__dirname + '/dist/to-do-heroku'));
+
 app.get('/*', function(req,res) {
+  console.log("here's what app.get is receiving: " + req.url);
+  console.log("sending file!");
   res.sendFile(path.join(__dirname + '/dist/to-do-heroku/index.html'));
 });
 
@@ -118,7 +121,9 @@ app.get('/tasks', function(req, res){
   });
 });
 
-app.get('/loginCheck', checkAuthenticated, function(req, res){
+
+// this won't execute because app.get('/*' ...) fires before it does
+app.get('/loginCheck', function(req, res){
   console.log("\nlogin check");
   if(req.isAuthenticated){
     res.send({authenticated: true});
@@ -284,6 +289,11 @@ function checkNotAuthenticated(req, res, next) {
 
 
 const PORT = process.env.PORT;
+/*app.listen(4000, function(req, res){
+  console.log("the port: " + PORT);
+  console.log("express server listening on port 8080");
+});*/
+
 app.listen(process.env.PORT || 8080, function(req, res){
   console.log("the port: " + PORT);
   console.log("express server listening on port 8080");
