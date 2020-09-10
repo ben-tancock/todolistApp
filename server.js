@@ -129,10 +129,12 @@ app.get('/loginCheck', function(req, res){
     console.log("authentication returns true!");
     console.log("printing req passport data: ");
     console.log(req.session);
+    console.log(req.user);
 
     res.send({authenticated: true});
   }
   else{
+    console.log("user is not authenticated");
     res.send({authenticated: false});
   }
 })
