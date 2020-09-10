@@ -1,16 +1,15 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
-/*import { TodoComponent } from './todo/todo.component';
-import { NewNavComponent } from './new-nav/new-nav.component';
-import { TaskGuardGuard } from './task-guard.guard';*/
-
+import { TodoComponent } from './todo/todo.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import { TaskGuard } from './task.guard';
 
 const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent
-  }
+  },
 
   /*{
     path: '',
@@ -18,11 +17,11 @@ const routes: Routes = [
     pathMatch: 'full'
   },*/
 
-  /*{
+  {
     path: 'tasks',
-    component: NewNavComponent,
-    canActivate: [TaskGuardGuard]
-  },*/
+    component: NavbarComponent,
+    canActivate: [TaskGuard]
+  },
 ];
 
 @NgModule({

@@ -6,7 +6,7 @@ import { AuthService } from './auth.service'
 @Injectable({
   providedIn: 'root'
 })
-export class TaskGuardGuard implements CanActivate {
+export class TaskGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
   canActivate(
     next: ActivatedRouteSnapshot,
