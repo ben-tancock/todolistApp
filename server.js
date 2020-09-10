@@ -56,7 +56,7 @@ app.use(session({
     // might want to look into changing this in the future, as cookie stores user stuff
     // for now I have it off until I'm certain I've got all this passport js, cookie and session stuff down pat
     secure: false,
-    maxAge: 60000
+    maxAge: 600000
   },
   store: new MongoStore({
     mongooseConnection: mongoose.connection,
