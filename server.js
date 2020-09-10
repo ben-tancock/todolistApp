@@ -61,7 +61,7 @@ app.use(session({
   store: new MongoStore({
     //url: '"mongodb+srv://todoApp:7211@cluster0.huawl.mongodb.net/toDoDB?retryWrites=true&w=majority"',
     //collection: 'sessions'
-    mongooseConnection: db,
+    mongooseConnection: mongoose.connection,
     collection: 'sessions'
   })
 }));
