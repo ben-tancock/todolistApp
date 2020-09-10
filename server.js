@@ -103,10 +103,11 @@ app.use('/', express.query());
 
 
 // why do we even need this?
-//app.use(express.static(__dirname + '/dist/to-do-heroku'));
+app.use(express.static(__dirname + '/dist/to-do-heroku'));
 // we need it to start on heroku
 // will it do this with every get?
-app.get('/*', function(req,res) {
+// instead let's change to '/' and see what happens?
+app.get('/', function(req,res) {
   console.log("here's what app.get is receiving: " + req.url);
   console.log("sending file!");
   res.sendFile(path.join(__dirname + '/dist/to-do-heroku/index.html'));
