@@ -48,7 +48,7 @@ app.use(session({
   // you'll want to generate it as a random string of characters so that it's more secure
   // the longer it is, the more secure it will be
   secret: "process.env.SESSION_SECRET",
-  resave: false, // should we reset our session variables if nothing has changed?
+  resave: true, // should we reset our session variables if nothing has changed?
   // NOTE: this MUST be set to true otherwise the user authentication / session data won't be saved between middleware methods
   // e.g. if you log in (via /tasks post method), it will print the session data at the end, but if you then do '/create' method right after the req object will be null (because it wasn't saved)
   saveUninitialized: true, // do you want to save an empty value in the session if there is no value?
