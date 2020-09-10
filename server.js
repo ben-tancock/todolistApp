@@ -126,6 +126,10 @@ app.get('/tasks', function(req, res){
 app.get('/loginCheck', function(req, res){
   console.log("\nlogin check");
   if(req.isAuthenticated){
+    console.log("authentication returns true!");
+    console.log("printing req passport data: ");
+    console.log(req.session);
+
     res.send({authenticated: true});
   }
   else{
