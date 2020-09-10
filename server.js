@@ -43,7 +43,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser("process.env.SESSION_SECRET"));
 
 
-/*app.use(session({
+app.use(session({
   // this is in your .env file in backend
   // you'll want to generate it as a random string of characters so that it's more secure
   // the longer it is, the more secure it will be
@@ -62,7 +62,7 @@ app.use(cookieParser("process.env.SESSION_SECRET"));
     url: '"mongodb+srv://todoApp:7211@cluster0.huawl.mongodb.net/toDoDB?retryWrites=true&w=majority"',
     collection: 'sessions'
   })
-}));*/
+}));
 
 app.use(passport.initialize());
 app.use(passport.session());
