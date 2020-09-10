@@ -123,9 +123,9 @@ app.get('/tasks', function(req, res){
 
 
 // this won't execute because app.get('/*' ...) fires before it does
-app.get('/loginCheck', function(req, res){
+app.get('/loginCheck', checkAuthenticated, function(req, res){
   console.log("\nlogin check");
-  if(req.isAuthenticated){
+  /*if(req.isAuthenticated){
     console.log("authentication returns true!");
     console.log("printing req passport data: ");
     console.log(req.session);
@@ -136,8 +136,8 @@ app.get('/loginCheck', function(req, res){
   else{
     console.log("user is not authenticated");
     res.send({authenticated: false});
-  }
-})
+  }*/
+});
 
 app.post('/login', passport.authenticate('local',
   {

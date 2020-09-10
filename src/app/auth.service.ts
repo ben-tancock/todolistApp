@@ -21,13 +21,6 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-
-
-  /*testRoute(){
-    console.log("auth doing test route");
-    return this.http.get(this.url + '/');
-  }*/
-
   login(uname, pw){
     console.log("logging in user: " + uname + " " + pw + '\n');
     this.username = uname;
@@ -60,7 +53,7 @@ export class AuthService {
         'Access-Control-Allow-Credentials' : 'true'
       }),
       withCredentials: true
-    } );
+    });
   }
 
 

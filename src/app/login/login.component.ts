@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
     this.authService.loginCheck().subscribe((res:any) => {
       console.log("heres the authentication response: " + JSON.stringify(res.authenticated));
       if(res.authenticated == true){
-        this.authService.setLogin(true); // why do we need this again?
+        this.authService.setLogin(true); // why do we need this again? (guard uses this instead of asking the server if we're logged in)
         this.authService.renderTasks();
       }
     });
