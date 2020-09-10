@@ -1,0 +1,99 @@
+.create{
+  text-align: center;
+  padding: 20px;
+  margin-left: 100px;
+  margin-right: 8%;
+  padding: 20px;
+ /* border-radius: 10px;
+  margin-bottom: 50px;
+  margin: 200px;
+  margin-top: 0px;
+  padding: 20px;
+  border: solid black 10px;*/
+  float: right;
+}
+
+.sidebar{
+  width: 100px;
+  float: top;
+  top: 100px;
+}
+
+.sidebar > app-sidebar {
+  position: relative;
+  bottom: 200px;
+}
+
+.taskObject {
+ /* border: grey, solid, 10px; ---- doesn't work btw */
+  width: 5%;
+  box-sizing: border-box;
+  text-align: left;
+
+}
+
+.tasks {
+  width: 60%;
+  margin-left: 20%;
+  /*border-bottom: grey solid 2px;*/
+  box-sizing: border-box;
+  /*padding-bottom: 10px;
+  padding-top: 10px;*/
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.createSection{
+  margin-left: 90%;
+  margin-right: 10%;
+}
+
+.fixedBtn{
+  position: fixed;
+  margin-bottom: 6%;
+  bottom: 0px
+}
+
+
+
+div.create > input, select, span, textarea{
+  margin-bottom: 20px;
+  overflow: scroll;
+  /*vertical-align: top;*/
+
+}
+
+
+#completeBtn{
+  position: relative;
+  float: left;
+  top: 20px;
+}
+
+#deleteBtn{
+  position: relative;
+  float: right;
+  bottom: 50px;
+
+}
+
+/*.tasks > button{
+  position: relative;
+  float: right;
+  bottom: 50px;
+}*/
+
+table {
+  width: 100%;
+}
+
+th {
+  /*border: solid green 3px;*/
+  width: 100%;
+}
+
+::ng-deep .mat-menu-panel {
+  max-width: 1000px!important;
+  width: 350px;
+  height: 400px;
+}

@@ -1,0 +1,21 @@
+
+
+<!--[@taskAnimation]='taskState' (@taskAnimation.start) = animStart() (@taskAnimation.done) = animEnd()-->
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      <mat-icon taskDirective id="completeBtn" class="noSelect" *ngIf="!didComplete" (click)="completeClick()" (click) = "$event.stopPropagation()">check_box_outline_blank</mat-icon>
+      <mat-icon taskDirective id="completeBtn" class="noSelect" *ngIf="didComplete" (click)="completeClick()" (click) = "$event.stopPropagation()">check_box_outline</mat-icon>
+      <p style="overflow: hidden; max-width: 200px; max-height: 20px; position: absolute; left: 10%;">{{taskName}}</p>
+    </mat-panel-title>
+    <mat-panel-description>
+      <p style="position: absolute; left: 33%;">Priority: {{taskPriority}}</p>
+
+      <mat-icon taskDirective id="deleteBtn" class="noSelect" (click)="deleteClick()" (click) = "$event.stopPropagation()" style="position: absolute; left: 86%; color: black;">delete</mat-icon>
+      </mat-panel-description>
+  </mat-expansion-panel-header>
+  <div style="white-space: pre-wrap;">{{taskDescription}}</div> <br>
+  <p>Date created: {{taskDate}}</p>
+  <p>ID: {{taskId}} </p>
+
+</mat-expansion-panel>

@@ -14,12 +14,22 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import { MatMenuModule } from '@angular/material/menu';
 import {MatInputModule} from '@angular/material/input';
 import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http';
+import { NavbarComponent } from './navbar/navbar.component';
+import { TaskComponent } from './task/task.component';
+import { TodoComponent } from './todo/todo.component';
+import { TaskDirective } from './task.directive';
+import { TitleComponent } from './title/title.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
+    NavbarComponent,
+    TaskComponent,
+    TodoComponent,
+    TaskDirective,
+    TitleComponent,
   ],
   imports: [
     HttpClientModule,
@@ -31,6 +41,7 @@ import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http'
     MatExpansionModule,
     MatIconModule,
     MatInputModule,
+    MatMenuModule
   ],
   providers: [],
   bootstrap: [AppComponent]
