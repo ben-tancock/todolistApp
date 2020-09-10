@@ -87,8 +87,8 @@ const userSchema = new mongoose.Schema({
   tasks: [taskSchema]
 }, {collection: 'usersCollection'});
 
-//const Users = mongoose.model('Users', userSchema);
-//const usersCollection = mongoose.connection.collection('usersCollection');
+const Users = mongoose.model('Users', userSchema);
+const usersCollection = mongoose.connection.collection('usersCollection');
 
 
 // ENABLING CORS STUFF ---------------------------------------------
