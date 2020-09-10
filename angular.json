@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "to-do-heroku"
+    }
+  },
+  "defaultProject": "to-do-heroku",
+  "cli": {
+    "analytics": "48b1863b-c844-4d6a-8dd8-3d921b26acf7"
+  }
 }
