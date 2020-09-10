@@ -19,8 +19,7 @@ export class LoginComponent implements OnInit {
     this.authService.loginCheck().subscribe((res:any) => {
       console.log("heres the authentication response: " + JSON.stringify(res.authenticated));
       if(res.authenticated == true){
-        // btw .renderTasks actually doesn't use any of the params we give rn because we use cookies to retrieve user info
-        this.authService.setLogin(true);
+        this.authService.setLogin(true); // why do we need this again?
         this.authService.renderTasks();
       }
     });

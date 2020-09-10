@@ -51,7 +51,7 @@ app.use(session({
   resave: false, // should we reset our session variables if nothing has changed?
   // NOTE: this MUST be set to true otherwise the user authentication / session data won't be saved between middleware methods
   // e.g. if you log in (via /tasks post method), it will print the session data at the end, but if you then do '/create' method right after the req object will be null (because it wasn't saved)
-  saveUninitialized: false, // do you want to save an empty value in the session if there is no value?
+  saveUninitialized: true, // do you want to save an empty value in the session if there is no value?
   cookie: {
     // might want to look into changing this in the future, as cookie stores user stuff
     // for now I have it off until I'm certain I've got all this passport js, cookie and session stuff down pat
