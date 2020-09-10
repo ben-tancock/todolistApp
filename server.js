@@ -102,7 +102,8 @@ app.use(flash());
 app.use('/', express.query());
 
 
-app.use(express.static(__dirname + '/dist/to-do-heroku'));
+// why do we even need this?
+//app.use(express.static(__dirname + '/dist/to-do-heroku'));
 
 /*app.get('/*', function(req,res) {
   console.log("here's what app.get is receiving: " + req.url);
