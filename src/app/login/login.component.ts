@@ -13,24 +13,22 @@ export class LoginComponent implements OnInit {
   constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
-   /*this.authService.testRoute().subscribe((res:any) => {
-      console.log("test route");
-    })*/
     this.authService.loginCheck().subscribe((res:any) => {
       console.log("heres the authentication response: " + JSON.stringify(res.authenticated));
-      if(res.authenticated == true){
-        this.authService.setLogin(true); // why do we need this again? (guard uses this instead of asking the server if we're logged in)
+      if(res.authenticated == true){ // if the user is already authenticated, redirect to tasks
+        this.authService.setLogin(true); // guard will use this to allow logged in users to access tasks
         this.authService.renderTasks();
       }
     });
   }
 
+  // when the user clicks the login button
   loginClick(uname, pw){
-    this.username = uname;
+    this.username = uname; // we'll pass these variables to the auth service, which will be retrieved by the todo component to store as local variables
     this.password = pw;
     console.log("username and password set: \n" + this.username + "\n" + this.password);
 
-    this.authService.login(uname, pw).subscribe((res:any) => {
+    this.authService.login(uname, pw).subscribe((res:any) => { // if the server successfully finds the user and authenticates, set guard variable and go to todo tasks page
       if(res.status == 'success'){
         this.authService.setLogin(true);
         this.goToTasks();
@@ -38,10 +36,12 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  // when the user clicks the register button
   btnRegister(uname, pw){
     console.log("test register!");
-    this.authService.registerUser(uname, pw).subscribe((res:any) => {
+    this.authService.registerUser(uname, pw).subscribe((res:any) => { // send registration request to the server
       console.log("recieved registration response from the server");
+      // TODO: add error handling / messaging to user (e.g. if username already exists)
     });
   }
 

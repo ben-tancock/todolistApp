@@ -177,12 +177,7 @@ app.post('/logout', checkAuthenticated, function(req, res){
 
 
 app.post('/getTasks', checkAuthenticated, function(req, res){
-    // if this function gets called, authentication was successful.
     console.log("\n Successful authentication, request: " + JSON.stringify(req.body));
-    //console.log(req.user.tasks); undefined
-    console.log(JSON.stringify(req.session.passport.user));
-    console.log(req.session.cookie);
-    console.log("\n here's the sesssion id: " + JSON.stringify(req.session.id));
 
     Users.find({id: { $eq: req.session.passport.user}}, function(err, doc){
       if(!doc.length || doc == null){ // if the user is not found
@@ -207,7 +202,6 @@ app.post('/register', async (req, res) => {
   console.log(usernameQuery);
   if (usernameQuery.length >= 1){
     console.log("ERROR: there already another user with that username");
-
     // TO DO: implement client-side response to failed stuff (error messages, proper redirects,  etc.)
     res.send({data: null, status: 'failed'});
   }
@@ -218,7 +212,6 @@ app.post('/register', async (req, res) => {
       console.log("\nnew req pw: " + req.body.password);
       usersCollection.insertOne(req.body, function(err, result){
         if(!err){
-          //console.log("\n the result object: " + JSON.stringify(result.ops));
           console.log("\nsuccessfully inserted and registered: " + JSON.stringify(result.ops[0].username));
           res.send({data: result, status: 'success'});
         }
@@ -227,9 +220,7 @@ app.post('/register', async (req, res) => {
           res.send({data: result, status: 'failed'});
         }
       });
-      //res.redirect('/login')
     } catch {
-      //res.redirect('/register')
       console.log("catch!\n")
     }
   }

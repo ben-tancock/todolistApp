@@ -21,23 +21,20 @@ export class TaskComponent implements OnInit {
   @Input('taskState') taskState: String;
   @Output() animated = new EventEmitter<any>();
   @Output() completed = new EventEmitter<boolean>();
-  isOpen = false;
-  didDelete = false;
   didComplete = false;
   isNew = true;
   date;
   id;
   isClicked = false;
 
-
+  // let the todo component know a task has been deleted
   deleteClick(){
     this.taskState = 'deleted';
     this.animated.emit({status: this.taskState, id: this.taskId}); // any animation could be called here, have to let todo know which one
   }
 
-
+  // controls checkbox animation
   completeClick(){
-    // we gotta change the icon on the task mat-icon tag somehow
     this.didComplete = !this.didComplete;
   }
 
@@ -45,7 +42,6 @@ export class TaskComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
 
   @HostListener('click') onMouseClick(){
     //console.log("the state: " + this.taskState);
