@@ -303,10 +303,7 @@ function checkNotAuthenticated(req, res, next) {
 
 
 const PORT = process.env.PORT;
-/*app.listen(4000, function(req, res){
-  console.log("the port: " + PORT);
-  console.log("express server listening on port 8080");
-});*/
+
 
 app.listen(process.env.PORT || 8080, function(req, res){
   console.log("the port: " + PORT);

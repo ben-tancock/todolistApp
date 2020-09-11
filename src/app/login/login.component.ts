@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
+import {MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-login',
@@ -10,9 +12,10 @@ export class LoginComponent implements OnInit {
   username;
   password;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private snackbar: MatSnackBar) { }
 
   ngOnInit(): void {
+    this.snackbar.open("testing snackbar!", "duration: 5 * 1000");
     this.authService.loginCheck().subscribe((res:any) => {
       console.log("heres the authentication response: " + JSON.stringify(res.authenticated));
       if(res.authenticated == true){ // if the user is already authenticated, redirect to tasks

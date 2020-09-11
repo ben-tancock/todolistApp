@@ -19,6 +19,7 @@ import { TaskComponent } from './task/task.component';
 import { TodoComponent } from './todo/todo.component';
 import { TaskDirective } from './task.directive';
 import { TitleComponent } from './title/title.component';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar'
 
 
 @NgModule({
@@ -44,6 +45,7 @@ import { TitleComponent } from './title/title.component';
     MatMenuModule,
     MatSidenavModule,
     MatListModule,
+    MatSnackBarModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
