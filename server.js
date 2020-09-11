@@ -168,7 +168,7 @@ app.post('/login', passport.authenticate('local',
   }
 );
 
-app.get('/logout', checkAuthenticated, function(req, res){
+app.post('/logout', checkAuthenticated, function(req, res){
   console.log("\nlogging out user");
   req.logOut();
   // send message to client to redirect

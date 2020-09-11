@@ -39,7 +39,7 @@ export class AuthService {
 
   logout(){
     console.log("test auth logout");
-    return this.http.get(this.url + '/logout',  {
+    return this.http.post(this.url + '/logout',  {
       headers: new HttpHeaders({
         'Access-Control-Allow-Credentials' : 'true'
       }),
