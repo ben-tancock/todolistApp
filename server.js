@@ -101,13 +101,20 @@ app.get('/with-cors', cors(), (req, res, next) => {
 app.use(flash());
 app.use('/', express.query());
 
+// I want every URL the user types in to redirect to wherever they're supposed to be
+// Is that what sending them to index would do?
 
 // why do we even need this?
 app.use(express.static(__dirname + '/dist/to-do-heroku'));
+app.get(__dirname + '/dist/to-do-heroku', function(req, res){
+  console.log("testing __dirname get request!");
+});
+
 // we need it to start on heroku
 // will it do this with every get?
 // instead let's change to '/' and see what happens?
-app.get('/', function(req,res) {
+// maybe let's change the order so that loginCheck comes first?
+app.get('/*', function(req,res) {
   console.log("here's what app.get is receiving: " + req.url);
   console.log("sending file!");
   res.sendFile(path.join(__dirname + '/dist/to-do-heroku/index.html'));
@@ -126,7 +133,7 @@ app.get('/tasks', function(req, res){
 
 
 // this won't execute because app.get('/*' ...) fires before it does
-app.get('/loginCheck', function(req, res){
+app.post('/loginCheck', function(req, res){
   console.log("\nlogin check");
   if(req.isAuthenticated()){
     console.log("authentication returns true!");

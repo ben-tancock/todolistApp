@@ -49,7 +49,7 @@ export class AuthService {
 
   loginCheck(){
     console.log("test auth service login check");
-    return this.http.get(this.url + '/loginCheck', {
+    return this.http.post(this.url + '/loginCheck', {
       headers: new HttpHeaders({
         'Access-Control-Allow-Credentials' : 'true'
       }),
