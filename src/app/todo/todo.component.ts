@@ -52,6 +52,9 @@ export class TodoComponent implements OnInit {
 
   ngOnInit() {
     console.log("initializing todo");
+    this.authService.loginCheck().subscribe((res:any) => {
+      console.log("heres the authentication response: " + JSON.stringify(res.authenticated));
+    });
     // I'm unsure if this is secure / good programming practice, but it beats passing
     // user info in through the url. Something to look into later.
     // Personally I don't see a huge problem with it?
@@ -83,6 +86,9 @@ export class TodoComponent implements OnInit {
 
   logout(){
     console.log("test logout");
+    this.authService.loginCheck().subscribe((res:any) => {
+      console.log("heres the authentication response: " + JSON.stringify(res.authenticated));
+    });
     this.authService.setLogin(false);
 
     // resetting the session data so that if a new user is logged in we'll use that data on initialization

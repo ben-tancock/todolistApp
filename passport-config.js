@@ -19,7 +19,7 @@ function initialize(passport, getUserByUsername){
     // we're going to need to somehow prevent people from creating a user with the same username and password
     if(!user.length || user == null){
       console.log("PASSPORT: user not found, no user with that username \n");
-      return done(null, false, {message: "no user with that username"})
+      return done(true, false, {message: "no user with that username"})
     }
 
     try{
@@ -28,10 +28,10 @@ function initialize(passport, getUserByUsername){
         // null = no error (on server end)
         // user = user you want to authenticate with
         console.log("PASSPORT: bcrypt is successful \n");
-        return done(null, user)
+        return done(null, user);
       } else {
         console.log("PASSPORT: bcrypt returns false on comparison! \n");
-        return done(null, false, {message: "password incorrect"})
+        return done(true, false, {message: "password incorrect"})
       }
     } catch (e){
       return done(e)

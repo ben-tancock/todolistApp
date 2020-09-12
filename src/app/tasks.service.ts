@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, tap, share, map } from 'rxjs/operators';
+import { environment } from './../environments/environment';
+
 
 
 @Injectable({
@@ -9,7 +11,8 @@ import { catchError, tap, share, map } from 'rxjs/operators';
 })
 export class TasksService {
   //url = 'http://localhost:4000' // the port the mongo database is listening on
-  url = 'https://to-do-bentancock.herokuapp.com';
+  //url = 'https://to-do-bentancock.herokuapp.com';
+  url = environment.apiUrl;
   constructor(private http: HttpClient) { }
 
 

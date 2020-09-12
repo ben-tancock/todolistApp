@@ -19,7 +19,10 @@ import { TaskComponent } from './task/task.component';
 import { TodoComponent } from './todo/todo.component';
 import { TaskDirective } from './task.directive';
 import { TitleComponent } from './title/title.component';
-import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar'
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
+//import { isDevMode } from '@angular/core'
+
 
 
 @NgModule({
@@ -46,6 +49,7 @@ import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar'
     MatSidenavModule,
     MatListModule,
     MatSnackBarModule,
+    NgbModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

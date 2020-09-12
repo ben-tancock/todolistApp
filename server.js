@@ -3,10 +3,14 @@
   require('dotenv').config()
 }*/
 
+// can't use import statements outside a module
+//import { apiUrl } from './src/environments/environment';
 
 
 const express = require('express');
 const app = express();
+const dotenv = require('dotenv');
+dotenv.config();
 
 const url = require('url');
 const cors = require('cors');
@@ -19,7 +23,7 @@ const bcrypt = require('bcrypt');
 const flash = require('express-flash');
 const mongoose = require('mongoose');
 const path = require('path');
-
+//const env = require('./src/environments/environment');
 //const methodOverride = require('method-override')
 //var initializePassport = require('passport-config');
 const initializePassport = require('./passport-config');
@@ -27,6 +31,14 @@ const initializePassport = require('./passport-config');
 // passes passport, a function for finding a user by their username,
 // and a function for finding a user by id to the initialize() function inside passport-config
 // the authenticateUser function then uses these methods to get what it needs
+var connurl = '';
+if(process.env.NODE_ENV == 'development'){
+  connurl = 'http://localhost:4200';
+}
+else{
+  connurl = 'https://to-do-bentancock.herokuapp.com/';
+}
+
 initializePassport(
   passport,
   // both of these things are functions, passed into passport config
@@ -40,14 +52,11 @@ var router = express.Router();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-app.use(cookieParser("process.env.SESSION_SECRET"));
+app.use(cookieParser('process.env.SECRET'));
 
 
 app.use(session({
-  // this is in your .env file in backend
-  // you'll want to generate it as a random string of characters so that it's more secure
-  // the longer it is, the more secure it will be
-  secret: "process.env.SESSION_SECRET",
+  secret: 'process.env.SECRET',
   resave: true, // should we reset our session variables if nothing has changed?
   // NOTE: this MUST be set to true otherwise the user authentication / session data won't be saved between middleware methods
   // e.g. if you log in (via /tasks post method), it will print the session data at the end, but if you then do '/create' method right after the req object will be null (because it wasn't saved)
@@ -60,6 +69,7 @@ app.use(session({
   },
   store: new MongoStore({
     mongooseConnection: mongoose.connection,
+    ttl: 60 * 60, // keeps the session open for 1 hour
     collection: 'sessions'
   })
 }));
@@ -92,7 +102,7 @@ const usersCollection = mongoose.connection.collection('usersCollection');
 
 
 // ENABLING CORS STUFF ---------------------------------------------
-app.use(cors({credentials: true, origin:'https://to-do-bentancock.herokuapp.com/'}));
+app.use(cors({credentials: true, origin: connurl}));
 app.get('/with-cors', cors(), (req, res, next) => {
   console.log("testing cors:");
 });
@@ -110,29 +120,12 @@ app.get(__dirname + '/dist/to-do-heroku', function(req, res){
   console.log("testing __dirname get request!");
 });
 
-// we need it to start on heroku
-// will it do this with every get?
-// instead let's change to '/' and see what happens?
-// maybe let's change the order so that loginCheck comes first?
 app.get('/*', function(req,res) {
   console.log("here's what app.get is receiving: " + req.url);
   console.log("sending file!");
   res.sendFile(path.join(__dirname + '/dist/to-do-heroku/index.html'));
 });
 
-
-
-app.get('/tasks', function(req, res){
-  console.log("this is /tasks\n");
-  // need client to send user data,
-
-  Users.findOne({username: { $eq: req.body.user.username}, password: { $eq: req.body.user.password}}).then((user) => {
-    res.send(user.tasks);
-  });
-});
-
-
-// this won't execute because app.get('/*' ...) fires before it does
 app.post('/loginCheck', function(req, res){
   console.log("\nlogin check");
   if(req.isAuthenticated()){
@@ -149,14 +142,9 @@ app.post('/loginCheck', function(req, res){
   }
 });
 
-// because of the app.use(express.static...) line, a user trying to navigate using /login will execute this (I think)
-app.get('/login', function(req, res){
-  console.log("test GET login");
-  res.send("GET login response");
 
-})
 
-app.post('/login', passport.authenticate('local',
+/*app.post('/login', passport.authenticate('local',
   {
     successMessage: 'success',
     failureMessage: 'fail'
@@ -166,14 +154,37 @@ app.post('/login', passport.authenticate('local',
     res.send({status: 'success'});
     //once logged in, the client must find another way to get the tasks
   }
-);
+);*/
+
+app.post('/login', function(req, res, next) {
+  passport.authenticate('local', function(err, user, info) {
+    console.log("printing error: " + err);
+    console.log("passport info: " + JSON.stringify(info));
+    if(err){
+      console.log("error authenticating!");
+      res.send({status: 'error logging in user'});
+      return;
+    }
+
+    if(!err){
+      req.logIn(user, function(err){
+        if(err){
+          console.log("error logging in");
+          //return
+        }
+        res.send({status: 'success'});
+      });
+    }
+  })(req, res, next);
+});
 
 app.post('/logout', checkAuthenticated, function(req, res){
   console.log("\nlogging out user");
-  req.logOut();
-  // send message to client to redirect
-  res.send({status: 'redirect', url: '/login'});
-})
+  req.logOut(function(){
+    res.send({status: 'redirect', url: '/login'});
+  });
+
+});
 
 
 app.post('/getTasks', checkAuthenticated, function(req, res){
@@ -182,13 +193,10 @@ app.post('/getTasks', checkAuthenticated, function(req, res){
     Users.find({id: { $eq: req.session.passport.user}}, function(err, doc){
       if(!doc.length || doc == null){ // if the user is not found
         console.log("ERROR: USER NOT FOUND, LOGGING OUT");
-        // send some kind of message back to client-side
         req.logOut();
-        res.send({error:'not found'});
+        res.send({error:'not found'}); // send some kind of message back to client-side
       }
       else{
-        //console.log("gettasks find operation: " + JSON.stringify(doc));
-        //console.log("sending tasks back to user: " + doc[0].tasks);
         res.send({tasks: doc[0].tasks, idCount: doc[0].idCount});
       }
 
@@ -244,7 +252,7 @@ app.post('/create', checkAuthenticated, function(req, res){
 
 // deleting a task (using task ID, given in URL) from a users tasks subarray
 app.post('/deleteTask/*', checkAuthenticated, function(req, res){
-  console.log("\nreq.session.passport for deleteTask: " + JSON.stringify(req.session.passport));
+  //console.log("\nreq.session.passport for deleteTask: " + JSON.stringify(req.session.passport));
   console.log("\nhere is the req body data we're dealing with: " + JSON.stringify(req.body));
   var delId = Number(req.url.split('/')[2]);
   console.log("and here is the task id to delete: " + delId + "\n");
@@ -263,29 +271,32 @@ app.post('/deleteTask/*', checkAuthenticated, function(req, res){
 });
 
 
-const uri = "mongodb+srv://todoApp:7211@cluster0.huawl.mongodb.net/toDoDB?retryWrites=true&w=majority";
-//mongoose.set('usenewUrlParser', true);
+var uri = '';
+if(process.env.NODE_ENV == 'development'){
+  uri = 'mongodb://localhost/todoDB'
+}
+else{
+  uri = "mongodb+srv://todoApp:7211@cluster0.huawl.mongodb.net/toDoDB?retryWrites=true&w=majority";
+}
+
+
+//const uri = "mongodb+srv://todoApp:7211@cluster0.huawl.mongodb.net/toDoDB?retryWrites=true&w=majority";
 mongoose.connect(uri);
 const connection = mongoose.connection;
-
 connection.once('open', function(){
-
   mongoose.connection.db.collection('usersCollection').countDocuments(function(err, docs){
     console.log("there are " + docs + " docs in the collection\n");
   });
-
   console.log("MongoDB database connection established successfully\n");
 });
 
-
 function checkAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
-    console.log("user is authenticated!")
-    return next()
+    console.log("user is authenticated!");
+    return next();
   }
   console.log("WARNING: USER NOT AUTHENTICATED");
   res.send({authenticated: false});
-  //res.redirect('/login')
 }
 
 function checkNotAuthenticated(req, res, next) {
@@ -302,12 +313,16 @@ function checkNotAuthenticated(req, res, next) {
 
 
 
-const PORT = process.env.PORT;
+if(process.env.NODE_ENV == 'development'){
+  app.listen(4000, function(req, res){
+    console.log("express server listening on port 4000");
+  });
+}
+else{
+  app.listen(process.env.PORT || 8080, function(req, res){
+    console.log("express server listening on port 8080");
+  });
 
-
-app.listen(process.env.PORT || 8080, function(req, res){
-  console.log("the port: " + PORT);
-  console.log("express server listening on port 8080");
-});
+}
 
 

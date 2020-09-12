@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { isDevMode } from '@angular/core'
+
+
 
 @Component({
   selector: 'app-root',
@@ -11,6 +14,7 @@ export class AppComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit(): void {
+    console.log(isDevMode());
     this.router.navigate(['/login']);
 
   }

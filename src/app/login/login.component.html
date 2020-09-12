@@ -1,7 +1,7 @@
-
-
+<div class="parent">
 <mat-toolbar color="primary" class="header">
   <div class="headerTitle"> My To-do List App</div>
+
   <div class="barspace">
     <div class="headerBtns">
       <div style="display: table-row;">
@@ -25,9 +25,32 @@
   </div>
 </mat-toolbar>
 
+<div #alert1 class="alert alert-warning alert-dismissible fade " role="alert">
+  <button type="button" class="close" aria-label="Close" (click)="closeAlert(1)">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <strong>Greetings!</strong> <p>This app is a work in progress. I plan on adding new stuff and smoothing out any bugs in the future!</p>
+</div>
+
+<div #alert2 class="alert alert-warning alert-dismissible fade " role="alert">
+  <button type="button" class="close" aria-label="Close" (click)="closeAlert(2)">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <strong>Registraion Failure!</strong> <p>There is already a user with that username!</p>
+</div>
+
+<div #alert3 class="alert alert-warning alert-dismissible fade  " role="alert">
+  <button type="button" class="close" aria-label="Close" (click)="closeAlert(3)">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <strong>Login Failure!</strong> <p>Your username/password is incorrect!</p>
+</div>
+
+
 
 
 <div class="lboxContainer">
+
   <div class="loginBox">
     <div>
       <br>
@@ -64,4 +87,7 @@
       </button>
     </div>
   </div>
+</div>
+
+
 </div>

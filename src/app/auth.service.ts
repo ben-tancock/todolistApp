@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Subject } from 'rxjs';
+import { environment } from './../environments/environment';
+
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +11,8 @@ import { Subject } from 'rxjs';
 export class AuthService {
 
   //url = 'http://localhost:4000';
-  url = 'https://to-do-bentancock.herokuapp.com'
+  //url = 'https://to-do-bentancock.herokuapp.com'
+  url = environment.apiUrl;
 
 
   username;
@@ -23,6 +26,7 @@ export class AuthService {
 
   login(uname, pw){
     console.log("logging in user: " + uname + " " + pw + '\n');
+    console.log("the url: " + this.url);
     this.username = uname;
     this.password = pw;
     return this.http.post(this.url + '/login', {username: uname, password: pw}, {
@@ -72,6 +76,12 @@ export class AuthService {
       idCount: 0,
       id: Date.now().toString(),
       tasks: []
+    },
+    {
+      headers: new HttpHeaders({
+        'Access-Control-Allow-Credentials' : 'true'
+      }),
+      withCredentials: true
     });
   }
 
