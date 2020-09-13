@@ -130,8 +130,8 @@ app.post('/loginCheck', function(req, res){
   console.log("\nlogin check");
   if(req.isAuthenticated()){
     console.log("authentication returns true!");
-    console.log("printing req passport data: ");
-    console.log(req.session);
+    //console.log("printing req passport data: ");
+    //console.log(req.session);
     console.log(req.user);
 
     res.send({authenticated: true});
@@ -141,8 +141,6 @@ app.post('/loginCheck', function(req, res){
     res.send({authenticated: false});
   }
 });
-
-
 
 /*app.post('/login', passport.authenticate('local',
   {
@@ -181,6 +179,7 @@ app.post('/login', function(req, res, next) {
 app.post('/logout', checkAuthenticated, function(req, res){
   console.log("\nlogging out user");
   req.logOut(function(){
+    console.log("logout occuring in server.js");
     res.send({status: 'redirect', url: '/login'});
   });
 
