@@ -103,7 +103,10 @@ export class LoginComponent implements OnInit {
     console.log("test register!");
     this.authService.registerUser(uname, pw).subscribe((res:any) => { // send registration request to the server
       console.log("recieved registration response from the server");
-      // TODO: add error handling / messaging to user (e.g. if username already exists)
+      if(res.status == 'failed'){
+        console.log("displaying registration error");
+        this.showAlert('registration');
+      }
     });
   }
 
