@@ -178,10 +178,8 @@ app.post('/login', function(req, res, next) {
 
 app.post('/logout', checkAuthenticated, function(req, res){
   console.log("\nlogging out user");
-  req.logOut(function(){
-    console.log("user logged out!");
-    res.send({status: 'redirect', url: '/login'});
-  });
+  req.logOut();
+  res.send({status: 'redirect', url: '/login'});
 
 
 });
