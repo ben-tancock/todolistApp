@@ -132,7 +132,7 @@ app.post('/loginCheck', function(req, res){
     console.log("authentication returns true!");
     //console.log("printing req passport data: ");
     //console.log(req.session);
-    console.log(req.user);
+    //console.log(req.user);
 
     res.send({authenticated: true});
   }
@@ -157,7 +157,7 @@ app.post('/loginCheck', function(req, res){
 app.post('/login', function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {
     console.log("printing error: " + err);
-    console.log("passport info: " + JSON.stringify(info));
+    console.log("passport info: " + JSON.stringify(info)); // undefined
     if(err){
       console.log("error authenticating!");
       res.send({status: 'error logging in user'});
@@ -179,9 +179,10 @@ app.post('/login', function(req, res, next) {
 app.post('/logout', checkAuthenticated, function(req, res){
   console.log("\nlogging out user");
   req.logOut(function(){
-    console.log("logout occuring in server.js");
+    console.log("user logged out!");
     res.send({status: 'redirect', url: '/login'});
   });
+
 
 });
 

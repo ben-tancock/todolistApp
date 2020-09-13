@@ -86,9 +86,9 @@ export class TodoComponent implements OnInit {
 
   logout(){
     console.log("test logout");
-    this.authService.loginCheck().subscribe((res:any) => {
+    /*this.authService.loginCheck().subscribe((res:any) => {
       console.log("heres the authentication response: " + JSON.stringify(res.authenticated));
-    });
+    });*/
     this.authService.setLogin(false);
 
     // resetting the session data so that if a new user is logged in we'll use that data on initialization
@@ -96,7 +96,7 @@ export class TodoComponent implements OnInit {
     window.localStorage.setItem('userName', null);
     window.localStorage.setItem('password', null);
     console.log("session storage username on logout: " + window.localStorage.getItem('userName'))
-    this.authService.logout().subscribe((res:any) => {
+    this.authService.logout().subscribe((res:any) => { // not getting a response...
       if(res.status == 'redirect'){
         console.log("res.status.url: " + res.url)
         this.router.navigate([res.url]);
