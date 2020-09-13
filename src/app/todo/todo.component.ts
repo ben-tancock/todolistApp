@@ -86,9 +86,6 @@ export class TodoComponent implements OnInit {
 
   logout(){
     console.log("test logout");
-    /*this.authService.loginCheck().subscribe((res:any) => {
-      console.log("heres the authentication response: " + JSON.stringify(res.authenticated));
-    });*/
     this.authService.setLogin(false);
 
     // resetting the session data so that if a new user is logged in we'll use that data on initialization
