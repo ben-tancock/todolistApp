@@ -114,6 +114,10 @@ export class LoginComponent implements OnInit {
         this.registrationText = "<strong>Error: </strong> registration failed, there is already a user with that username.";
         this.alertToggle('register');
       }
+      else{
+        this.registrationText = "<strong>Registration successful!</strong>";
+        this.alertToggle('register');
+      }
     });
   }
 
