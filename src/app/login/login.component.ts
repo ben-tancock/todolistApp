@@ -1,28 +1,49 @@
 import { Component, OnInit, ElementRef, ViewChild, Renderer2 } from '@angular/core';
 import { AuthService } from '../auth.service';
 import {MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition
+} from '@angular/animations';
 
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+  animations: [
+    trigger('fade', [
+      state('open', style({
+        opacity: 1
+      })),
+
+      transition(':enter', [
+        animate('300ms', style({ opacity: 1}))
+      ]),
+      transition(':leave', [
+        animate('300ms', style({ opacity: 0}))
+      ]),
+    ]),
+  ]
 })
 export class LoginComponent implements OnInit {
-  @ViewChild('alert1', { static: true }) alert1: ElementRef;
-  @ViewChild('alert2', { static: true }) alert2: ElementRef;
-  @ViewChild('alert3', { static: true }) alert3: ElementRef;
+  @ViewChild('greetingAlert', { static: true }) greetingAlert: ElementRef;
+  @ViewChild('registrationAlert', { static: true }) registrationAlert: ElementRef;
+  @ViewChild('loginAlert', { static: true }) loginAlert: ElementRef;
   username;
   password;
-  openingMessage = true;
-  registrationFail = false;
-  loginFail = false;
+  showGreeting=false;
+  showRegistration=false;
+  showLogin=false;
+  registrationText='';
 
   constructor(private authService: AuthService, private snackbar: MatSnackBar, private renderer: Renderer2, private el: ElementRef) { }
 
   ngOnInit(): void {
-
-    //this.fadeAlert(); apply this to all alerts on initialization
+    this.alertToggle('greeting');
 
     this.authService.loginCheck().subscribe((res:any) => {
       console.log("heres the authentication response: " + JSON.stringify(res.authenticated));
@@ -33,43 +54,28 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  closeAlert(alertnum){
-    if(alertnum == 1){
-     // this.alert1.nativeElement.classList.remove('show');
-      //this.alert1.nativeElement.remove();
-      this.renderer.removeChild(this.el.nativeElement, this.alert1.nativeElement);
-      this.renderer.removeChild(this.el.nativeElement, this.alert1.nativeElement);
-      //this.openingMessage = false;
-      console.log("remove 1");
+  alertToggle(alertType){
+    if(alertType == 'greeting'){
+      this.showGreeting = !this.showGreeting;
+      window.setTimeout(() => {
+        this.showGreeting = !this.showGreeting
+      }, 5000);
     }
-    else if(alertnum == 2){
-      this.alert2.nativeElement.classList.remove('show');
-      this.renderer.removeChild(this.el.nativeElement, this.alert2.nativeElement);
-      console.log("remove 2");
-    }
-    else{
-      this.alert3.nativeElement.classList.remove('show');
-      //this.alert3.nativeElement.classList.remove();
-      //this.renderer.removeChild(this.el.nativeElement, this.alert3.nativeElement);
-      console.log("remove 3");
-    }
-  }
-
-  fadeAlert(){
-    // fix for each alert
-    window.setTimeout(() => {
-      this.closeAlert(1);
-    }, 5000);
-  }
-
-  // use for showing registration failure, login failure, etc.
-  showAlert(alertType){
-    if(alertType == 'registration'){
-      this.alert2.nativeElement.classList.add('show');
+    else if(alertType == 'register'){
+      this.showRegistration = !this.showRegistration;
+      window.setTimeout(() => {
+        this.showRegistration = !this.showRegistration;
+      }, 5000);
     }
     else{
-      this.alert3.nativeElement.classList.add('show');
+      this.showLogin = !this.showLogin;
+      window.setTimeout(() => {
+        this.showLogin = !this.showLogin;
+      }, 5000);
     }
+
+    //this.fadeAlert(alertType);
+    console.log("test toggle alert");
 
   }
 
@@ -93,7 +99,7 @@ export class LoginComponent implements OnInit {
       }
       else{
         console.log("test login failure");
-        this.showAlert('login');
+        this.alertToggle('login');
       }
     });
   }
@@ -105,7 +111,8 @@ export class LoginComponent implements OnInit {
       console.log("recieved registration response from the server");
       if(res.status == 'failed'){
         console.log("displaying registration error");
-        this.showAlert('registration');
+        this.registrationText = "<strong>Error: </strong> registration failed, there is already a user with that username.";
+        this.alertToggle('register');
       }
     });
   }

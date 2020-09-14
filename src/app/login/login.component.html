@@ -25,14 +25,41 @@
   </div>
 </mat-toolbar>
 
-<div #alert1 class="alert alert-warning alert-dismissible fade " role="alert">
-  <button type="button" class="close" aria-label="Close" (click)="closeAlert(1)">
+<!--
+<div #alertList *ngFor="let alert of alertArr">
+  <div #greetingAlert class="alert alert-warning alert-dismissible fade show " role="alert">
+    <button type="button" class="close" aria-label="Close" (click)="closeAlert()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    {{alertText}}
+  </div>
+</div>
+-->
+
+<div id="greetingAlert" [@fade] class="alert alert-warning alert-dismissible fade show " role="alert" *ngIf="showGreeting">
+  <button type="button" class="close" aria-label="Close" (click)="alertToggle('greeting')">
     <span aria-hidden="true">&times;</span>
   </button>
-  <strong>Greetings!</strong> <p>This app is a work in progress. I plan on adding new stuff and smoothing out any bugs in the future!</p>
+  <strong>Greetings!</strong> <p>This web application is a work in progress!   </p> <p>I plan on smoothing out any bugs and adding more features in the near-future!</p> <p>- Ben</p>
 </div>
 
-<div #alert2 class="alert alert-warning alert-dismissible fade " role="alert">
+<div id="loginAlert" [@fade]  class="alert alert-warning alert-dismissible fade show " role="alert" *ngIf="showLogin">
+  <button type="button" class="close" aria-label="Close" (click)="alertToggle('login')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <strong>Error:</strong> <p>your username/password was incorrect</p>
+</div>
+
+<div  id="registrationAlert" [@fade] class="alert alert-warning alert-dismissible fade show " role="alert" *ngIf="showRegistration" >
+  <button type="button" class="close" aria-label="Close" (click)="alertToggle('register')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <div [innerHTML]="registrationText">
+  </div>
+</div>
+
+
+<!--<div #alert2 class="alert alert-warning alert-dismissible fade " role="alert">
   <button type="button" class="close" aria-label="Close" (click)="closeAlert(2)">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -44,7 +71,7 @@
     <span aria-hidden="true">&times;</span>
   </button>
   <strong>Login Failure!</strong> <p>Your username/password is incorrect!</p>
-</div>
+</div>-->
 
 
 

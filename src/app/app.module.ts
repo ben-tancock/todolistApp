@@ -20,7 +20,7 @@ import { TodoComponent } from './todo/todo.component';
 import { TaskDirective } from './task.directive';
 import { TitleComponent } from './title/title.component';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 //import { isDevMode } from '@angular/core'
 
 
