@@ -172,9 +172,9 @@ app.post('/login', function(req, res, next) {
   })(req, res, next);
 });
 
-app.post('/logout', checkAuthenticated, function(req, res){
+app.post('/logout', checkAuthenticated, async function(req, res){
   console.log("\nlogging out user");
-  req.logOut();
+  await req.logout();
   res.send({status: 'redirect', url: '/login'});
 
 
