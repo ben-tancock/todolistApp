@@ -174,7 +174,7 @@ app.post('/login', function(req, res, next) {
 
 app.post('/logout', checkAuthenticated, async function(req, res){
   console.log("\nlogging out user");
-  await req.logout();
+  await req.logout(); // logOut or logout??
   res.send({status: 'redirect', url: '/login'});
 
 
