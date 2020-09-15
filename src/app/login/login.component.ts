@@ -28,6 +28,7 @@ import {
       ]),
     ]),
   ]
+
 })
 export class LoginComponent implements OnInit {
   @ViewChild('greetingAlert', { static: true }) greetingAlert: ElementRef;
@@ -39,8 +40,10 @@ export class LoginComponent implements OnInit {
   showRegistration=false;
   showLogin=false;
   registrationText='';
+  loginText='';
 
   constructor(private authService: AuthService, private snackbar: MatSnackBar, private renderer: Renderer2, private el: ElementRef) { }
+
 
   ngOnInit(): void {
     this.alertToggle('greeting');
@@ -84,6 +87,8 @@ export class LoginComponent implements OnInit {
     if(uname.length == 0 || pw.length == 0){
       // TO DO: make alert appear
       console.log("please enter username and password");
+      this.loginText = "<strong>Error:</strong> <p>Please enter a username/password</p>";
+      this.alertToggle('login');
       return;
     }
     this.username = uname; // we'll pass these variables to the auth service, which will be retrieved by the todo component to store as local variables
@@ -99,6 +104,7 @@ export class LoginComponent implements OnInit {
       }
       else{
         console.log("test login failure");
+        this.loginText = "<strong>Error:</strong> <p>your username/password was incorrect</p>";
         this.alertToggle('login');
       }
     });
@@ -106,6 +112,13 @@ export class LoginComponent implements OnInit {
 
   // when the user clicks the register button
   btnRegister(uname, pw){
+    if(uname.length == 0 || pw.length == 0){
+      // TO DO: make alert appear
+      console.log("please enter username and password");
+      this.registrationText = "<strong>Error:</strong> <p>Please enter a username/password</p>";
+      this.alertToggle('register');
+      return;
+    }
     console.log("test register!");
     this.authService.registerUser(uname, pw).subscribe((res:any) => { // send registration request to the server
       console.log("recieved registration response from the server");

@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
+import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -9,6 +11,11 @@ import { map, shareReplay } from 'rxjs/operators';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
+  logoutSubject: Subject<void> = new Subject<void>();
+  emitEventToChild() {
+    console.log("navbar logout clicked");
+    this.logoutSubject.next();
+  }
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -16,6 +23,11 @@ export class NavbarComponent {
       shareReplay()
     );
 
-  constructor(private breakpointObserver: BreakpointObserver) {}
+  constructor(private breakpointObserver: BreakpointObserver, private authService: AuthService, private router: Router) {}
+
+  // try calling the todo logout instead
+  logout(){
+    this.emitEventToChild();
+  }
 
 }

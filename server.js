@@ -3,10 +3,6 @@
   require('dotenv').config()
 }*/
 
-// can't use import statements outside a module
-//import { apiUrl } from './src/environments/environment';
-
-
 const express = require('express');
 const app = express();
 const dotenv = require('dotenv');

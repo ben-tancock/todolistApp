@@ -1,11 +1,9 @@
-import { Component, OnInit, HostListener, ViewChild, ElementRef, Renderer2, Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChildren, QueryList, Input } from '@angular/core';
 import { TasksService } from '../tasks.service';
 import { AuthService } from '../auth.service';
 
-import { Observable,  } from 'rxjs';
-import { catchError, tap, share, map } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { Observable, Subscription  } from 'rxjs';
+import { Router} from '@angular/router';
 import {
   trigger,
   state,
@@ -13,8 +11,7 @@ import {
   animate,
   transition
 } from '@angular/animations';
-import { delay } from 'rxjs/operators';
-import { typeofExpr } from '@angular/compiler/src/output/output_ast';
+
 
 @Component({
   selector: 'app-todo',
@@ -39,6 +36,10 @@ export class TodoComponent implements OnInit {
   @Output() created = new EventEmitter<boolean>();
   @ViewChildren("appTask") taskElements: QueryList<any>;
 
+  // when the user clicks the logout option in the navbar
+  private logoutSubscription: Subscription;
+  @Input() navLogout: Observable<void>;
+
   tasks: Array<any> = [];
   theDate;
   isClicked = false;
@@ -55,9 +56,7 @@ export class TodoComponent implements OnInit {
     this.authService.loginCheck().subscribe((res:any) => {
       console.log("heres the authentication response: " + JSON.stringify(res.authenticated));
     });
-    // I'm unsure if this is secure / good programming practice, but it beats passing
-    // user info in through the url. Something to look into later.
-    // Personally I don't see a huge problem with it?
+
     let uname = window.localStorage.getItem('userName');
     let pw = window.localStorage.getItem('password');
     console.log("local storage before if stuff: " + uname + " " + pw);
@@ -73,6 +72,12 @@ export class TodoComponent implements OnInit {
     this.userName = window.localStorage.getItem('userName');
     this.password = window.localStorage.getItem('password');
     this.getTasks();
+
+    this.logoutSubscription = this.navLogout.subscribe(() => this.logout());
+  }
+
+  ngOnDestroy() {
+    this.logoutSubscription.unsubscribe();
   }
 
   ngAfterViewInit(){
@@ -85,9 +90,8 @@ export class TodoComponent implements OnInit {
   }
 
   logout(){
-    console.log("test logout");
+    console.log("test logout todo");
     this.authService.setLogin(false);
-
     // resetting the session data so that if a new user is logged in we'll use that data on initialization
     // otherwise it'll just use the username and pw from last session
     window.localStorage.setItem('userName', null);

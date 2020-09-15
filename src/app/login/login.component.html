@@ -47,15 +47,15 @@
   <button type="button" class="close" aria-label="Close" (click)="alertToggle('login')">
     <span aria-hidden="true">&times;</span>
   </button>
-  <strong>Error:</strong> <p>your username/password was incorrect</p>
+  <div [innerHTML]="loginText"></div>
+  <!--<strong>Error:</strong> <p>your username/password was incorrect</p>-->
 </div>
 
 <div  id="registrationAlert" [@fade] class="alert alert-warning alert-dismissible fade show " role="alert" *ngIf="showRegistration" >
   <button type="button" class="close" aria-label="Close" (click)="alertToggle('register')">
     <span aria-hidden="true">&times;</span>
   </button>
-  <div [innerHTML]="registrationText">
-  </div>
+  <div [innerHTML]="registrationText"></div>
 </div>
 
 <div class="lboxContainer">
