@@ -15,3 +15,7 @@
   top: 0;
   z-index: 1;
 }
+
+.mat-nav-list > *{
+  color: rgb(166, 167, 167);
+}

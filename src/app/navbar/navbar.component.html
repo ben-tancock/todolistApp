@@ -2,12 +2,14 @@
   <mat-sidenav #drawer class="sidenav" fixedInViewport
       [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
       [mode]="(isHandset$ | async) ? 'push' : 'side'"
-      [opened]="(isHandset$ | async) === true">
-    <mat-toolbar>Menu</mat-toolbar>
+      [opened]="(isHandset$ | async) === true"
+      style="background-color: #2e2d2dfa;">
+    <mat-toolbar style="color: rgb(166, 167, 167);">Menu</mat-toolbar>
     <mat-nav-list>
       <a mat-list-item href="#">Link 1</a>
       <a mat-list-item href="#">Link 2</a>
-      <a (click)='logout()' mat-list-item href="#">Logout</a>
+
+      <a (click)='logout()' mat-list-item href="#"> <span style="margin-right: 45px;" class="material-icons">power_settings_new</span> Logout</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
