@@ -126,7 +126,7 @@ export class TodoComponent implements OnInit {
 
   getTasks(){
     this.TaskService.getTasks(this.userName, this.password).subscribe((res:any) => {
-      console.log("tasks response from server: " + JSON.stringify(res));
+      //console.log("tasks response from server: " + JSON.stringify(res));
       if(res.error == 'not found'){
         console.log("server says user not found, logging out...");
         this.logout();

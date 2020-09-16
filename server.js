@@ -116,6 +116,18 @@ app.get(__dirname + '/dist/to-do-heroku', function(req, res){
   console.log("testing __dirname get request!");
 });
 
+// does not fire for dev testing
+app.options('*', function(req, res){
+  console.log("test recieving pre-flights!");
+  res.header("Access-Control-Allow-Origin", connurl);
+  res.send();
+});
+
+// neither does this
+router.options('/*', function(req,res){
+  console.log("test router options");
+});
+
 app.get('/*', function(req,res) {
   res.header("Access-Control-Allow-Origin", connurl);
   console.log("here's what app.get is receiving: " + req.url);
@@ -205,6 +217,7 @@ app.post('/getTasks', checkAuthenticated, function(req, res){
 // this method is done when the user clicks the 'register' button
 app.post('/register', async (req, res) => {
   res.header("Access-Control-Allow-Origin", connurl);
+  // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept", ); have yet to see if we will need this
   // TO DO: if a find() req for a user with the req username has a length > 1, send an error message
   let usernameQuery = await Users.find({username: { $eq: req.body.username}});
   console.log(usernameQuery);

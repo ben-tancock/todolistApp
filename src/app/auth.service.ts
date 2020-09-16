@@ -27,12 +27,13 @@ export class AuthService {
   login(uname, pw){
     console.log("logging in user: " + uname + " " + pw + '\n');
     console.log("the url: " + this.url);
+    //console.log()
     this.username = uname;
     this.password = pw;
     return this.http.post(this.url + '/login', {username: uname, password: pw}, {
       headers: new HttpHeaders({
         'Access-Control-Allow-Credentials' : 'true',
-        'Access-Control-Allow-Origin': "*" //we'll see if we need this
+        'Access-Control-Allow-Origin': "*" // this might just need to be the api url
       }),
       withCredentials: true
     });
