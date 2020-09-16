@@ -32,7 +32,7 @@ if(process.env.NODE_ENV == 'development'){
   connurl = 'http://localhost:4200';
 }
 else{
-  connurl = 'https://to-do-bentancock.herokuapp.com/';
+  connurl = 'https://to-do-bentancock.herokuapp.com';
 }
 
 initializePassport(
