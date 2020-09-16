@@ -31,7 +31,8 @@ export class AuthService {
     this.password = pw;
     return this.http.post(this.url + '/login', {username: uname, password: pw}, {
       headers: new HttpHeaders({
-        'Access-Control-Allow-Credentials' : 'true'
+        'Access-Control-Allow-Credentials' : 'true',
+        'Access-Control-Allow-Origin': "*" //we'll see if we need this
       }),
       withCredentials: true
     });
@@ -45,7 +46,8 @@ export class AuthService {
     console.log("test auth logout");
     return this.http.post(this.url + '/logout', {body: 'logout'},  {
       headers: new HttpHeaders({
-        'Access-Control-Allow-Credentials' : 'true'
+        'Access-Control-Allow-Credentials' : 'true',
+        'Access-Control-Allow-Origin': "*"
       }),
       withCredentials: true
     });
@@ -55,7 +57,8 @@ export class AuthService {
     console.log("test auth service login check");
     return this.http.post(this.url + '/loginCheck', {
       headers: new HttpHeaders({
-        'Access-Control-Allow-Credentials' : 'true'
+        'Access-Control-Allow-Credentials' : 'true',
+        'Access-Control-Allow-Origin': "*"
       }),
       withCredentials: true
     });
@@ -79,7 +82,8 @@ export class AuthService {
     },
     {
       headers: new HttpHeaders({
-        'Access-Control-Allow-Credentials' : 'true'
+        'Access-Control-Allow-Credentials' : 'true',
+        'Access-Control-Allow-Origin': "*"
       }),
       withCredentials: true
     });

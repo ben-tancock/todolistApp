@@ -23,7 +23,8 @@ export class TasksService {
     return this.http.post(this.url + '/getTasks', {username: userName, password: pw},
     {
       headers: new HttpHeaders({
-        'Access-Control-Allow-Credentials' : 'true'
+        'Access-Control-Allow-Credentials' : 'true',
+        'Access-Control-Allow-Origin': "*"
       }),
       withCredentials: true
     });
@@ -35,7 +36,8 @@ export class TasksService {
     return this.http.post(delUrl, {username: uname, password: pw},
       {
         headers: new HttpHeaders({
-          'Access-Control-Allow-Credentials' : 'true'
+          'Access-Control-Allow-Credentials' : 'true',
+          'Access-Control-Allow-Origin': "*"
         }),
         withCredentials: true
       }
@@ -73,7 +75,10 @@ export class TasksService {
       }
     },
     {
-      headers: new HttpHeaders({'Access-Control-Allow-Credentials' : 'true'}),
+      headers: new HttpHeaders({
+        'Access-Control-Allow-Credentials' : 'true',
+        'Access-Control-Allow-Origin': "*"
+      }),
       withCredentials: true
     }
   );
