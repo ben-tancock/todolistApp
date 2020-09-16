@@ -117,19 +117,21 @@ app.get(__dirname + '/dist/to-do-heroku', function(req, res){
 });
 
 app.get('/*', function(req,res) {
+  res.header("Access-Control-Allow-Origin", connurl);
   console.log("here's what app.get is receiving: " + req.url);
   console.log("sending file!");
   res.sendFile(path.join(__dirname + '/dist/to-do-heroku/index.html'));
 });
 
 app.post('/loginCheck', function(req, res){
+  res.header("Access-Control-Allow-Origin", connurl);
+  console.log("res header: %j", res.getHeaders());
   console.log("\nlogin check");
   if(req.isAuthenticated()){
     console.log("authentication returns true!");
     //console.log("printing req passport data: ");
     //console.log(req.session);
     //console.log(req.user);
-
     res.send({authenticated: true});
   }
   else{
@@ -151,6 +153,7 @@ app.post('/loginCheck', function(req, res){
 );*/
 
 app.post('/login', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", connurl);
   passport.authenticate('local', function(err, user, info) {
     console.log("printing error: " + err);
     console.log("passport info: " + JSON.stringify(info)); // undefined
@@ -173,6 +176,7 @@ app.post('/login', function(req, res, next) {
 });
 
 app.post('/logout', checkAuthenticated, async function(req, res){
+  res.header("Access-Control-Allow-Origin", connurl);
   console.log("\nlogging out user");
   await req.logout(); // logOut or logout??
   res.send({status: 'redirect', url: '/login'});
@@ -182,6 +186,7 @@ app.post('/logout', checkAuthenticated, async function(req, res){
 
 
 app.post('/getTasks', checkAuthenticated, function(req, res){
+    res.header("Access-Control-Allow-Origin", connurl);
     console.log("\n Successful authentication, request: " + JSON.stringify(req.body));
 
     Users.find({id: { $eq: req.session.passport.user}}, function(err, doc){
@@ -199,6 +204,7 @@ app.post('/getTasks', checkAuthenticated, function(req, res){
 
 // this method is done when the user clicks the 'register' button
 app.post('/register', async (req, res) => {
+  res.header("Access-Control-Allow-Origin", connurl);
   // TO DO: if a find() req for a user with the req username has a length > 1, send an error message
   let usernameQuery = await Users.find({username: { $eq: req.body.username}});
   console.log(usernameQuery);
@@ -230,6 +236,7 @@ app.post('/register', async (req, res) => {
 
 
 app.post('/create', checkAuthenticated, function(req, res){
+  res.header("Access-Control-Allow-Origin", connurl);
   console.log("req.session.passport: " + JSON.stringify(req.session.passport));
   Users.findOneAndUpdate({id: { $eq: req.session.passport.user}}, {$push: {tasks: req.body.task}, $inc: {idCount: 1}}, function(err, result){
     if(err){
@@ -246,6 +253,7 @@ app.post('/create', checkAuthenticated, function(req, res){
 
 // deleting a task (using task ID, given in URL) from a users tasks subarray
 app.post('/deleteTask/*', checkAuthenticated, function(req, res){
+  res.header("Access-Control-Allow-Origin", connurl);
   //console.log("\nreq.session.passport for deleteTask: " + JSON.stringify(req.session.passport));
   console.log("\nhere is the req body data we're dealing with: " + JSON.stringify(req.body));
   var delId = Number(req.url.split('/')[2]);
