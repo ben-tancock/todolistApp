@@ -76,6 +76,7 @@ export class TodoComponent implements OnInit {
     this.logoutSubscription = this.navLogout.subscribe(() => this.logout());
   }
 
+
   ngOnDestroy() {
     this.logoutSubscription.unsubscribe();
   }

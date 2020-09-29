@@ -4,12 +4,13 @@
 }*/
 
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const dotenv = require('dotenv');
 dotenv.config();
 
 const url = require('url');
-const cors = require('cors');
+
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session'); // should give us persistent sessions...
@@ -192,8 +193,6 @@ app.post('/logout', checkAuthenticated, async function(req, res){
   console.log("\nlogging out user");
   await req.logout(); // logOut or logout??
   res.send({status: 'redirect', url: '/login'});
-
-
 });
 
 
