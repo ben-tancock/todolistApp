@@ -110,13 +110,16 @@ const usersCollection = mongoose.connection.collection('usersCollection');
 
 // ENABLING CORS STUFF ---------------------------------------------
 app.use(cors({credentials: true, origin: connurl}));
+
+// enables pre-flight requests across the board
+app.options('*', cors()) // include before other routes
+
 app.get('/with-cors', cors(), (req, res, next) => {
   console.log("testing cors:");
 });
 // -----------------------------------------------------------------
 
-// enables pre-flight requests across the board
-app.options('*', cors()) // include before other routes
+
 
 app.use(flash());
 app.use('/', express.query());
