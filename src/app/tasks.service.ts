@@ -19,12 +19,11 @@ export class TasksService {
   getTasks(userName, pw){
     console.log("tasks service: get tasks \n");
     console.log("username and pw to post: " + userName + " " + pw);
-    var something = this.http.options('/something');
 
     return this.http.post(this.url + '/getTasks', {username: userName, password: pw},
     {
       headers: new HttpHeaders({
-
+        'Content-Type' : 'application/json',
         'Access-Control-Allow-Credentials' : 'true',
         'Access-Control-Allow-Origin': "*"
       }),
@@ -38,6 +37,7 @@ export class TasksService {
     return this.http.post(delUrl, {username: uname, password: pw},
       {
         headers: new HttpHeaders({
+          'Content-Type' : 'application/json',
           'Access-Control-Allow-Credentials' : 'true',
           'Access-Control-Allow-Origin': "*"
         }),
@@ -78,6 +78,7 @@ export class TasksService {
     },
     {
       headers: new HttpHeaders({
+        'Content-Type' : 'application/json',
         'Access-Control-Allow-Credentials' : 'true',
         'Access-Control-Allow-Origin': "*"
       }),

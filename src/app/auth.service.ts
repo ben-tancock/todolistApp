@@ -32,6 +32,7 @@ export class AuthService {
     this.password = pw;
     return this.http.post(this.url + '/login', {username: uname, password: pw}, {
       headers: new HttpHeaders({
+        'Content-Type' : 'application/json',
         'Access-Control-Allow-Credentials' : 'true',
         'Access-Control-Allow-Origin': "*" // this might just need to be the api url
       }),
@@ -47,6 +48,7 @@ export class AuthService {
     console.log("test auth logout");
     return this.http.post(this.url + '/logout', {body: 'logout'},  {
       headers: new HttpHeaders({
+        'Content-Type' : 'application/json',
         'Access-Control-Allow-Credentials' : 'true',
         'Access-Control-Allow-Origin': "*"
       }),
@@ -58,6 +60,7 @@ export class AuthService {
     console.log("test auth service login check");
     return this.http.post(this.url + '/loginCheck', {
       headers: new HttpHeaders({
+        'Content-Type' : 'application/json',
         'Access-Control-Allow-Credentials' : 'true',
         'Access-Control-Allow-Origin': "*"
       }),
@@ -83,6 +86,7 @@ export class AuthService {
     },
     {
       headers: new HttpHeaders({
+        'Content-Type' : 'application/json',
         'Access-Control-Allow-Credentials' : 'true',
         'Access-Control-Allow-Origin': "*"
       }),
