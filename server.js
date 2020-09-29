@@ -52,6 +52,16 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser('process.env.SECRET'));
 
 
+/*app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});*/
+
+
 app.use(session({
   secret: 'process.env.SECRET',
   resave: true, // should we reset our session variables if nothing has changed?
@@ -105,6 +115,9 @@ app.get('/with-cors', cors(), (req, res, next) => {
 });
 // -----------------------------------------------------------------
 
+// enables pre-flight requests across the board
+app.options('*', cors()) // include before other routes
+
 app.use(flash());
 app.use('/', express.query());
 
@@ -117,17 +130,27 @@ app.get(__dirname + '/dist/to-do-heroku', function(req, res){
   console.log("testing __dirname get request!");
 });
 
+
 // does not fire for dev testing
-app.options('*', function(req, res){
-  console.log("test recieving pre-flights!");
+/*app.options('*', function(req, res){
+  console.log("TESTING PREFLIGHTS!");
   res.header("Access-Control-Allow-Origin", connurl);
   res.send();
 });
 
 // neither does this
-router.options('/*', function(req,res){
-  console.log("test router options");
+app.options('/*', function(req, res){
+  console.log("TESTING PREFLIGHTS!");
+  res.header("Access-Control-Allow-Origin", connurl);
+  res.send();
 });
+
+// or this...
+router.options('/*', function(req,res){
+  console.log("TESTING PREFLIGHTS!");
+});
+*/
+
 
 app.get('/*', function(req,res) {
   res.header("Access-Control-Allow-Origin", connurl);
