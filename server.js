@@ -53,8 +53,8 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser('process.env.SECRET'));
 
 var cspPolicy = {
-  'default-src': [csp.NONE],
-  'img-src': [csp.SELF], 
+  'default-src': '*',
+  'img-src': '*', 
 }
 
 /*app.use(csp({
