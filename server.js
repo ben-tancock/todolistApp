@@ -68,15 +68,6 @@ const globalCSP = csp.getCSP(cspPolicy);
 app.use(globalCSP)
 
 
-/*app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});*/
-
 
 app.use(session({
   secret: 'process.env.SECRET',
@@ -126,21 +117,21 @@ const usersCollection = mongoose.connection.collection('usersCollection');
 
 // ENABLING CORS STUFF ---------------------------------------------
 
-//app.use(cors({credentials: true, origin: connurl}));
-app.use(cors({credentials: true, origin: function(req, callback){
+app.use(cors({credentials: true, origin: true}));
+/*app.use(cors({credentials: true, origin: function(req, callback){
   var corsOptions;
   console.log("origin req: %j" , req);
   console.log(JSON.stringify(req));
   if(req.includes(connurl)){
     console.log("req includes connurl")
-    console.log("CSP stuff: %j", csp.STARTER_OPTIONS)
+    console.log("CSP stuff: %j", globalCSP)
     corsOptions={origin: req}
   }else{
     corsOptions={origin: false}
   }
   callback(null, corsOptions);
   }
-}));
+}));*/
 
 // enables pre-flight requests across the board
 app.options('*', cors()) // include before other routes
