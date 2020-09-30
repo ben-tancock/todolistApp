@@ -54,7 +54,7 @@ app.use(cookieParser('process.env.SECRET'));
 
 var cspPolicy = {
   'default-src': 'self, https://to-do-bentancock.herokuapp.com/*',
-  'img-src': '*', 
+  'img-src': '*',
 }
 
 /*app.use(csp({
@@ -180,7 +180,7 @@ router.options('/*', function(req,res){
 app.get('/*', function(req,res) {
   res.header("Access-Control-Allow-Origin", connurl);
   res.header('Access-Control-Allow-Credentials', true);
-  res.header('Content-Type', 'application/json');
+  //res.header('Content-Type', 'application/json');
   console.log("here's what app.get is receiving: " + req.url);
   console.log("sending file!");
   res.sendFile(path.join(__dirname + '/dist/to-do-heroku/index.html'));
