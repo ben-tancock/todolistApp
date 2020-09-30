@@ -62,12 +62,12 @@ var cspPolicy = {
     'default-src': [csp.NONE],
     'img-src': [csp.SELF],
   }
-}));*/
+}));
 
 const globalCSP = csp.getCSP(cspPolicy);
 app.use(globalCSP)
 
-
+*/
 
 app.use(session({
   secret: 'process.env.SECRET',
