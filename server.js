@@ -109,7 +109,20 @@ const usersCollection = mongoose.connection.collection('usersCollection');
 
 
 // ENABLING CORS STUFF ---------------------------------------------
-app.use(cors({credentials: true, origin: connurl}));
+/*var corsOrigin = function(req, cb){
+  var origin;
+  if(req.url.includes(connurl){ // if req.url has the connection url inside it
+    console.log("req url contains origin");
+    origin = {origin: true};
+  } else {
+    console.log("req url does NOT contain origin");
+  }
+}*/
+
+
+
+
+app.use(cors({credentials: true, origin: true}));
 
 // enables pre-flight requests across the board
 app.options('*', cors()) // include before other routes
