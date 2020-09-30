@@ -5,6 +5,7 @@
 
 var express = require('express');
 var cors = require('cors');
+var csp = require('content-security-policy');
 var app = express();
 var dotenv = require('dotenv');
 dotenv.config();
@@ -50,6 +51,21 @@ var router = express.Router();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser('process.env.SECRET'));
+
+var cspPolicy = {
+  'default-src': [csp.NONE],
+  'img-src': [csp.SELF], 
+}
+
+/*app.use(csp({
+  policies: {
+    'default-src': [csp.NONE],
+    'img-src': [csp.SELF],
+  }
+}));*/
+
+const globalCSP = csp.getCSP(csp.STARTER_OPTIONS);
+app.use(globalCSP)
 
 
 /*app.use(function(req, res, next) {
