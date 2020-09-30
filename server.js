@@ -53,7 +53,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser('process.env.SECRET'));
 
 var cspPolicy = {
-  'default-src': '*',
+  'default-src': 'self, https://to-do-bentancock.herokuapp.com/*',
   'img-src': '*', 
 }
 
@@ -64,7 +64,7 @@ var cspPolicy = {
   }
 }));*/
 
-const globalCSP = csp.getCSP(csp.STARTER_OPTIONS);
+const globalCSP = csp.getCSP(cspPolicy);
 app.use(globalCSP)
 
 
@@ -125,17 +125,6 @@ const usersCollection = mongoose.connection.collection('usersCollection');
 
 
 // ENABLING CORS STUFF ---------------------------------------------
-/*var corsOrigin = function(req, cb){
-  var origin;
-  if(req.url.includes(connurl){ // if req.url has the connection url inside it
-    console.log("req url contains origin");
-    origin = {origin: true};
-  } else {
-    console.log("req url does NOT contain origin");
-  }
-}*/
-
-
 
 //app.use(cors({credentials: true, origin: connurl}));
 app.use(cors({credentials: true, origin: function(req, callback){
@@ -144,6 +133,7 @@ app.use(cors({credentials: true, origin: function(req, callback){
   console.log(JSON.stringify(req));
   if(req.includes(connurl)){
     console.log("req includes connurl")
+    console.log("CSP stuff: %j", csp.STARTER_OPTIONS)
     corsOptions={origin: req}
   }else{
     corsOptions={origin: false}
