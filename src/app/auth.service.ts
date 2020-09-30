@@ -32,7 +32,7 @@ export class AuthService {
     this.password = pw;
     return this.http.post(this.url + '/login', {username: uname, password: pw}, {
       headers: new HttpHeaders({
-        'Content-Type' : 'application/json',
+
         'Access-Control-Allow-Credentials' : 'true',
         'Access-Control-Allow-Origin': "*" // this might just need to be the api url
       }),
