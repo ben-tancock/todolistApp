@@ -5,7 +5,7 @@
 
 var express = require('express');
 var cors = require('cors');
-var csp = require('content-security-policy');
+//var csp = require('content-security-policy');
 var app = express();
 var dotenv = require('dotenv');
 dotenv.config();
