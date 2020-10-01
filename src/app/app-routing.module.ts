@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
-import { TodoComponent } from './todo/todo.component';
+import { RegistrationComponent } from './registration/registration.component'
 import { NavbarComponent } from './navbar/navbar.component';
 import { TaskGuard } from './task.guard';
 
@@ -22,6 +22,12 @@ const routes: Routes = [
     component: NavbarComponent,
     canActivate: [TaskGuard]
   },
+
+  {
+    path: 'registration',
+    component: RegistrationComponent,
+    //canActivate: [TaskGuard]
+  }
 ];
 
 @NgModule({

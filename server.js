@@ -146,36 +146,12 @@ app.get('/with-cors', cors(), (req, res, next) => {
 app.use(flash());
 app.use('/', express.query());
 
-// I want every URL the user types in to redirect to wherever they're supposed to be
-// Is that what sending them to index would do?
 
 // why do we even need this?
 app.use(express.static(__dirname + '/dist/to-do-heroku'));
 app.get(__dirname + '/dist/to-do-heroku', function(req, res){
   console.log("testing __dirname get request!");
 });
-
-
-// does not fire for dev testing
-/*app.options('*', function(req, res){
-  console.log("TESTING PREFLIGHTS!");
-  res.header("Access-Control-Allow-Origin", connurl);
-  res.send();
-});
-
-// neither does this
-app.options('/*', function(req, res){
-  console.log("TESTING PREFLIGHTS!");
-  res.header("Access-Control-Allow-Origin", connurl);
-  res.send();
-});
-
-// or this...
-router.options('/*', function(req,res){
-  console.log("TESTING PREFLIGHTS!");
-});
-*/
-
 
 app.get('/*', function(req,res) {
   res.header("Access-Control-Allow-Origin", connurl);
@@ -278,9 +254,8 @@ app.post('/getTasks', checkAuthenticated, function(req, res){
 app.post('/register', async (req, res) => {
   res.header("Access-Control-Allow-Origin", connurl);
   res.header('Access-Control-Allow-Credentials', true);
-  res.header('Content-Type', 'application/json');
-  // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept", ); have yet to see if we will need this
-  // TO DO: if a find() req for a user with the req username has a length > 1, send an error message
+  //res.header('Content-Type', 'application/json');
+
   let usernameQuery = await Users.find({username: { $eq: req.body.username}});
   console.log(usernameQuery);
   if (usernameQuery.length >= 1){

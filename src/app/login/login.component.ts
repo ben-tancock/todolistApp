@@ -8,6 +8,7 @@ import {
   animate,
   transition
 } from '@angular/animations';
+import {Router} from '@angular/router';
 
 
 @Component({
@@ -42,7 +43,7 @@ export class LoginComponent implements OnInit {
   registrationText='';
   loginText='';
 
-  constructor(private authService: AuthService, private snackbar: MatSnackBar, private renderer: Renderer2, private el: ElementRef) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
 
   ngOnInit(): void {
@@ -76,16 +77,12 @@ export class LoginComponent implements OnInit {
         this.showLogin = !this.showLogin;
       }, 5000);
     }
-
-    //this.fadeAlert(alertType);
     console.log("test toggle alert");
-
   }
 
   // when the user clicks the login button
   loginClick(uname, pw){
     if(uname.length == 0 || pw.length == 0){
-      // TO DO: make alert appear
       console.log("please enter username and password");
       this.loginText = "<strong>Error:</strong> <p>Please enter a username/password</p>";
       this.alertToggle('login');
@@ -130,6 +127,9 @@ export class LoginComponent implements OnInit {
       else{
         this.registrationText = "<strong>Registration successful!</strong>";
         this.alertToggle('register');
+        this.authService.username = uname;
+        this.authService.password = pw;
+        this.router.navigate(['registration']);
       }
     });
   }

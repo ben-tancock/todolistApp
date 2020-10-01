@@ -25,16 +25,6 @@
   </div>
 </mat-toolbar>
 
-<!--
-<div #alertList *ngFor="let alert of alertArr">
-  <div #greetingAlert class="alert alert-warning alert-dismissible fade show " role="alert">
-    <button type="button" class="close" aria-label="Close" (click)="closeAlert()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    {{alertText}}
-  </div>
-</div>
--->
 
 <div id="greetingAlert" [@fade] class="alert alert-warning alert-dismissible fade show " role="alert" *ngIf="showGreeting">
   <button type="button" class="close" aria-label="Close" (click)="alertToggle('greeting')">
@@ -48,7 +38,6 @@
     <span aria-hidden="true">&times;</span>
   </button>
   <div [innerHTML]="loginText"></div>
-  <!--<strong>Error:</strong> <p>your username/password was incorrect</p>-->
 </div>
 
 <div  id="registrationAlert" [@fade] class="alert alert-warning alert-dismissible fade show " role="alert" *ngIf="showRegistration" >

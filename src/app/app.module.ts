@@ -21,6 +21,7 @@ import { TaskDirective } from './task.directive';
 import { TitleComponent } from './title/title.component';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { RegistrationComponent } from './registration/registration.component';
 //import { isDevMode } from '@angular/core'
 
 
@@ -34,6 +35,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     TodoComponent,
     TaskDirective,
     TitleComponent,
+    RegistrationComponent,
   ],
   imports: [
     HttpClientModule,
