@@ -1,3 +1,4 @@
+
 .create{
   text-align: center;
   padding: 20px;
@@ -43,10 +44,7 @@
   margin-bottom: 10px;
 }
 
-.createSection{
-  margin-left: 90%;
-  margin-right: 10%;
-}
+
 
 .fixedBtn{
   position: fixed;
@@ -58,7 +56,6 @@
 
 div.create > input, select, span, textarea{
   margin-bottom: 20px;
-  overflow: scroll;
   /*vertical-align: top;*/
 
 }
@@ -92,8 +89,98 @@ th {
   width: 100%;
 }
 
+.createSection{
+  margin-left: 90%;
+  margin-right: 10%;
+}
+
+.createTab {
+  position: absolute;
+  width: 600px;
+  height: 170px;
+  border: solid lightgray 2px;
+  border-radius: 15px;
+  padding: 15px;
+  left: 50%;
+  margin-left: -300px;
+  top: 30%;
+  background-color: white;
+}
+
+
+
+.tabBtns > button {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  margin-left: 40px;
+  margin-top: 8%;
+
+}
+
+
+
+.descriptionBox {
+  position: absolute;
+  top: 128px;
+  left:20%;
+
+  width: 400px;
+  height: 200px;
+
+  outline: none;
+  background-color: #ffffff;
+  border-radius: 15px;
+  /*border: solid black 2px;*/
+}
+
+.descriptionBox > * {
+  width: 350px;
+  height: 150px;
+}
+
+/*
+.priorityBox {
+  position: absolute;
+  top: 142px;
+  width: 200px;
+  height: 50px;
+  outline: none;
+  left: 35%;
+  background: #ffffff;
+}*/
+
+::ng-deep .mat-select-arrow { /* hide that stupid drop-down arrow!! */
+  visibility: hidden;
+}
+
+::ng-deep .mat-menu-panel { /* get that stupid friggin mat menu panel size right */
+  padding: 0 10px!important;
+  width: 400px!important;
+  height:200px!important;
+}
+
+#createAlert {
+  position: absolute;
+  width: 80%;
+  height: 50px;
+  text-align: center;
+  display: block;
+  left: 0%;
+  top: -37%;
+  margin-right: auto;
+  background-color: red;
+  color: white;
+}
+
+
 ::ng-deep .mat-menu-panel {
   max-width: 1000px!important;
   width: 350px;
   height: 400px;
+}
+
+.parent {
+  width: 100%;
+  height: 100%;
 }

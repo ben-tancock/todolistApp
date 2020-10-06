@@ -1,54 +1,120 @@
 
-<h1 style="margin-left: 10%;">Welcome, {{userName}}</h1>
-<table #table >
-  <tr #tr>
-    <th #th>
-      <div #div  *ngFor="let task of tasks" taskDirective class="tasks" [@enterLeave] >
-        <app-task
-        #appTask class="taskObject"
-        [taskName] = task.name
-        [taskPriority] = task.priority
-        [taskDescription] = "task.description"
-        [taskDate] = task.date
-        [taskId] = task.id
-        [taskState] = task.state
-        (completed)="completeTask()"
-        (animated)="taskAnimated($event)"
-        >
-        </app-task>
-      </div>
-    </th>
-  </tr>
-</table>
+<div class='parent'>
 
-<div class="createSection">
-  <div class="fixedBtn">
-    <button mat-fab [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu" style="background-color: blue;">
-      <mat-icon>add_icon</mat-icon>
-    </button>
-  </div>
-
-  <mat-menu #menu="matMenu" >
-    <div class="create" (click) = "$event.stopPropagation()" >
-      <p style="vertical-align: middle;"> Task name: <br> <input type="text" #taskName> <br> </p>
+  <h1 style="margin-left: 10%;">Welcome, {{userName}}</h1>
+  <table #table >
+    <tr #tr>
+      <th #th>
+        <div #div  *ngFor="let task of tasks" taskDirective class="tasks" [@enterLeave]>
+          <app-task
+            #appTask class="taskObject"
+            [taskName] = task.name
+            [taskPriority] = task.priority
+            [taskDescription] = "task.description"
+            [taskDate] = task.date
+            [taskId] = task.id
+            [taskState] = task.state
+            (completed)="completeTask()"
+            (animated)="taskAnimated($event)"
+          >
+          </app-task>
+        </div>
 
 
-      <p style="vertical-align: middle;" >
-        <label for="taskDesc">Description: <br> <textarea id="taskDesc" #taskDesc cols="30" rows="5"></textarea></label>
-      </p>
-      <br>
 
-      <label for="" style="vertical-align: middle;">Priority:</label> <br>
-      <select name="" id="" #taskPriority>
-        <option selected="selected" value="low">low</option>
-        <option value="medium">medium</option>
-        <option value="high">high</option>
-      </select> <br><br>
-      <button  (click)="createTask(taskName.value, taskDesc.value, taskPriority.value);
-          taskName.value = ''; taskDesc.value = ''; taskPriority.value = 'low'">Create Task</button>
+
+
+
+
+          <div class="createTab" *ngIf='creating' [@fadeSlide] (keydown)='onKeyDown($event, taskName.value, taskDesc.value, taskPriority.value)'>
+            <table>
+              <tr>
+                <th><input #taskName placeholder="Task Name"  type="text" style="outline: none; border: hidden; font-size: 32px; background-color: transparent; width: 90%;"></th>
+                <th><button mat-flat-button (click)='cancelClick()' style="margin: 10px; border: solid grey 2px;">Cancel</button></th>
+              </tr>
+              <tr>
+                <th class="tabBtns">
+                  <button><span class="material-icons">event</span></button>
+                  <button><span class="material-icons">alarm</span></button>
+                  <button (click)="setDescription()"><span class="material-icons">chat</span>
+
+
+                  </button>
+
+
+
+                  <button (click)="setPriority()">
+                    <span class="material-icons">priority_high</span>
+                    <mat-select #priSelect #taskPriority [hidden]='hidePriority'>
+                      <mat-option value="Low">Low</mat-option>
+                      <mat-option value="Medium">Medium</mat-option>
+                      <mat-option value="High">High</mat-option>
+                    </mat-select>
+                  </button>
+
+                  <button><span class="material-icons">repeat</span></button>
+                  <!--<input placeholder="Schedule" type="text" style="border: solid 1px grey; border-radius: 5px;">
+                  <input #taskPriority placeholder="priority" type="text" style="border: solid 1px grey; border-radius: 5px;">
+                  <input #taskDesc placeholder="description" type="text" style="border: solid 1px grey; border-radius: 5px;">-->
+                </th>
+
+                <th>
+                  <button (click)="createTask(taskName.value, taskDesc.value, taskPriority.value);
+                    taskName.value = ''; taskDesc.value = ''; taskPriority.value = 'low' " mat-flat-button color="primary" style="margin: 10px">Create Task
+                  </button>
+                </th>
+
+              </tr>
+            </table>
+
+
+            <div id="descriptionBox" [hidden]="hideDescription"  class="descriptionBox" [@fadeSlideDown]="setdesc ? 'in' : 'out'" (@fadeSlideDown.done)="animEnd('description')" >
+              <form>
+                <mat-form-field style="width: 350px; height: 150px; margin-left: 15px;">
+                  <mat-label>Task Description:</mat-label>
+                  <textarea matInput id="taskDesc" #taskDesc style="width: 350px; height: 150px; margin-left: 5%;"></textarea>
+                </mat-form-field>
+              </form>
+            </div>
+
+
+
+            <div id="createAlert" class="alert alert-warning alert-dismissible fade show " role="alert" *ngIf="showAlert">
+              <button type="button" class="close" aria-label="Close" (click)="alertToggle()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <p>Error: the task must have a name!</p>
+            </div>
+
+
+
+
+          </div>
+
+
+
+
+
+
+
+
+      </th>
+    </tr>
+  </table>
+
+
+
+  <div class="createSection">
+    <div class="fixedBtn"> <!--[matMenuTriggerFor]="menu"-->
+      <button mat-fab  aria-label="Example icon-button with a menu" style="background-color: blue; outline: none;" (click)="toggleCreateTask()">
+        <mat-icon>add_icon</mat-icon>
+      </button>
     </div>
-  </mat-menu>
+  </div>
 </div>
+
+
+
 
 
 

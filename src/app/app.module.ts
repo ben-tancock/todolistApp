@@ -14,6 +14,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import { MatMenuModule } from '@angular/material/menu';
 import {MatInputModule} from '@angular/material/input';
 import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http';
+import {MatSelectModule} from '@angular/material/select';
 import { NavbarComponent } from './navbar/navbar.component';
 import { TaskComponent } from './task/task.component';
 import { TodoComponent } from './todo/todo.component';
@@ -52,6 +53,7 @@ import { RegistrationComponent } from './registration/registration.component';
     MatListModule,
     MatSnackBarModule,
     NgbModule,
+    MatSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent]

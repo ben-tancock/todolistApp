@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, ViewChildren, QueryList, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChildren, ViewChild, QueryList, Input} from '@angular/core';
 import { TasksService } from '../tasks.service';
 import { AuthService } from '../auth.service';
 
@@ -30,11 +30,35 @@ import {
         animate('300ms', style({ transform: "translateX(-100%)"}))
       ]),
     ]),
+
+    trigger('fadeSlide', [
+      state('in', style({ opacity:1,transform: 'translateY(0)' })),
+      transition('void => *', [
+        style({ opacity:0,transform: 'translateY(100%)' }),
+        animate(200)
+      ]),
+      transition('* => void', [
+        animate(200, style({ opacity:0,transform: 'translateY(100%)' }))
+      ])
+    ]),
+
+    trigger('fadeSlideDown', [
+      state('in', style({ opacity:1,transform: 'translateY(10%)' })),
+      state('out',style({ opacity:0,transform: 'translateY(-10%)' })),
+      transition('in => out', [
+        animate(100)
+      ]),
+      transition('out => in', [
+        animate(100)
+      ]),
+    ]),
   ]
 })
+
 export class TodoComponent implements OnInit {
-  @Output() created = new EventEmitter<boolean>();
   @ViewChildren("appTask") taskElements: QueryList<any>;
+  @ViewChild('priSelect') priSelect;
+  @ViewChild('descMenu') descMenu;
 
   // when the user clicks the logout option in the navbar
   private logoutSubscription: Subscription;
@@ -44,11 +68,19 @@ export class TodoComponent implements OnInit {
   theDate;
   isClicked = false;
   isDeleted = false;
-  formatted;
   selectedTask;
   idCount = 0;
   userName;
   password;
+  creating=false;
+  hideDescription=false;
+  hidePriority=false;
+
+  setdesc = false;
+  setpri = false;
+
+  showAlert = false;
+
   constructor(private TaskService: TasksService, private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
@@ -151,8 +183,27 @@ export class TodoComponent implements OnInit {
     });
   }
 
+  formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+  }
+
   createTask(taskName, taskDesc, taskPriority){
+    if(taskName.length == 0){
+      this.alertToggle();
+      return;
+    }
     this.theDate = new Date();
+    this.theDate = this.formatDate(this.theDate);
     let newId = this.idCount; // idCount is undefined, for some reason
     console.log("createTask newId: " + newId);
 
@@ -196,4 +247,78 @@ export class TodoComponent implements OnInit {
     // <action that sends task to a completed tasks array>
     //this.deleteTask()
   }
+
+  toggleCreateTask(){
+    this.creating = !this.creating;
+  }
+
+  setDescription(){
+    //this.descMenu.open();
+
+    this.setdesc = !this.setdesc;
+    if(this.setdesc == true){
+      this.hideDescription=false;
+    }
+  }
+
+  setPriority(){
+    this.priSelect.open();
+    /*
+    this.setpri = !this.setpri;
+    if(this.setpri == true){
+      this.hidePriority=false;
+    }*/
+  }
+
+  animEnd(buttonType){
+    console.log(buttonType);
+
+    if(buttonType=='description'){
+      if(this.setdesc == false){
+        console.log("hiding element...");
+        this.hideDescription=true;
+      }
+      else{
+        this.hideDescription=false;
+      }
+    }
+
+    if(buttonType=='priority'){
+      if(this.setpri == false){
+        console.log("hiding element...");
+        this.hidePriority=true;
+      }
+      else{
+        this.hidePriority=false;
+      }
+    }
+  }
+
+  cancelClick(){
+    this.setdesc=false;
+    this.setpri=false;
+    this.hideDescription=true;
+    this.hidePriority=true;
+    this.showAlert=false;
+    this.creating=false;
+  }
+
+  onKeyDown(event, name, desc, priority){ // when the user hits the enter key in task creation, create the task
+    // re-implement this when you know how to check if the focus is in a text area of not
+    /*if(event.keyCode == 13){
+      console.log("test key down");
+      this.createTask(name, desc, priority);
+      this.cancelClick();
+    }*/
+  }
+
+  alertToggle(){
+    window.setTimeout(() => {
+      this.showAlert = !this.showAlert;
+    }, 3000);
+  }
+
+
+
+
 }

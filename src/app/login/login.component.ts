@@ -1,6 +1,5 @@
-import { Component, OnInit, ElementRef, ViewChild, Renderer2 } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { AuthService } from '../auth.service';
-import {MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import {
   trigger,
   state,
@@ -28,13 +27,21 @@ import {Router} from '@angular/router';
         animate('300ms', style({ opacity: 0}))
       ]),
     ]),
+    trigger('fadeSlide', [
+      state('in', style({ opacity:1,transform: 'translateY(0)' })),
+      transition('void => *', [
+        style({ opacity:0,transform: 'translateY(100%)' }),
+        animate(200)
+      ]),
+      transition('* => void', [
+        animate(200, style({ opacity:0,transform: 'translateY(100%)' }))
+      ])
+    ]),
   ]
 
 })
 export class LoginComponent implements OnInit {
-  @ViewChild('greetingAlert', { static: true }) greetingAlert: ElementRef;
-  @ViewChild('registrationAlert', { static: true }) registrationAlert: ElementRef;
-  @ViewChild('loginAlert', { static: true }) loginAlert: ElementRef;
+
   username;
   password;
   showGreeting=false;
@@ -136,5 +143,11 @@ export class LoginComponent implements OnInit {
 
   goToTasks(){
     this.authService.renderTasks();
+  }
+
+  onKeyDown(event, uname, pw){
+    if(event.keyCode == 13){
+      this.loginClick(uname, pw);
+    }
   }
 }

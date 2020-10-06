@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component'
 import { NavbarComponent } from './navbar/navbar.component';
+import { TodoComponent } from './todo/todo.component';
 import { TaskGuard } from './task.guard';
 
 const routes: Routes = [

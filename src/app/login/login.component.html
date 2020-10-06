@@ -1,91 +1,86 @@
 <div class="parent">
-<mat-toolbar color="primary" class="header">
-  <div class="headerTitle"> My To-do List App</div>
 
-  <div class="barspace">
-    <div class="headerBtns">
-      <div style="display: table-row;">
-        <div class="icons">
-          <br>
-          <a href="https://github.com/ben-tancock">
-            <img class="iconImgs" src="../../assets/images/giticon.png" alt="">
-          </a>
-          <p class="iconLabel">Github</p>
-        </div>
+  <mat-toolbar color="primary" class="header">
+    <div class="headerTitle"> My To-do List App</div>
 
-        <div  class="icons">
-          <br>
-          <a href="https://www.linkedin.com/in/ben-tancock/">
-            <img class="iconImgs" src="../../assets/images/linkedin_icon.png" alt="">
-          </a>
-          <p class="iconLabel">LinkedIn</p>
+    <div class="barspace">
+      <div class="headerBtns">
+        <div style="display: table-row;">
+          <div class="icons">
+            <br>
+            <a href="https://github.com/ben-tancock">
+              <img class="iconImgs" src="../../assets/images/giticon.png" alt="">
+            </a>
+            <p class="iconLabel">Github</p>
+          </div>
+
+          <div  class="icons">
+            <br>
+            <a href="https://www.linkedin.com/in/ben-tancock/">
+              <img class="iconImgs" src="../../assets/images/linkedin_icon.png" alt="">
+            </a>
+            <p class="iconLabel">LinkedIn</p>
+          </div>
         </div>
       </div>
     </div>
+  </mat-toolbar>
+
+
+  <div id="greetingAlert" [@fade] class="alert alert-warning alert-dismissible fade show " role="alert" *ngIf="showGreeting">
+    <button type="button" class="close" aria-label="Close" (click)="alertToggle('greeting')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <strong>Greetings!</strong> <p>This web application is a work in progress!   </p> <p>I plan on smoothing out any bugs and adding more features in the near-future!</p> <p>- Ben</p>
   </div>
-</mat-toolbar>
 
+  <div id="loginAlert" [@fade]  class="alert alert-warning alert-dismissible fade show " role="alert" *ngIf="showLogin">
+    <button type="button" class="close" aria-label="Close" (click)="alertToggle('login')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <div [innerHTML]="loginText"></div>
+  </div>
 
-<div id="greetingAlert" [@fade] class="alert alert-warning alert-dismissible fade show " role="alert" *ngIf="showGreeting">
-  <button type="button" class="close" aria-label="Close" (click)="alertToggle('greeting')">
-    <span aria-hidden="true">&times;</span>
-  </button>
-  <strong>Greetings!</strong> <p>This web application is a work in progress!   </p> <p>I plan on smoothing out any bugs and adding more features in the near-future!</p> <p>- Ben</p>
-</div>
+  <div  id="registrationAlert" [@fade] class="alert alert-warning alert-dismissible fade show " role="alert" *ngIf="showRegistration" >
+    <button type="button" class="close" aria-label="Close" (click)="alertToggle('register')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <div [innerHTML]="registrationText"></div>
+  </div>
 
-<div id="loginAlert" [@fade]  class="alert alert-warning alert-dismissible fade show " role="alert" *ngIf="showLogin">
-  <button type="button" class="close" aria-label="Close" (click)="alertToggle('login')">
-    <span aria-hidden="true">&times;</span>
-  </button>
-  <div [innerHTML]="loginText"></div>
-</div>
+  <div class="lboxContainer">
 
-<div  id="registrationAlert" [@fade] class="alert alert-warning alert-dismissible fade show " role="alert" *ngIf="showRegistration" >
-  <button type="button" class="close" aria-label="Close" (click)="alertToggle('register')">
-    <span aria-hidden="true">&times;</span>
-  </button>
-  <div [innerHTML]="registrationText"></div>
-</div>
+    <div class="loginBox" (keydown)='onKeyDown($event, Username.value, Password.value)'>
+      <div>
+        <br>
+        <p id="title" >User Login</p>
+      </div>
 
-<div class="lboxContainer">
+      <div class="inputs" ng-model='localstoragething'>
+        <mat-form-field>
+          <mat-label>Username</mat-label>
+          <input matInput type="text" class="username" #Username>
+          <mat-icon matSuffix>person</mat-icon>
+        </mat-form-field>
 
-  <div class="loginBox">
-    <div>
-      <br>
-      <p id="title" >User Login</p>
-    </div>
+        <mat-form-field>
+          <mat-label>Password</mat-label>
+          <input matInput type="text" class="password" #Password>
+          <mat-icon matSuffix>lock</mat-icon>
+        </mat-form-field>
 
-    <div class="inputs" ng-model='localstoragething'>
-      <mat-form-field>
-        <mat-label>Username</mat-label>
-        <input matInput type="text" class="username" #Username>
-        <mat-icon matSuffix>person</mat-icon>
-      </mat-form-field>
+        <br>
+      </div>
 
-      <mat-form-field>
-        <mat-label>Password</mat-label>
-        <input matInput type="text" class="password" #Password>
-        <mat-icon matSuffix>lock</mat-icon>
-      </mat-form-field>
+      <div class="btnContainer">
+        <button (click)="loginClick(Username.value, Password.value)"  mat-flat-button color="primary" style="margin: 10px">
+          Login
+        </button>
 
-      <br>
-    </div>
-
-    <!-- Use Angular routing to send to tasks page with user data to display, if successful -->
-    <!-- routing: [routerLink] = "['/url', data stuff]"  => [routerLink]="['/tasks']" -->
-    <!-- Might need to do routing in component?-->
-    <div class="btnContainer">
-      <button (click)="loginClick(Username.value, Password.value)"  mat-flat-button color="primary" style="margin: 10px">
-        Login
-      </button>
-
-      <!-- To do: send to register component, let user know register successful / unsuccessful, send back to login-->
-      <button (click)="btnRegister(Username.value, Password.value)" mat-flat-button color="primary" style="margin: 10px">
-        Register
-      </button>
+        <button (click)="btnRegister(Username.value, Password.value)" mat-flat-button color="primary" style="margin: 10px">
+          Register
+        </button>
+      </div>
     </div>
   </div>
-</div>
-
-
 </div>
