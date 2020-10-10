@@ -57,7 +57,7 @@ import {
 
 export class TodoComponent implements OnInit {
   @ViewChildren("appTask") taskElements: QueryList<any>;
-  @ViewChild('priSelect') priSelect;
+  @ViewChild('taskPriority') taskPriority;
   @ViewChild('descMenu') descMenu;
 
   // when the user clicks the logout option in the navbar
@@ -76,8 +76,12 @@ export class TodoComponent implements OnInit {
   hideDescription=false;
   hidePriority=false;
 
-  setdesc = false;
+  low='';
+  medium='';
+  high='';
+
   setpri = false;
+  setdesc = false;
 
   showAlert = false;
 
@@ -262,7 +266,10 @@ export class TodoComponent implements OnInit {
   }
 
   setPriority(){
-    this.priSelect.open();
+    this.low='Low';
+    this.medium='Medium';
+    this.high='High';
+    this.taskPriority.open();
     /*
     this.setpri = !this.setpri;
     if(this.setpri == true){
@@ -282,21 +289,10 @@ export class TodoComponent implements OnInit {
         this.hideDescription=false;
       }
     }
-
-    if(buttonType=='priority'){
-      if(this.setpri == false){
-        console.log("hiding element...");
-        this.hidePriority=true;
-      }
-      else{
-        this.hidePriority=false;
-      }
-    }
   }
 
   cancelClick(){
     this.setdesc=false;
-    this.setpri=false;
     this.hideDescription=true;
     this.hidePriority=true;
     this.showAlert=false;
@@ -310,6 +306,13 @@ export class TodoComponent implements OnInit {
       this.createTask(name, desc, priority);
       this.cancelClick();
     }*/
+  }
+
+  priInvis(){
+    console.log('test focus');
+    this.low='';
+    this.medium='';
+    this.high='';
   }
 
   alertToggle(){
