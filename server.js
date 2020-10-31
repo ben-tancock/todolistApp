@@ -377,17 +377,17 @@ if(process.env.NODE_ENV == 'development'){
   });
 }
 else{
- /* app.listen(process.env.PORT || 8080, function(req, res){
+  app.listen(process.env.PORT || 8080, function(req, res){
     console.log("express server listening on port 8080");
-  });*/
+  });
 
-  cors_proxy.createServer({
+  /*cors_proxy.createServer({
     originWhitelist: [], // Allow all origins
     requireHeader: ['origin'],
     removeHeaders: ['cookie', 'cookie2']
   }).listen(process.env.PORT, 'https://haunted-goblin-14104.herokuapp.com', function() {
     console.log('Running CORS Anywhere on ' + host + ':' + port);
-  });
+  });*/
 
 }
 
