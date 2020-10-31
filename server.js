@@ -385,7 +385,7 @@ else{
     originWhitelist: [], // Allow all origins
     requireHeader: ['origin'],
     removeHeaders: ['cookie', 'cookie2']
-  }).listen(process.env.PORT, 'https://to-do-bentancock.herokuapp.com/', function() {
+  }).listen(process.env.PORT, 'https://cors-anywhere.to-do-bentancock.herokuapp.com/', function() {
     console.log('Running CORS Anywhere on ' + host + ':' + port);
   });
 
