@@ -12,6 +12,8 @@ dotenv.config();
 
 var url = require('url');
 
+var cors_proxy = require('cors-anywhere');
+
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session'); // should give us persistent sessions...
@@ -375,8 +377,16 @@ if(process.env.NODE_ENV == 'development'){
   });
 }
 else{
-  app.listen(process.env.PORT || 8080, function(req, res){
+ /* app.listen(process.env.PORT || 8080, function(req, res){
     console.log("express server listening on port 8080");
+  });*/
+
+  cors_proxy.createServer({
+    originWhitelist: [], // Allow all origins
+    requireHeader: ['origin', 'x-requested-with'],
+    removeHeaders: ['cookie', 'cookie2']
+  }).listen(port, host, function() {
+    console.log('Running CORS Anywhere on ' + host + ':' + port);
   });
 
 }
