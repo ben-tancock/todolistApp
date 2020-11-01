@@ -21,7 +21,7 @@ const routes: Routes = [
   {
     path: 'tasks',
     component: NavbarComponent,
-    canActivate: [TaskGuard]
+    //canActivate: [TaskGuard]
   },
 
   {
