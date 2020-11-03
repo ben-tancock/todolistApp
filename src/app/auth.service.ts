@@ -58,7 +58,7 @@ export class AuthService {
 
   loginCheck(){
     console.log("test auth service login check");
-    return this.http.post(this.url + '/to-do-bentancock.herokuapp.com' + '/loginCheck', {
+    return this.http.post(this.url + '/loginCheck', {
       headers: new HttpHeaders({
         'Content-Type' : 'application/json',
         'Access-Control-Allow-Credentials' : 'true',
