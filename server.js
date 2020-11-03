@@ -119,7 +119,7 @@ const usersCollection = mongoose.connection.collection('usersCollection');
 
 // ENABLING CORS STUFF ---------------------------------------------
 
-app.use(cors({credentials: true, origin: true}));
+app.use(cors());
 /*app.use(cors({credentials: true, origin: function(req, callback){
   var corsOptions;
   console.log("origin req: %j" , req);
