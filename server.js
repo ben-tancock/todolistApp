@@ -371,7 +371,7 @@ function checkNotAuthenticated(req, res, next) {
 
 
 
-if(process.env.NODE_ENV == 'development'){
+/*if(process.env.NODE_ENV == 'development'){
   app.listen(4000, function(req, res){
     console.log("express server listening on port 4000");
   });
@@ -381,14 +381,15 @@ else{
     console.log("express server listening on port 8080");
   });
 
-  /*cors_proxy.createServer({
+
+}*/
+
+ cors_proxy.createServer({
     originWhitelist: [], // Allow all origins
     requireHeader: ['origin'],
     removeHeaders: ['cookie', 'cookie2']
   }).listen(process.env.PORT, 'https://haunted-goblin-14104.herokuapp.com', function() {
     console.log('Running CORS Anywhere on ' + host + ':' + port);
-  });*/
-
-}
+  });
 
 
