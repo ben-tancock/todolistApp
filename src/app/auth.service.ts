@@ -34,7 +34,7 @@ export class AuthService {
       headers: new HttpHeaders({
 
         'Access-Control-Allow-Credentials' : 'true',
-        'Access-Control-Allow-Origin': "*" // this might just need to be the api url
+        'Access-Control-Allow-Origin': this.url // this might just need to be the api url
       }),
       withCredentials: true
     });

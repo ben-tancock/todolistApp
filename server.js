@@ -119,7 +119,7 @@ const usersCollection = mongoose.connection.collection('usersCollection');
 
 // ENABLING CORS STUFF ---------------------------------------------
 
-app.use(cors());
+app.use(cors({credentials: true, origin: connurl}));
 /*app.use(cors({credentials: true, origin: function(req, callback){
   var corsOptions;
   console.log("origin req: %j" , req);
@@ -164,7 +164,7 @@ app.get('/*', function(req,res) {
   res.sendFile(path.join(__dirname + '/dist/to-do-heroku/index.html'));
 });
 
-app.post('/loginCheck', function(req, res){
+app.post('/loginCheck', cors(), function(req, res){
   res.header("Access-Control-Allow-Origin", connurl);
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Content-Type', 'application/json');
@@ -197,7 +197,7 @@ app.post('/loginCheck', function(req, res){
   }
 );*/
 
-app.post('/login', function(req, res, next) {
+app.post('/login', cors(), function(req, res, next) {
   res.header("Access-Control-Allow-Origin", connurl);
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Content-Type', 'application/json');
@@ -223,7 +223,7 @@ app.post('/login', function(req, res, next) {
   })(req, res, next);
 });
 
-app.post('/logout', checkAuthenticated, async function(req, res){
+app.post('/logout', cors(), checkAuthenticated, async function(req, res){
   res.header("Access-Control-Allow-Origin", connurl);
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Content-Type', 'application/json');
@@ -233,7 +233,7 @@ app.post('/logout', checkAuthenticated, async function(req, res){
 });
 
 
-app.post('/getTasks', checkAuthenticated, function(req, res){
+app.post('/getTasks', cors(), checkAuthenticated, function(req, res){
     res.header("Access-Control-Allow-Origin", connurl);
     res.header('Access-Control-Allow-Credentials', true);
     res.header('Content-Type', 'application/json');
@@ -253,7 +253,7 @@ app.post('/getTasks', checkAuthenticated, function(req, res){
 });
 
 // this method is done when the user clicks the 'register' button
-app.post('/register', async (req, res) => {
+app.post('/register', cors(), async (req, res) => {
   res.header("Access-Control-Allow-Origin", connurl);
   res.header('Access-Control-Allow-Credentials', true);
   //res.header('Content-Type', 'application/json');
@@ -287,7 +287,7 @@ app.post('/register', async (req, res) => {
 });
 
 
-app.post('/create', checkAuthenticated, function(req, res){
+app.post('/create', cors(), checkAuthenticated, function(req, res){
   res.header("Access-Control-Allow-Origin", connurl);
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Content-Type', 'application/json');
@@ -306,7 +306,7 @@ app.post('/create', checkAuthenticated, function(req, res){
 
 
 // deleting a task (using task ID, given in URL) from a users tasks subarray
-app.post('/deleteTask/*', checkAuthenticated, function(req, res){
+app.post('/deleteTask/*', cors(),  checkAuthenticated, function(req, res){
   res.header("Access-Control-Allow-Origin", connurl);
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Content-Type', 'application/json');
