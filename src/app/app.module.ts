@@ -23,6 +23,8 @@ import { TitleComponent } from './title/title.component';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RegistrationComponent } from './registration/registration.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 //import { isDevMode } from '@angular/core'
 
 
@@ -53,7 +55,8 @@ import { RegistrationComponent } from './registration/registration.component';
     MatListModule,
     MatSnackBarModule,
     NgbModule,
-    MatSelectModule
+    MatSelectModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [],
   bootstrap: [AppComponent]

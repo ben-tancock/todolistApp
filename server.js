@@ -1,18 +1,18 @@
-// this is going to load in all of our environment variables and set them inside process.env
-/*if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config()
-}*/
-
 var express = require('express');
 var cors = require('cors');
-//var csp = require('content-security-policy');
 var app = express();
 var dotenv = require('dotenv');
 dotenv.config();
 
 var url = require('url');
 
-var cors_proxy = require('cors-anywhere');
+var USER_SUBSCRIPTIONS = [];
+
+//var cors_proxy = require('cors-anywhere');
+
+const webpush = require('web-push');
+const notifier = require('node-notifier');
+
 
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -25,7 +25,6 @@ var mongoose = require('mongoose');
 var path = require('path');
 //const env = require('./src/environments/environment');
 //const methodOverride = require('method-override')
-//var initializePassport = require('passport-config');
 var initializePassport = require('./passport-config');
 // this completes passport authentication strategy
 // passes passport, a function for finding a user by their username,
@@ -36,7 +35,7 @@ if(process.env.NODE_ENV == 'development'){
   connurl = 'http://localhost:4200';
 }
 else{
-  connurl = 'https://cors-anywhere.to-do-bentancock.herokuapp.com';
+  connurl = 'http://localhost:8080'//'https://to-do-bentancock.herokuapp.com';
 }
 
 initializePassport(
@@ -50,26 +49,19 @@ initializePassport(
 var MongoStore = require('connect-mongo')(session);
 var router = express.Router();
 
+const vapidKeys = webpush.generateVAPIDKeys();
+console.log("vapid keys: ", vapidKeys);
+
+webpush.setVapidDetails(
+  //'mailto:https://to-do-bentancock.herokuapp.com/',
+  'mailto:https://localhost:8080',
+  vapidKeys.publicKey,
+  vapidKeys.privateKey
+);
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser('process.env.SECRET'));
-
-var cspPolicy = {
-  'default-src': 'self, https://to-do-bentancock.herokuapp.com/*',
-  'img-src': '*',
-}
-
-/*app.use(csp({
-  policies: {
-    'default-src': [csp.NONE],
-    'img-src': [csp.SELF],
-  }
-}));
-
-const globalCSP = csp.getCSP(cspPolicy);
-app.use(globalCSP)
-
-*/
 
 app.use(session({
   secret: 'process.env.SECRET',
@@ -120,20 +112,6 @@ const usersCollection = mongoose.connection.collection('usersCollection');
 // ENABLING CORS STUFF ---------------------------------------------
 
 app.use(cors({credentials: true, origin: connurl}));
-/*app.use(cors({credentials: true, origin: function(req, callback){
-  var corsOptions;
-  console.log("origin req: %j" , req);
-  console.log(JSON.stringify(req));
-  if(req.includes(connurl)){
-    console.log("req includes connurl")
-    console.log("CSP stuff: %j", globalCSP)
-    corsOptions={origin: req}
-  }else{
-    corsOptions={origin: false}
-  }
-  callback(null, corsOptions);
-  }
-}));*/
 
 // enables pre-flight requests across the board
 app.options('*', cors()) // include before other routes
@@ -147,6 +125,19 @@ app.get('/with-cors', cors(), (req, res, next) => {
 
 app.use(flash());
 app.use('/', express.query());
+
+
+// push notification stuff: --------------------------------------------------------------------------------------------------------------------------
+// String
+/*notifier.notify('Message');
+// Object
+notifier.notify({
+  title: 'My notification',
+  message: 'Hello, there!'
+});*/
+
+// ---------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 
 // why do we even need this?
@@ -164,6 +155,77 @@ app.get('/*', function(req,res) {
   res.sendFile(path.join(__dirname + '/dist/to-do-heroku/index.html'));
 });
 
+app.post('/vkeys', cors(), checkAuthenticated, function(req, res){
+  console.log("TEST VKEYS");
+  console.log(vapidKeys);
+  res.send({keys:vapidKeys});
+})
+
+app.post('/addPushNotifications', cors(), checkAuthenticated, function(req, res ){
+  console.log("TEST NOTIFICATIONS");
+
+  const sub = req.body;
+
+  console.log('Received Subscription on the server: ', sub);
+
+  USER_SUBSCRIPTIONS.push(sub);
+
+  res.status(200).json({message: "Subscription added successfully."});
+});
+
+app.post('/scheduleNotification', cors(), checkAuthenticated, function(req, res){
+  console.log('Total subscriptions', USER_SUBSCRIPTIONS.length);
+  // sample notification payload
+  const notificationPayload = {
+    "notification": {
+      "title": "Angular News",
+      "body": "Newsletter Available!",
+      "icon": "assets/main-page-logo-small-hat.png",
+      "vibrate": [100, 50, 100],
+      "data": {
+          "dateOfArrival": Date.now(),
+          "primaryKey": 1
+      },
+      "actions": [{
+          "action": "explore",
+          "title": "Go to the site"
+      }]
+    }
+  };
+
+  console.log(req.body);
+
+  //userIndex = USER_SUBSCRIPTIONS.findIndex(sub => (sub.))
+
+  /*Promise.all(USER_SUBSCRIPTIONS.map(sub => webpush.sendNotification(
+    sub, JSON.stringify(notificationPayload) )))
+    .then(() => res.status(200).json({message: 'Newsletter sent successfully.'}))
+    .catch(err => {
+        console.error("Error sending notification, reason: ", err);
+        res.sendStatus(500);
+    });
+    */
+
+
+
+
+});
+
+app.post('/notify', cors(), checkAuthenticated, function(req, res){
+  console.log('test notify');
+  // String
+  notifier.notify('Message');
+
+  // Object
+  notifier.notify({
+    title: 'My notification',
+    message: 'Hello, there!'
+  });
+
+  res.send({});
+});
+
+
 app.post('/loginCheck', cors(), function(req, res){
   res.header("Access-Control-Allow-Origin", connurl);
   res.header('Access-Control-Allow-Credentials', true);
@@ -173,10 +235,6 @@ app.post('/loginCheck', cors(), function(req, res){
   console.log("\nlogin check");
   if(req.isAuthenticated()){
     console.log("authentication returns true!");
-    //console.log("printing req passport data: ");
-    //console.log(req.session);
-    //console.log(req.user);
-    //res.headersSent();
     res.send({authenticated: true});
   }
   else{
@@ -185,17 +243,6 @@ app.post('/loginCheck', cors(), function(req, res){
   }
 });
 
-/*app.post('/login', passport.authenticate('local',
-  {
-    successMessage: 'success',
-    failureMessage: 'fail'
-  }),
-  function(req, res){
-    console.log("\nuser logged in");
-    res.send({status: 'success'});
-    //once logged in, the client must find another way to get the tasks
-  }
-);*/
 
 app.post('/login', cors(), function(req, res, next) {
   res.header("Access-Control-Allow-Origin", connurl);
@@ -231,6 +278,8 @@ app.post('/logout', cors(), checkAuthenticated, async function(req, res){
   await req.logout(); // logOut or logout??
   res.send({status: 'redirect', url: '/login'});
 });
+
+
 
 
 app.post('/getTasks', cors(), checkAuthenticated, function(req, res){
@@ -372,7 +421,7 @@ function checkNotAuthenticated(req, res, next) {
 
 
 if(process.env.NODE_ENV == 'development'){
-  app.listen(4000, function(req, res){
+  app.listen(8080, function(req, res){
     console.log("express server listening on port 4000");
   });
 }
@@ -392,5 +441,3 @@ else{
   }).listen(process.env.PORT, 'https://haunted-goblin-14104.herokuapp.com', function() {
     console.log('Running CORS Anywhere on ' + host + ':' + port);
   });*/
-
-

@@ -1,6 +1,10 @@
+import { PushnotificationsService } from '../pushnotifications.service'
 import { Component, OnInit, Output, EventEmitter, ViewChildren, ViewChild, QueryList, Input} from '@angular/core';
 import { TasksService } from '../tasks.service';
 import { AuthService } from '../auth.service';
+import {SwPush} from '@angular/service-worker';
+
+
 
 import { Observable, Subscription  } from 'rxjs';
 import { Router} from '@angular/router';
@@ -11,6 +15,7 @@ import {
   animate,
   transition
 } from '@angular/animations';
+
 
 
 @Component({
@@ -80,12 +85,15 @@ export class TodoComponent implements OnInit {
   medium='';
   high='';
 
+  publicKey;
+  privateKey;
+
   setpri = false;
   setdesc = false;
 
   showAlert = false;
 
-  constructor(private TaskService: TasksService, private authService: AuthService, private router: Router) { }
+  constructor(private TaskService: TasksService, private authService: AuthService, private router: Router, private pushnotifs: PushnotificationsService, private swPush: SwPush) { }
 
   ngOnInit() {
     console.log("initializing todo");
@@ -110,6 +118,36 @@ export class TodoComponent implements OnInit {
     this.getTasks();
 
     this.logoutSubscription = this.navLogout.subscribe(() => this.logout());
+
+    //this.vapidKeys = this.getKeys();
+    this.pushnotifs.requestKeys().subscribe((res:any) => {
+      this.publicKey = res.keys.publicKey;
+      this.privateKey = res.keys.privateKey;
+      console.log("vapid keys set 1: ", this.publicKey);
+
+      this.swPush.requestSubscription({
+        serverPublicKey: this.publicKey
+      }).then(sub => {
+        console.log("Notification Subscription: ", sub);
+        this.pushnotifs.addPushSubscriber(sub).subscribe((res:any) => {
+          console.log("test response: ", res);
+        });
+      })
+      .catch(err => console.error("Could not subscribe to notifications", err));
+    })
+    //console.log("vapid keys set 2: ", this.vapidKeys);
+
+    //this.reqPermission(this.vapidKeys);
+
+    /*this.pushnotifs.requestKeys().subscribe((res:any) => {
+      console.log("testing request for vapid keys")
+      this.vapidKeys = JSON.stringify(res.keys);
+    });
+    // we need to request keys from server first
+    this.swPush.requestSubscription({
+      serverPublicKey: this.vapidKeys
+    })*/
+
   }
 
 
@@ -150,10 +188,31 @@ export class TodoComponent implements OnInit {
     }
   }
 
+  getKeys(){
+    console.log("TEST GET KEYS");
+    this.pushnotifs.requestKeys().subscribe((res:any) => {
+      console.log("DOING PUSH NOTIFS");
+      console.log(res);
+      return res.keys;
+    })
+  }
+
+  /*reqPermission(vKeys){
+    Notification.requestPermission(function(permission){
+      var notif = new Notification("Title", {body:'HTML5 Web Notification API',icon:'http://i.stack.imgur.com/Jzjhz.png?s=48&g=1', dir:'auto'});
+      setTimeout(function(){
+        notif.close();
+      },3000);
+    })
+  }*/
+
+
+
   addTask(task){
     console.log("addTask params: " + task);
     console.log("task id before pushed: " + JSON.parse(task).id); // undefined
     this.tasks.push(JSON.parse(task));
+    this.pushnotifs.scheduleNotification(this.privateKey);
   }
 
   removeTask(id){
@@ -200,6 +259,8 @@ export class TodoComponent implements OnInit {
 
     return [year, month, day].join('-');
   }
+
+
 
   createTask(taskName, taskDesc, taskPriority){
     if(taskName.length == 0){
