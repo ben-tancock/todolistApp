@@ -57,7 +57,7 @@ export class AuthService {
   }
 
   loginCheck(){
-    console.log("test auth service login check");
+    console.log("test auth service login check", this.url);
     return this.http.post(this.url + '/loginCheck', {
       headers: new HttpHeaders({
         'Content-Type' : 'application/json',
@@ -92,6 +92,13 @@ export class AuthService {
       }),
       withCredentials: true
     });
+  }
+
+  sendNotification(){
+    return this.http.post(this.url + '/notify',
+    {
+      body: 5000
+    })
   }
 
 
