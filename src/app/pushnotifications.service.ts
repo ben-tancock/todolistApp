@@ -22,6 +22,6 @@ export class PushnotificationsService {
   }
 
   scheduleNotification(sub:any){
-    return this.http.post(this.url + '/scheduleNotifications', sub);
+    return this.http.post(this.url + '/scheduleNotification', sub);
   }
 }

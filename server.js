@@ -3,15 +3,9 @@ var cors = require('cors');
 var app = express();
 var dotenv = require('dotenv');
 dotenv.config();
-
 var url = require('url');
-
 var USER_SUBSCRIPTIONS = [];
-
-//var cors_proxy = require('cors-anywhere');
-
 const webpush = require('web-push');
-const notifier = require('node-notifier');
 
 
 var cookieParser = require('cookie-parser');
@@ -35,7 +29,7 @@ if(process.env.NODE_ENV == 'development'){
   connurl = 'http://localhost:4200';
 }
 else{
-  connurl = 'http://localhost:8080'//'https://to-do-bentancock.herokuapp.com';
+  connurl = 'http://localhost:4200'//'https://to-do-bentancock.herokuapp.com';
 }
 
 initializePassport(
@@ -53,8 +47,7 @@ const vapidKeys = webpush.generateVAPIDKeys();
 console.log("vapid keys: ", vapidKeys);
 
 webpush.setVapidDetails(
-  //'mailto:https://to-do-bentancock.herokuapp.com/',
-  'mailto:https://localhost:8080',
+  'mailto:https://to-do-bentancock.herokuapp.com/', //'mailto:https://localhost:4200', use this when testing push notifs locally
   vapidKeys.publicKey,
   vapidKeys.privateKey
 );
@@ -163,13 +156,9 @@ app.post('/vkeys', cors(), checkAuthenticated, function(req, res){
 
 app.post('/addPushNotifications', cors(), checkAuthenticated, function(req, res ){
   console.log("TEST NOTIFICATIONS");
-
   const sub = req.body;
-
   console.log('Received Subscription on the server: ', sub);
-
   USER_SUBSCRIPTIONS.push(sub);
-
   res.status(200).json({message: "Subscription added successfully."});
 });
 
@@ -197,21 +186,17 @@ app.post('/scheduleNotification', cors(), checkAuthenticated, function(req, res)
 
   //userIndex = USER_SUBSCRIPTIONS.findIndex(sub => (sub.))
 
-  /*Promise.all(USER_SUBSCRIPTIONS.map(sub => webpush.sendNotification(
+  Promise.all(USER_SUBSCRIPTIONS.map(sub => webpush.sendNotification(
     sub, JSON.stringify(notificationPayload) )))
     .then(() => res.status(200).json({message: 'Newsletter sent successfully.'}))
     .catch(err => {
         console.error("Error sending notification, reason: ", err);
         res.sendStatus(500);
     });
-    */
-
-
-
 
 });
 
-app.post('/notify', cors(), checkAuthenticated, function(req, res){
+/*app.post('/notify', cors(), checkAuthenticated, function(req, res){
   console.log('test notify');
   // String
   notifier.notify('Message');
@@ -224,7 +209,7 @@ app.post('/notify', cors(), checkAuthenticated, function(req, res){
 
   res.send({});
 });
-
+*/
 
 app.post('/loginCheck', cors(), function(req, res){
   res.header("Access-Control-Allow-Origin", connurl);
@@ -275,7 +260,7 @@ app.post('/logout', cors(), checkAuthenticated, async function(req, res){
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Content-Type', 'application/json');
   console.log("\nlogging out user");
-  await req.logout(); // logOut or logout??
+  await req.logout();
   res.send({status: 'redirect', url: '/login'});
 });
 
@@ -418,8 +403,6 @@ function checkNotAuthenticated(req, res, next) {
   next();
 }
 
-
-
 if(process.env.NODE_ENV == 'development'){
   app.listen(8080, function(req, res){
     console.log("express server listening on port 4000");
@@ -430,14 +413,4 @@ else{
     console.log("express server listening on port 8080");
   });
 
-
-
 }
-
- /*cors_proxy.createServer({
-    originWhitelist: [], // Allow all origins
-    requireHeader: ['origin'],
-    removeHeaders: ['cookie', 'cookie2']
-  }).listen(process.env.PORT, 'https://haunted-goblin-14104.herokuapp.com', function() {
-    console.log('Running CORS Anywhere on ' + host + ':' + port);
-  });*/

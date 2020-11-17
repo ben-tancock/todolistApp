@@ -85,8 +85,9 @@ export class TodoComponent implements OnInit {
   medium='';
   high='';
 
-  publicKey;
-  privateKey;
+  publicKey = '';
+  privateKey = '';
+  sub;
 
   setpri = false;
   setdesc = false;
@@ -121,16 +122,18 @@ export class TodoComponent implements OnInit {
 
     //this.vapidKeys = this.getKeys();
     this.pushnotifs.requestKeys().subscribe((res:any) => {
+      console.log("RES FOR REQUESTKEYS: ", res)
       this.publicKey = res.keys.publicKey;
       this.privateKey = res.keys.privateKey;
       console.log("vapid keys set 1: ", this.publicKey);
-
+      //this.swPush.unsubscribe().then(() => );
       this.swPush.requestSubscription({
         serverPublicKey: this.publicKey
       }).then(sub => {
         console.log("Notification Subscription: ", sub);
         this.pushnotifs.addPushSubscriber(sub).subscribe((res:any) => {
           console.log("test response: ", res);
+          this.sub = sub;
         });
       })
       .catch(err => console.error("Could not subscribe to notifications", err));
@@ -148,6 +151,17 @@ export class TodoComponent implements OnInit {
       serverPublicKey: this.vapidKeys
     })*/
 
+  }
+
+  notify(){
+    console.log("TEST NOTIFY");
+    this.pushnotifs.scheduleNotification(this.sub).subscribe((res:any) => {
+      console.log("push notif response", res);
+    });
+  }
+
+  unsubscribe(){
+    this.swPush.unsubscribe();
   }
 
 
