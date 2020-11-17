@@ -29,7 +29,7 @@ if(process.env.NODE_ENV == 'development'){
   connurl = 'http://localhost:4200';
 }
 else{
-  connurl = 'http://localhost:4200'//'https://to-do-bentancock.herokuapp.com';
+  connurl = 'https://to-do-bentancock.herokuapp.com';
 }
 
 initializePassport(
@@ -93,6 +93,7 @@ const userSchema = new mongoose.Schema({
   password: {type: String, required: true},
   idCount: {type: Number, required: false},
   id: {type: String, required: true},
+  subscription: {type: Object, required: true},
 
   // Array of tasks
   tasks: [taskSchema]
@@ -159,11 +160,41 @@ app.post('/addPushNotifications', cors(), checkAuthenticated, function(req, res 
   const sub = req.body;
   console.log('Received Subscription on the server: ', sub);
   USER_SUBSCRIPTIONS.push(sub);
-  res.status(200).json({message: "Subscription added successfully."});
+
+  Users.findOneAndUpdate({id: { $eq: req.session.passport.user}}, {$set: {subscription: sub}}, function(err, result){
+    if(err){
+      console.log("error finding and updating! \n");
+      res.send("error finding and updating");
+    }
+    else{
+      console.log("SUB OBJECT SET IN USER");
+      //console.log(result);
+      res.status(200).json({message: "Subscription added successfully."});
+     // res.send({status: "success", task: req.body.task, idCount: result.idCount});
+    }
+  });
+
+  /*Users.find({id: { $eq: req.session.passport.user}}, function(err, doc){
+    if(!doc.length || doc == null){ // if the user is not found
+      console.log("ERROR: USER NOT FOUND, LOGGING OUT");
+      req.logOut();
+      res.send({error:'not found'}); // send some kind of message back to client-side
+    }
+    else{ // if the user is found
+      //res.send({tasks: doc[0].tasks, idCount: doc[0].idCount});
+      console.log("user object: ", doc);
+      console.log("SUB OBJECT SET IN USER");
+
+      doc.subscription = sub;
+      doc.save();
+      console.log(doc);
+    }
+  });*/
+
+
 });
 
 app.post('/scheduleNotification', cors(), checkAuthenticated, function(req, res){
-  console.log('Total subscriptions', USER_SUBSCRIPTIONS.length);
   // sample notification payload
   const notificationPayload = {
     "notification": {
@@ -182,17 +213,37 @@ app.post('/scheduleNotification', cors(), checkAuthenticated, function(req, res)
     }
   };
 
-  console.log(req.body);
+  console.log('Total subscriptions', USER_SUBSCRIPTIONS.length);
+  console.log('user for notification: ', req.session.passport.user);
+  Users.find({id: { $eq: req.session.passport.user}}, function(err, doc){
+    if(!doc.length || doc == null){ // if the user is not found
+      console.log("ERROR: USER NOT FOUND, LOGGING OUT");
+      req.logOut();
+      res.send({error:'not found'}); // send some kind of message back to client-side
+    }
+    else{ // if the user is found
+      //res.send({tasks: doc[0].tasks, idCount: doc[0].idCount});
+      console.log("the user we found: ", JSON.stringify(doc));
+      console.log(doc[0].subscription);
+      webpush.sendNotification(doc[0].subscription, JSON.stringify(notificationPayload) )
+        .then(() => res.status(200).json({message: 'Newsletter sent successfully.'}))
+          .catch(err => {
+            console.error("Error sending notification, reason: ", err);
+            res.sendStatus(500);
+          });
+    }
+
+  });
 
   //userIndex = USER_SUBSCRIPTIONS.findIndex(sub => (sub.))
 
-  Promise.all(USER_SUBSCRIPTIONS.map(sub => webpush.sendNotification(
+  /*Promise.all(USER_SUBSCRIPTIONS.map(sub => webpush.sendNotification(
     sub, JSON.stringify(notificationPayload) )))
     .then(() => res.status(200).json({message: 'Newsletter sent successfully.'}))
     .catch(err => {
         console.error("Error sending notification, reason: ", err);
         res.sendStatus(500);
-    });
+    });*/
 
 });
 
